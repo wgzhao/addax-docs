@@ -31,7 +31,7 @@ The output information is as follows (non-critical information removed):
 
 ## Parameters
 
-This plugin is based on [RDBMS Reader](../rdbmsreader), so you can refer to all parameters of RDBMS Reader.
+This plugin is based on [RDBMS Reader](rdbmsreader), so you can refer to all parameters of RDBMS Reader.
 
 ## Supported Data Types
 

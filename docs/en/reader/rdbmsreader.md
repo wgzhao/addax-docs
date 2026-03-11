@@ -4,13 +4,13 @@ RDBMS Reader plugin supports reading data from traditional RDBMS. This is a gene
 
 At the same time, RDBMS Reader is also the base class for other relational database reading plugins. The following reading plugins all depend on this plugin:
 
-- [Oracle Reader](../oraclereader)
-- [MySQL Reader](../mysqlreader)
-- [PostgreSQL Reader](../postgresqlreader)
-- [ClickHouse Reader](../clickhousereader)
-- [SQLServer Reader](../sqlserverreader)
-- [Access Reader](../accessreader)
-- [Databend Reader](../databendreader)
+- [Oracle Reader](oraclereader)
+- [MySQL Reader](mysqlreader)
+- [PostgreSQL Reader](postgresqlreader)
+- [ClickHouse Reader](clickhousereader)
+- [SQLServer Reader](sqlserverreader)
+- [Access Reader](accessreader)
+- [Databend Reader](databendreader)
 
 Note: If a dedicated database reading plugin is already provided, it is recommended to use the dedicated plugin. If the database you need to read does not have a dedicated plugin, consider using this generic plugin. Before use, you need to perform the following operations to run normally, otherwise exceptions will occur.
 

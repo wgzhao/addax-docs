@@ -6,7 +6,7 @@ MongoDB Writer plugin implements writing data to MongoDB.
 
 This plugin is used to write data to MongoDB database. For detailed configuration and parameters, please refer to the original MongoDB Writer documentation.
 
-<<<@/public/assets/jobs/mongodbwriter.json
+<<<@/public/assets/jobs/mongowriter.json
 
 ## Parameters
 

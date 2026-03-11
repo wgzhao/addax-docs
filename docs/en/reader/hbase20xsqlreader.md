@@ -28,4 +28,4 @@ Configure a job to synchronize and extract data from Phoenix to local:
 
 ## Parameters
 
-This plugin is based on [RDBMS Reader](../rdbmsreader), so you can refer to all configuration items of RDBMS Reader.
+This plugin is based on [RDBMS Reader](rdbmsreader), so you can refer to all configuration items of RDBMS Reader.

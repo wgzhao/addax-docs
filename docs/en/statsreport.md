@@ -19,14 +19,17 @@ During execution, Addax reports various metrics including:
 
 During job execution, Addax displays real-time statistics:
 
+```bash
 2023-12-07 10:30:15.123 [Statistics] INFO - Total records: 15000, Speed: 1500 rec/s (1.2 MB/s), Errors: 0 (0.00%)
 2023-12-07 10:30:25.124 [Statistics] INFO - Total records: 30000, Speed: 1500 rec/s (1.2 MB/s), Errors: 2 (0.01%)
 2023-12-07 10:30:35.125 [Statistics] INFO - Total records: 45000, Speed: 1500 rec/s (1.2 MB/s), Errors: 2 (0.00%)
+```
 
 ### Final Report
 
 At job completion, a comprehensive report is displayed:
 
+```
 ====================Job Statistics====================
 Job ID: 202312071030001
 Start Time: 2023-12-07 10:30:00
@@ -53,6 +56,7 @@ Channels:
 - Channel 1: 25000 records, 305 rec/s
 - Channel 2: 24999 records, 298 rec/s
 - # Channel 3: 24999 records, 295 rec/s
+```
 
 ## Enabling Detailed Statistics
 

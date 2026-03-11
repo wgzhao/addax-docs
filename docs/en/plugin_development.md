@@ -6,7 +6,7 @@ This guide is primarily for developers who need to develop Addax plugins to meet
 
 The general process for running a task in Addax is as follows:
 
-![addax-flowchart](../images/addax-flowchart.png)
+![addax-flowchart](images/addax-flowchart.png)
 
 The startup steps are:
 

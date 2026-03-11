@@ -2,8 +2,7 @@
 
 S3 Writer 插件用于将数据写入 Amazon AWS S3 存储，以及兼容 S3 协议的存储，比如 [MinIO](https://min.io)。
 
-在实现上，本插件基于 S3 官方的 [SDK 2.0](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/home.
-html) 编写。
+在实现上，本插件基于 S3 官方的 [SDK 2.0](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/home.html) 编写。
 
 ## 配置样例
 
@@ -26,7 +25,7 @@ html) 编写。
 | header                 |    否    | list     | 无                                         | 写入文件头信息，比如 `["id","title","url"]`           |
 | maxFileSize            |    否    | int      | `100000`                                   | 单个 object 的大小，单位为 MB                         |
 | encoding               |    否    | string   | `utf-8`                                    | 文件编码格式                                          |
-| writeMode              |    否    | string   | `append`                                   | 写入模式，详见 [hdfswriter](../hdfswriter) 中相关描述 |
+| writeMode              |    否    | string   | `append`                                   | 写入模式，详见 [hdfswriter](hdfswriter) 中相关描述 |
 | pathStyleAccessEnabled |    否    | bool     | false                                      | 是否使用path access方式访问                           |
 | sslEnabled             |    否    | bool     | true                                       | 是否使用ssl方式访问                                   |
 | fileType               |    否    | string   | `text`                                     | 文件类型 text, orc ,parquet                           |

@@ -33,7 +33,7 @@ bin/addax.sh job/clickhouse2stream.json
 
 ## 参数说明
 
-该插件基于 [RDBMS Reader](../rdbmsreader) 实现，因此可以参考 RDBMS Reader 的所有参数。
+该插件基于 [RDBMS Reader](rdbmsreader) 实现，因此可以参考 RDBMS Reader 的所有参数。
 
 ## 支持的数据类型
 

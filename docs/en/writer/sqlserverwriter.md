@@ -10,7 +10,7 @@ Here we use data generated from memory to import into SQL Server.
 
 ## Parameters
 
-This plugin is based on [RDBMS Writer](../rdbmswriter), so you can refer to all configuration items of RDBMS Writer.
+This plugin is based on [RDBMS Writer](rdbmswriter), so you can refer to all configuration items of RDBMS Writer.
 
 ### writeMode
 

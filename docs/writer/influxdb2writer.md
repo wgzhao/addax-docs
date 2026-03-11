@@ -2,7 +2,7 @@
 
 InfluxDB2 Writer 插件实现了将数据写入 [InfluxDB](https://www.influxdata.com) 2.0 及以上版本的数据库的功能。
 
-注意，如果你的 InfluxDB 是 1.8 及以下版本，则应该使用 [InfluxDBWriter](../influxdbwriter/) 插件
+注意，如果你的 InfluxDB 是 1.8 及以下版本，则应该使用 [InfluxDBWriter](influxdbwriter) 插件
 
 ## 示例
 

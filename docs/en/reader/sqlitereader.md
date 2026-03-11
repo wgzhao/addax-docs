@@ -1,6 +1,6 @@
 # SQLite Reader
 
-SQLite Reader plugin is used to read sqlite files in a specified directory. It inherits from [RDBMS Reader](../rdbmsreader).
+SQLite Reader plugin is used to read sqlite files in a specified directory. It inherits from [RDBMS Reader](rdbmsreader).
 
 ## Example
 
@@ -32,4 +32,4 @@ bin/addax.sh job/sqlite2stream.json
 
 ## Parameters
 
-This plugin is based on [RDBMS Reader](../rdbmsreader), so you can refer to all configuration items of RDBMS Reader.
+This plugin is based on [RDBMS Reader](rdbmsreader), so you can refer to all configuration items of RDBMS Reader.

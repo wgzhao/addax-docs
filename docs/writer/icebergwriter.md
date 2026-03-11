@@ -31,7 +31,7 @@ Iceberg Writer 提供向 已有的iceberg表写入数据的能力。
 
 依赖包设置:
 
-```java
+```groovy
 //build.gradle
 groovy
 plugins {
@@ -147,8 +147,7 @@ useJUnitPlatform()
 
 创建存储在minio,catalogType是hadoop的iceberg表
 
-```bash
-java
+```java
 package com.test;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.iceberg.hadoop.HadoopCatalog;
@@ -185,11 +184,11 @@ public class CreateMinioTable {
         catalog.close();
     }
 }
-
-
+```
 
 创建存储在hdfs,catalogType是hadoop的iceberg表
-java
+
+```java
 package com.test;
 
 import org.apache.hadoop.conf.Configuration;
@@ -263,10 +262,11 @@ public class CreateHdfsTable {
         catalog.close();
     }
 }
+```
 
 创建hive表
 
-java
+```java
 package com.test;
 
 import org.apache.hadoop.conf.Configuration;
@@ -346,15 +346,12 @@ public class CreateHiveTable {
         catalog.close();
     }
 }
-
-
-
-
+```
 
 
 Spark 或者 flink 环境创建表
 
-
+```sql
 CREATE TABLE if not exists test1.test1_iceberg1 USING ICEBERG
   TBLPROPERTIES(
      'format-version'='2',
@@ -363,9 +360,6 @@ CREATE TABLE if not exists test1.test1_iceberg1 USING ICEBERG
      'target-file-size-bytes'=268435456
   )
   as select * from test1.test1 limit 0;
-
-
-
 ```
 
 s3 或者 minio hadoop catalog例子
@@ -413,9 +407,6 @@ s3 或者 minio hadoop catalog例子
             "catalogType":"hadoop",
             "warehouse": "s3a://pvc-91d1e2cd-4d25-45c9-8613-6c4f7bf0a4cc/iceberg",
             "hadoopConfig": {
-
-```
-
               "fs.s3a.endpoint": "http://localhost:9000",
               "fs.s3a.access.key": "gy0dX5lALP176g6c9fYf",
               "fs.s3a.secret.key": "ReuUrCzzu5wKWAegtswoHIWV389BYl9AB1ZQbiKr",
@@ -427,13 +418,9 @@ s3 或者 minio hadoop catalog例子
         }
       }
     ]
-
 }
 }
-
-````
-
-
+```
 
 hdfs hadoop catalog例子
 
@@ -510,7 +497,7 @@ hdfs hadoop catalog例子
     ]
   }
 }
-````
+```
 
 hive catalog例子
 
@@ -609,12 +596,9 @@ hive catalog例子
 | STRING(逗号分隔如'a,b,c')     | ARRAY            |
 | STRING(json格式如'{"a":"1"}') | MAP              |
 
-##插件构建
+## 插件构建
 
 ```bash
 set JAVA_HOME=E:\jdk\openlogic-openjdk-17.0.13+11-windows-x64
 mvn package install -Pdefault -Piceberg   -pl plugin/writer/icebergwriter
-
-
-
 ```

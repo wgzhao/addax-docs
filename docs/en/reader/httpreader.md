@@ -20,7 +20,10 @@ The interface accepts GET requests with the following parameters:
 
 The following is a sample of accessed data (actual returned data may vary slightly):
 
+::: details
 <<<@/public/assets/sql/http.json
+:::
+
 We need to get partial key value data from the `result` results.
 
 ### Configuration

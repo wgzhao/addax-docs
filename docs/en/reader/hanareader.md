@@ -20,4 +20,4 @@ bin/addax.sh job/hana2stream.json
 
 ## Parameters
 
-This plugin is based on [RDBMS Reader](../rdbmsreader), so you can refer to all parameters of RDBMS Reader.
+This plugin is based on [RDBMS Reader](rdbmsreader), so you can refer to all parameters of RDBMS Reader.

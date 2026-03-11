@@ -6,6 +6,7 @@ SQLite Writer 插件实现了写入数据到 [SQLite](https://sqlite.org/index.h
 
 假定要写入的表如下：
 
+```sql
 create table addax_tbl
 (
 col1 varchar(20) ,
@@ -14,10 +15,12 @@ col3 datetime,
 col4 boolean,
 col5 binary
 );
+```
 
 这里使用一份从内存产生到 SQLite 的数据。
 
 <<<@/public/assets/jobs/sqlitewriter.json
+
 将上述配置文件保存为 `job/stream2sqlite.json`
 
 ### 执行采集命令
@@ -30,7 +33,7 @@ bin/addax.sh job/stream2sqlite.json
 
 ## 参数说明
 
-该插件基于 [RDBMS Writer](../rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项。因为 SQLite 连接无需账号密码，因此其他数据库写入插件需要配置的 `username`, `password` 在这里不需要。
+该插件基于 [RDBMS Writer](rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项。因为 SQLite 连接无需账号密码，因此其他数据库写入插件需要配置的 `username`, `password` 在这里不需要。
 
 ### writeMode
 

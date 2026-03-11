@@ -4,12 +4,13 @@ StarRocks Writer 插件用于向 [Starrocks](https://www.starrocks.com/zh-CN/ind
 ，然后通过 [stream load](https://docs.starrocks.com/zh-cn/main/loading/StreamLoad)
 加载数据到数据中，相比 `insert into` 方式效率要高不少，也是官方推荐的生产环境下的数据加载方式。
 
-StarRocks 是一个兼容 MySQL 协议的数据库后端，因此 Doris 读取可以使用 [MySQLReader](../../reader/mysqlreader) 进行访问。
+StarRocks 是一个兼容 MySQL 协议的数据库后端，因此 Doris 读取可以使用 [MySQLReader](../reader/mysqlreader) 进行访问。
 
 ## 示例
 
 假定要写入的表的建表语句如下：
 
+```sql
 CREATE DATABASE example_db;
 CREATE TABLE example_db.table1
 (
@@ -20,10 +21,12 @@ pv BIGINT SUM DEFAULT '0'
 ) AGGREGATE KEY(siteid, citycode, username)
 DISTRIBUTED BY HASH(siteid) BUCKETS 10
 PROPERTIES("replication_num" = "1");
+```
 
 下面配置一个从内存读取数据，然后写入到 doris 表的配置文件
 
 <<<@/public/assets/jobs/starrockswriter.json
+
 将上述配置文件保存为 `job/stream2starrocks.json`
 
 执行下面的命令
@@ -34,7 +37,7 @@ bin/addax.sh job/stream2starrocks.json
 
 ## 参数说明
 
-该插件基于 [RDBMS Writer](../rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项，并增加了下面的配置项。
+该插件基于 [RDBMS Writer](rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项，并增加了下面的配置项。
 
 | 配置项        | 是否必须 | 类型   | 默认值    | 描述                                                                         |
 | :------------ | :------: | ------ | --------- | ---------------------------------------------------------------------------- |

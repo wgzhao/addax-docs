@@ -8,20 +8,21 @@ In actual development and testing, we need to generate test data according to ce
 
 Indeed, there are quite a few specialized data generation tools on the Internet, many of which are powerful and performant. However, most of these tools consider the data generation part but ignore the problem of writing data to the target end, or some consider it but only consider one or a limited number of databases.
 
-It happens that the Addax tool can provide enough target-end writing capabilities, plus the existing [Stream Reader](../streamreader) is already a simple version of data generation tool. Therefore, adding some specific rules to this functionality and leveraging the diversity of the writing end naturally makes it a good data generation tool.
+It happens that the Addax tool can provide enough target-end writing capabilities, plus the existing [Stream Reader](streamreader) is already a simple version of data generation tool. Therefore, adding some specific rules to this functionality and leveraging the diversity of the writing end naturally makes it a good data generation tool.
 
 ## Configuration Example
 
 Here I list all the rules currently supported by the plugin in the example below
 
-=== "datareader2stream.json"
-
 <<<@/public/assets/jobs/datareader.json
+
 Save the above content to `job/datareader2stream.json`
 
 Then execute this task, the output result is similar to the following:
 
+::: details
 <<<@/public/assets/output/datareader.txt
+:::
 
 ## Configuration Description
 
@@ -66,11 +67,11 @@ The meaning of `incr` configuration item is consistent with the `incr` meaning i
 
 This means the field data is a long integer, starting from 1, incrementing by 2 each time, forming an incremental sequence starting from 1 with step size 2.
 
-For more detailed configuration rules and precautions for this field, refer to the `incr` description in [streamreader](../streamreader).
+For more detailed configuration rules and precautions for this field, refer to the `incr` description in [streamreader](streamreader).
 
 ### random
 
-The meaning of `random` configuration item is consistent with the `random` meaning in the [`streamreader`](../streamreader) plugin, indicating this is an incremental data generation rule. For example:
+The meaning of `random` configuration item is consistent with the `random` meaning in the [`streamreader`](streamreader) plugin, indicating this is an incremental data generation rule. For example:
 
 ```json
 {
@@ -82,7 +83,7 @@ The meaning of `random` configuration item is consistent with the `random` meani
 
 This means the field data is a random string with length 1 to 10 (both 1 and 10 included).
 
-For more detailed configuration rules and precautions for this field, refer to the `random` description in [streamreader](../streamreader).
+For more detailed configuration rules and precautions for this field, refer to the `random` description in [streamreader](streamreader).
 
 | Rule Name      | Meaning                                                                               | Example                                | Data Type | Description                                                                                   |
 | -------------- | ------------------------------------------------------------------------------------- | -------------------------------------- | --------- | --------------------------------------------------------------------------------------------- |

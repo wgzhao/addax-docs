@@ -30,7 +30,7 @@ bin/addax.sh job/stream2sqlite.json
 
 ## Parameters
 
-This plugin is based on [RDBMS Writer](../rdbmswriter), so you can refer to all configuration items of RDBMS Writer. Since SQLite connection does not require username and password, the `username` and `password` that other database writer plugins need to configure are not needed here.
+This plugin is based on [RDBMS Writer](rdbmswriter), so you can refer to all configuration items of RDBMS Writer. Since SQLite connection does not require username and password, the `username` and `password` that other database writer plugins need to configure are not needed here.
 
 ### writeMode
 

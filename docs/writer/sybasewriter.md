@@ -7,7 +7,8 @@ Sybase Writer 插件实现了写入数据到 [Sybase](https://en.wikipedia.org/w
 我们可以用 Docker 容器来启动一个 Sybase 数据库
 
 ```bash
-docker run -tid --rm  -h dksybase --name sybase  -p 5000:5000  ifnazar/sybase_15_7 bash /sybase/start
+docker run -tid --rm  -h dksybase --name sybase \
+   -p 5000:5000  ifnazar/sybase_15_7 bash /sybase/start
 ```
 
 然后创建一张如下表
@@ -29,4 +30,4 @@ create table addax_writer
 
 ## 参数说明
 
-该插件基于 [RDBMS Writer](../rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项。
+该插件基于 [RDBMS Writer](rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项。

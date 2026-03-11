@@ -30,7 +30,7 @@ bin/addax.sh job/stream2mysql.json
 
 ## Parameters
 
-This plugin is based on [RDBMS Writer](../rdbmswriter), so you can refer to all configuration items of RDBMS Writer, and adds some MySQL-specific configuration items.
+This plugin is based on [RDBMS Writer](rdbmswriter), so you can refer to all configuration items of RDBMS Writer, and adds some MySQL-specific configuration items.
 
 | Configuration | Required | Type   | Default Value | Description                                                                           |
 | :------------ | :------: | ------ | ------------- | ------------------------------------------------------------------------------------- |

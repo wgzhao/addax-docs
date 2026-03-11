@@ -4,13 +4,13 @@ RDBMS Reader 插件支持从传统 RDBMS 读取数据。这是一个通用关系
 
 同时 RDBMS Reader 又是其他关系型数据库读取插件的的基础类。以下读取插件均依赖该插件
 
-- [Oracle Reader](../oraclereader)
-- [MySQL Reader](../mysqlreader)
-- [PostgreSQL Reader](../postgresqlreader)
-- [ClickHouse Reader](../clickhousereader)
-- [SQLServer Reader](../sqlserverreader)
-- [Access Reader](../accessreader)
-- [Databend Reader](../databendreader)
+- [Oracle Reader](oraclereader)
+- [MySQL Reader](mysqlreader)
+- [PostgreSQL Reader](postgresqlreader)
+- [ClickHouse Reader](clickhousereader)
+- [SQLServer Reader](sqlserverreader)
+- [Access Reader](accessreader)
+- [Databend Reader](databendreader)
 
 注意， 如果已经提供了专门的数据库读取插件的，推荐使用专用插件，如果你需要读取的数据库没有专门插件，则考虑使用该通用插件。 在使用之前，还需要执行以下操作才可以正常运行，否则运行会出现异常。
 

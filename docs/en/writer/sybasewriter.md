@@ -29,4 +29,4 @@ Then use the following task configuration file:
 
 ## Parameters
 
-This plugin is based on [RDBMS Writer](../rdbmswriter), so you can refer to all configuration items of RDBMS Writer.
+This plugin is based on [RDBMS Writer](rdbmswriter), so you can refer to all configuration items of RDBMS Writer.

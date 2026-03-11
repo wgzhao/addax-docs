@@ -51,7 +51,7 @@ bin/addax.sh job/tdengine2stream.json
 
 ## 参数说明
 
-该插件基于 [RDBMS Writer](../rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项，并且增加了一些 TDengine 特有的配置项。
+该插件基于 [RDBMS Writer](rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项，并且增加了一些 TDengine 特有的配置项。
 
 ### 使用 JDBC-RESTful 接口
 

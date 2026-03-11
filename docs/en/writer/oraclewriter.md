@@ -10,7 +10,7 @@ Here we use data generated from memory to import into Oracle.
 
 ## Parameters
 
-This plugin is based on [RDBMS Writer](../rdbmswriter), so you can refer to all configuration items of RDBMS Writer, and adds some OracleWriter-specific configuration items.
+This plugin is based on [RDBMS Writer](rdbmswriter), so you can refer to all configuration items of RDBMS Writer, and adds some OracleWriter-specific configuration items.
 
 | Configuration | Required | Default Value | Description                                    |
 | :------------ | :------: | ------------- | ---------------------------------------------- |

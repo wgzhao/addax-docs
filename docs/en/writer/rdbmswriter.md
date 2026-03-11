@@ -4,13 +4,13 @@ RDBMS Writer plugin supports writing data to traditional RDBMS. This is a generi
 
 At the same time, RDBMS Writer is also the base class for other relational database writer plugins. The following writer plugins all depend on this plugin:
 
-- [Oracle Writer](../oraclewriter)
-- [MySQL Writer](../mysqlwriter)
-- [PostgreSQL Writer](../postgresqlwriter)
-- [ClickHouse Writer](../clickhousewriter)
-- [SQLServer Writer](../sqlserverwriter)
-- [Access Writer](../accesswriter)
-- [Databend Writer](../databendwriter)
+- [Oracle Writer](oraclewriter)
+- [MySQL Writer](mysqlwriter)
+- [PostgreSQL Writer](postgresqlwriter)
+- [ClickHouse Writer](clickhousewriter)
+- [SQLServer Writer](sqlserverwriter)
+- [Access Writer](accesswriter)
+- [Databend Writer](databendwriter)
 
 Note: If a dedicated database writer plugin is already provided, it is recommended to use the dedicated plugin. If the database you need to write to does not have a dedicated plugin, consider using this generic plugin. Before use, you need to perform the following operations to run normally, otherwise exceptions will occur.
 

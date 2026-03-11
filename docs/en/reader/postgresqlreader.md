@@ -6,6 +6,7 @@ The PostgreSQLReader plugin enables reading data from PostgreSQL databases.
 
 Create a sample table in PostgreSQL:
 
+```sql
 CREATE TABLE IF NOT EXISTS users (
 id SERIAL PRIMARY KEY,
 username VARCHAR(50) NOT NULL,
@@ -18,6 +19,7 @@ INSERT INTO users (username, email, age) VALUES
 ('alice', 'alice@example.com', 28),
 ('bob', 'bob@example.com', 32),
 ('charlie', 'charlie@example.com', 25);
+```
 
 Configuration to read from PostgreSQL:
 

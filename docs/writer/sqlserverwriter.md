@@ -10,7 +10,7 @@ SQLServer Writer 插件实现了写入数据到 [SQL Server](https://www.microso
 
 ## 参数说明
 
-该插件基于 [RDBMS Writer](../rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项。
+该插件基于 [RDBMS Writer](rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项。
 
 ### writeMode
 

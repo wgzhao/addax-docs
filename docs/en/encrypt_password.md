@@ -33,23 +33,21 @@ Replace plain text passwords with encrypted ones in your job configuration:
 ```json
 {
   "job": {
-    "content": [
-      {
+    "content": {
         "reader": {
           "name": "mysqlreader",
           "parameter": {
             "username": "dbuser",
             "password": "addax:enc:AES:7kMgvpYVGh2kH5tZ1AxyHQ==",
-            "connection": [
+            "connection": 
               {
                 "jdbcUrl": "jdbc:mysql://localhost:3306/testdb",
                 "table": ["users"]
               }
-            ]
+            
           }
         }
       }
-    ]
   }
 }
 ```

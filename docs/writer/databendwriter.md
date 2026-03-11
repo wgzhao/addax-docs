@@ -2,7 +2,7 @@
 
 Databend 插件用于向 [Databend](https://databend.rs/zh-CN/doc/) 数据库以 JDBC 方式写入数据。
 
-Databend 是一个兼容 MySQL 协议的数据库后端，因此 Databend 写入可以使用 [MySQLWriter](../../writer/mysqlwriter) 进行访问。
+Databend 是一个兼容 MySQL 协议的数据库后端，因此 Databend 写入可以使用 [MySQLWriter](../writer/mysqlwriter) 进行访问。
 
 ## 示例
 

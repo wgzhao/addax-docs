@@ -2,7 +2,7 @@
 
 DatabendReader plugin implements reading data from [Databend](https://databend.rs).
 
-Note that Databend has MySQL client protocol compatible implementation, so you can directly use [MySQL Reader](../mysqlreader) to read Databend data.
+Note that Databend has MySQL client protocol compatible implementation, so you can directly use [MySQL Reader](mysqlreader) to read Databend data.
 
 ## Example
 
@@ -45,7 +45,7 @@ bin/addax.sh job/databend2stream.json
 
 ## Parameters
 
-This plugin is based on [RDBMS Reader](../rdbmsreader), so you can refer to all parameters of RDBMS Reader.
+This plugin is based on [RDBMS Reader](rdbmsreader), so you can refer to all parameters of RDBMS Reader.
 
 ## Limitations
 

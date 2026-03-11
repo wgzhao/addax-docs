@@ -6,7 +6,7 @@
 
 ### 获取样例文件
 
-从[这里下载](../assets/excel_reader_demo.zip)用于演示的 Excel 压缩文件，并解压缩放置到 `/tmp/in` 目录下。
+从[这里下载](assets/excel_reader_demo.zip)用于演示的 Excel 压缩文件，并解压缩放置到 `/tmp/in` 目录下。
 三个文件夹的内容相同，其中
 
 - `demo.xlsx` 是 Excel 新格式

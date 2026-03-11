@@ -6,7 +6,7 @@ During data synchronization and transmission, users may have customized requirem
 
 ## Execution Model
 
-mermaid
+```mermaid
 graph LR
 source(("source"))
 subgraph fr["Addax Framework"]
@@ -15,6 +15,7 @@ Reader ==> Transformer ==>Writer
 end
 target(("target"))
 source ==> fr ==> target
+```
 
 ## UDF Functions
 
@@ -114,26 +115,28 @@ A `Record` data type.
 
 Groovy implementation of `subStr`:
 
-java
+```java
 String code="Column column = record.getColumn(1);\n"+
 " String oriValue = column.asString();\n"+
 " String newValue = oriValue.substring(0, 3);\n"+
 " record.setColumn(1, new StringColumn(newValue));\n"+
 " return record;";
 dx_groovy(code); // Note: The original doc had `dx_groovy(record)` which is incorrect. It should be the code string.
+```
 
 Groovy implementation of `replace`:
 
-java
+```java
 String code2="Column column = record.getColumn(1);\n"+
 " String oriValue = column.asString();\n"+
 " String newValue = \"\*\*\*\*\" + oriValue.substring(3, oriValue.length());\n"+
 " record.setColumn(1, new StringColumn(newValue));\n"+
 " return record;";
+```
 
 Groovy implementation of `pad`:
 
-java
+```java
 String code3="Column column = record.getColumn(1);\n"+
 " String oriValue = column.asString();\n"+
 " String padString = \"12345\";\n"+
@@ -152,21 +155,23 @@ String code3="Column column = record.getColumn(1);\n"+
 " String newValue= finalPad + oriValue;\n"+
 " record.setColumn(1, new StringColumn(newValue));\n"+
 " return record;";
+```
 
 Starting from version `4.1.2`, `dx_groovy` supports loading Groovy code from an external file. The file is read relative to the `$ADDAX_HOME` directory, which is the installation directory of Addax.
 
 For example, to implement `subStr`, you can create a file `job/substr.groovy` with the following content:
 
-groovy
+```groovy
 Column column = record.getColumn(1)
 String oriValue = column.asString()
 String newValue = oriValue.substring(0, 3)
 record.setColumn(1, new StringColumn(newValue))
 return record
+```
 
 Then, define it in the `job` file like this:
 
-````json
+```json
 {
   "transformer": [
     {
@@ -177,7 +182,7 @@ Then, define it in the `job` file like this:
     }
   ]
 }
-
+```
 
 You can also specify an absolute path for the file.
 
@@ -185,23 +190,20 @@ You can also specify an absolute path for the file.
 
 In this example, four UDFs are configured.
 
-```json
---8<-- "jobs/udfdemo.json"
+<<<@/public/assets/jobs/udfdemo.json
 
 
 ## Custom Functions
 
 If the built-in functions do not meet your data transformation requirements, you can write code that conforms to Groovy specifications within the `transformer`. Here is a complete example:
 
-```json
---8<-- "jobs/groovy.json"
-
+<<<@/public/assets/jobs/groovydemo.json
 
 The `transformer` code above modifies the first two fields of each record. It adds the prefix `Header_` to the first string field and doubles the value of the second integer field. The execution result is as follows:
 
-```shell
---8<-- "output/groovydemo.txt"
-
+::: details
+<<<@/public/assets/output/groovydemo.txt
+:::
 
 ## Metrics and Dirty Data
 
@@ -217,9 +219,11 @@ The metrics displayed during the process are defined as follows:
 
 ```shell
 Total 1000000 records, 22000000 bytes | Transform 100000 records(in), 10000 records(out) | Speed 2.10MB/s, 100000 records/s | Error 0 records, 0 bytes | Percentage 100.00%
+```
 
-
-Note: This mainly records the input and output of the transformation, which requires monitoring changes in the number of data records.
+::: info
+This mainly records the input and output of the transformation, which requires monitoring changes in the number of data records.
+:::
 
 The final job metrics are displayed as follows:
 
@@ -234,7 +238,7 @@ Failed record             :                   0
 Transformer success records:                  10
 Transformer failed  records:                   0
 Transformer filter  records:                   0
-
+```
 
 Note: This mainly records the input and output of the transformation, which requires monitoring changes in the number of data records.
-````
+

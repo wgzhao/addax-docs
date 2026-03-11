@@ -93,7 +93,7 @@ Increment also supports date type (introduced in version `4.0.1`), for example:
 
 `incr` consists of three parts: start date, step size, and step unit, separated by English commas (,).
 
-```
+
 - Start date: Correct date string, default format is `yyyy-MM-dd hh:mm:ss`. If time format is different, need to configure `dateFormat` to specify date format. This is mandatory.
 - Step size: Length to increase each time, default is 1. For decreasing, fill in negative number. This is optional.
 - Step unit: What time unit to increment/decrement by, default is by day. This is optional. Available units:
@@ -106,4 +106,3 @@ Increment also supports date type (introduced in version `4.0.1`), for example:
   - w/week
 
 Configuration item `sliceRecordCount` specifies the number of data records to generate. If `channel` is specified, actual generated records = `sliceRecordCount * channel`
-```

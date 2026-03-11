@@ -6,7 +6,7 @@
 
 ### Get Sample Files
 
-Download the Excel compressed file for demonstration from [here](../assets/excel_reader_demo.zip) and extract it to the `/tmp/in` directory.
+Download the Excel compressed file for demonstration from [here](assets/excel_reader_demo.zip) and extract it to the `/tmp/in` directory.
 The three folders have the same content, where:
 
 - `demo.xlsx` is the new Excel format
@@ -44,8 +44,6 @@ The table headers roughly describe the characteristics of cell data.
 
 Create the following JSON file:
 
-=== "excel2stream.json"
-
 <<<@/public/assets/jobs/excelreader.json
 
 Save the output content to the `job/excel2stream.json` file and execute the collection command:
@@ -58,6 +56,7 @@ If there are no errors, you should get the following output:
 
 ::: details
 <<<@/public/assets/output/excelreader.txt
+:::
 
 ## Parameters
 

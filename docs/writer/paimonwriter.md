@@ -28,10 +28,8 @@ Paimon Writer 提供向 已有的paimon表写入数据的能力。
 
 本地目录创建paimon表
 
-pom.xml
-
-xml
-
+::: details
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -219,9 +217,15 @@ xml
 
 </dependencies>
 </project>
+```
+
+:::
+
+程序代码
+
+::: details
 
 ```java
-
 import org.apache.paimon.catalog.Catalog;
 import org.apache.paimon.catalog.CatalogContext;
 import org.apache.paimon.catalog.CatalogFactory;
@@ -295,6 +299,8 @@ public class CreatePaimonTable {
     }
 }
 ```
+
+:::
 
 Spark 或者 flink 环境创建表
 

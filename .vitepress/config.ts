@@ -98,17 +98,23 @@ const zhWriterNavItems = writerPlugins.map(plugin => ({
 
 const enNav = [
   { text: 'Home', link: '/en/introduce' },
-  { text: 'Quickstart', link: '/en/quickstart' },
+  { text: 'Quickstart', link: '/en/quickstart'}
+]
+const enSiderbar = [
   { text: 'Job Setup', link: '/en/setupJob' },
   { text: 'Command Line', link: '/en/commandline' },
-  { text: 'Reader Plugins', items: enReaderNavItems },
-  { text: 'Writer Plugins', items: enWriterNavItems },
   { text: 'Debug', link: '/en/debug' },
   { text: 'Encrypt Password', link: '/en/encrypt_password' },
   { text: 'Stats Report', link: '/en/statsreport' },
   { text: 'Transformer', link: '/en/transformer' },
   { text: 'Plugin Development', link: '/en/plugin_development' },
-  { text: 'Server', link: '/en/server' }
+  { text: 'Server', link: '/en/server' },
+  { text: 'Plugins', 
+    items: [
+      { text: 'Reader Plugins', collapsed: true, items: enReaderNavItems },
+      { text: 'Writer Plugins', collapsed: true, items: enWriterNavItems },
+    ]
+  }
 ]
 
 const zhNav = [
@@ -158,6 +164,7 @@ export default defineConfig({
       lang: 'en',
       themeConfig: {
         nav: enNav,
+        sidebar: enSiderbar,
         socialLinks: [
           { icon: 'github', link: 'https://github.com/wgzhao/addax' }
         ]

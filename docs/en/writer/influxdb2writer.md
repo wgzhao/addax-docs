@@ -6,7 +6,7 @@ InfluxDB2 Writer plugin implements writing data to InfluxDB 2.0 and above versio
 
 This plugin is used to write data to InfluxDB 2.0+ database. For detailed configuration and parameters, please refer to the original InfluxDB2 Writer documentation.
 
-<<<@/public/assets/jobs/influxdb2writer.json
+<<<@/public/assets/jobs/stream2influx2.json
 
 ## Parameters
 

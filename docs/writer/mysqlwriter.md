@@ -30,7 +30,7 @@ bin/addax.sh job/stream2mysql.json
 
 ## 参数说明
 
-该插件基于 [RDBMS Writer](../rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项，并且增加了一些 MySQL 特有的配置项。
+该插件基于 [RDBMS Writer](rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项，并且增加了一些 MySQL 特有的配置项。
 
 | 配置项    | 是否必须 | 类型   | 默认值 | 描述                                           |
 | :-------- | :------: | ------ | ------ | ---------------------------------------------- |

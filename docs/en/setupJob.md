@@ -12,7 +12,7 @@ A complete job configuration file consists of three main parts:
 
 Here's the basic structure:
 
-````json
+```json
 {
   "core": {
     "transport": {
@@ -37,7 +37,7 @@ Here's the basic structure:
     }
   }
 }
-
+```
 
 ## Core Configuration
 
@@ -61,7 +61,7 @@ The `core` section contains system-level configuration:
     }
   }
 }
-
+```
 
 **Parameters:**
 
@@ -96,7 +96,7 @@ The `content` array can contain multiple reader-writer pairs for complex synchro
     ]
   }
 }
-
+```
 
 ### Reader Configuration
 
@@ -125,7 +125,7 @@ Example MySQL reader:
     }
   }
 }
-
+```
 
 ### Writer Configuration
 
@@ -153,7 +153,7 @@ Example PostgreSQL writer:
     }
   }
 }
-
+```
 
 ## Setting Configuration
 
@@ -171,7 +171,7 @@ The `setting` section controls job execution behavior:
     }
   }
 }
-
+```
 
 **Parameters:**
 
@@ -190,7 +190,7 @@ The `setting` section controls job execution behavior:
     }
   }
 }
-
+```
 
 **Parameters:**
 
@@ -224,13 +224,13 @@ Addax supports variable substitution in configuration files:
     }
   }
 }
-
+```
 
 Variables can be passed via command line:
 
 ```bash
 bin/addax.sh job.json -p "-Dhost=localhost -Dport=3306"
-````
+```
 
 ## Configuration Examples
 

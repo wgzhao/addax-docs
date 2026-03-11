@@ -2,7 +2,7 @@
 
 Databend plugin is used to write data to [Databend](https://databend.rs/zh-CN/doc/) database via JDBC.
 
-Databend is a database backend compatible with MySQL protocol, so Databend writing can use [MySQLWriter](../../writer/mysqlwriter) for access.
+Databend is a database backend compatible with MySQL protocol, so Databend writing can use [MySQLWriter](../writer/mysqlwriter) for access.
 
 ## Example
 
@@ -30,7 +30,7 @@ bin/addax.sh job/stream2Databend.json
 
 ## Parameters
 
-This plugin is based on [RDBMS Writer](../rdbmswriter), so you can refer to all configuration items of RDBMS Writer, and adds the following configuration items:
+This plugin is based on [RDBMS Writer](rdbmswriter), so you can refer to all configuration items of RDBMS Writer, and adds the following configuration items:
 
 | Configuration    | Required | Type   | Default Value | Description                                                                                           |
 | :--------------- | :------: | ------ | ------------- | ----------------------------------------------------------------------------------------------------- |

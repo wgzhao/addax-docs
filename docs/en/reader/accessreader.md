@@ -1,6 +1,6 @@
 # Access Reader
 
-AccessReader implements the ability to read data from [Access](https://en.wikipedia.org/wiki/Microsoft_Access) databases, based on [Addax RDBMS Reader](../rdbmsreader).
+AccessReader implements the ability to read data from [Access](https://en.wikipedia.org/wiki/Microsoft_Access) databases, based on [Addax RDBMS Reader](rdbmsreader).
 
 ## Example
 
@@ -21,4 +21,4 @@ bin/addax.sh job/access2stream.json
 
 ## Parameters
 
-AccessReader is based on [RDBMS Reader](../rdbmsreader), so you can refer to all configuration items of RDBMS Reader.
+AccessReader is based on [RDBMS Reader](rdbmsreader), so you can refer to all configuration items of RDBMS Reader.

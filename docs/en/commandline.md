@@ -178,7 +178,7 @@ bin/addax.sh --writer-plugin
 bin/addax.sh --reader-plugin mysqlreader
 ```
 
-# Get PostgreSQL writer details
+## Get PostgreSQL writer details
 
 ```bash
 bin/addax.sh --writer-plugin postgresqlwriter
