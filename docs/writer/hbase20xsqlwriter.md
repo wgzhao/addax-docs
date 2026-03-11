@@ -2,7 +2,7 @@
 
 HBase20x SQL Writer 插件利用 Phoenix 向 HBase 2.x 写入数据。
 
-如果 HBase 是 1.X 版本，则可以使用 [HBase11xsqlWriter](../hbase11xsqlwriter) 或[HBase11xWriter](../hbase11xwriter) 插件
+如果 HBase 是 1.X 版本，则可以使用 [HBase11xsqlWriter](hbase11xsqlwriter) 或[HBase11xWriter](hbase11xwriter) 插件
 
 ## 配置样例
 
@@ -26,7 +26,9 @@ HBase20x SQL Writer 插件利用 Phoenix 向 HBase 2.x 写入数据。
 
 `queryServerAddress` 是满足 Phoenix 链接的地址，具体格式和要求可以参考[官方文档][1] ，其 jdbc 连接串格式如下：
 
+```java
 jdbc:phoenix [ :<zookeeper quorum> [ :<port number> [ :<root node> [ :<principal> [ :<keytab file> ] ] ] ] ]
+```
 
 - zookeeper quorum: zookeeper 集群地址，多个地址用逗号分隔，如：`node1,node2,node3`
 - port number: zookeeper 集群端口，默认为 2181
@@ -36,7 +38,9 @@ jdbc:phoenix [ :<zookeeper quorum> [ :<port number> [ :<root node> [ :<principal
 
 如果你希望通过连接 Phoenix Query Server (a.k.a PQS) ，则 JDBC 连接串如下：
 
+```java
 jdbc:phoenix:thin:url=<scheme>://<server-hostname>:<port>[;option=value...]
+```
 
 - schema: 传输协议，`http` 或 `https`，默认为 `http`
 - server-hostname: Phoenix Query Server 地址，如：`node1`

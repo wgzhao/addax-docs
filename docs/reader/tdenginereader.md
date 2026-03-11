@@ -36,6 +36,7 @@ bin/addax.sh job/tdengine2stream.json
 ::: details
 
 <<<@/public/assets/output/tdenginereader.txt
+:::
 
 ## 参数说明
 

@@ -2,13 +2,13 @@
 
 HBase11x SQL Writer 插件利用 [Phoniex](https://phoenix.apache.org)， 用于向 HBase 1.x 版本的数据库写入数据。
 
-如果你希望通过调用原生接口写入数据，则需要使用[HBase11xWriter](../hbase11xwriter) 插件
+如果你希望通过调用原生接口写入数据，则需要使用[HBase11xWriter](hbase11xwriter) 插件
 
-如果 HBase 是 2.X 版本，则需要使用 [HBase20xsqlwriter](../hbase20xsqlwriter) 插件
+如果 HBase 是 2.X 版本，则需要使用 [HBase20xsqlwriter](hbase20xsqlwriter) 插件
 
 ## 配置样例
 
-<<<@/public/assets/job/hbase11xsqlwriter.json
+<<<@/public/assets/jobs/hbase11xsqlwriter.json
 
 ## 参数说明
 

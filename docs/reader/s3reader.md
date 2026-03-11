@@ -1,7 +1,6 @@
 # S3 Reader
 
-S3 Reader 插件用于读取 Amazon AWS S3 存储上的数据。在实现上，本插件基于 S3 官方的 [SDK 2.0](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/home.
-html) 编写。
+S3 Reader 插件用于读取 Amazon AWS S3 存储上的数据。在实现上，本插件基于 S3 官方的 [SDK 2.0](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/home.html) 编写。
 
 同时本插件也支持读取兼容 S3 协议的存储服务，比如 [MinIO](https://min.io/)
 

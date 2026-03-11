@@ -6,7 +6,7 @@ SQLite Reader 插件用于读取指定目录下的 sqlite 文件， 他继承于
 
 我们创建示例文件：
 
-```bash
+```sql
 $ sqlite3  /tmp/test.sqlite3
 SQLite version 3.7.17 2013-05-20 00:56:22
 Enter ".help" for instructions
@@ -28,8 +28,9 @@ sqlite> .q
 
 ```bash
 bin/addax.sh job/sqlite2stream.json
+```
 
 ## 参数说明
 
 该插件基于 [RDBMS Reader](../rdbmsreader) 实现，因此可以参考 RDBMS Reader 的所有配置项。
-```
+

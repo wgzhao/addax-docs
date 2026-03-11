@@ -10,13 +10,16 @@ Greenplum Writer 插件使用 `COPY FROM` 语法 将数据写入 [Greenplum](htt
 
 创建需要插入的表的语句如下:
 
+```sql
 create table gp_test like addax_tbl;
+```
 
 ### 任务配置
 
 以下是配置文件
 
 <<<@/public/assets/jobs/gpwriter.json
+
 将上述配置文件保存为 `job/pg2gp.json`
 
 ### 执行采集命令
@@ -25,8 +28,9 @@ create table gp_test like addax_tbl;
 
 ```bash
 bin/addax.sh job/pg2gp.json
+```
 
 ## 参数说明
 
-该插件基于 [RDBMS Writer](../rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项。
-```
+该插件基于 [RDBMS Writer](rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项。
+

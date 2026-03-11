@@ -8,8 +8,8 @@ Databend 是一个兼容 MySQL 协议的数据库后端，因此 Databend 写入
 
 假定要写入的表的建表语句如下：
 
-CREATE
-DATABASE example_db;
+```sql
+CREATE DATABASE example_db;
 CREATE TABLE `example_db`.`table1`
 (
 `siteid` INT DEFAULT CAST(10 AS INT),
@@ -17,20 +17,24 @@ CREATE TABLE `example_db`.`table1`
 `username` VARCHAR,
 `pv` BIGINT
 );
+```
 
 下面配置一个从内存读取数据，然后写入到 databend 表的配置文件
 
 <<<@/public/assets/jobs/databendwriter.json
+
+
 将上述配置文件保存为 `job/stream2databend.json`
 
 执行下面的命令
 
-````bash
+```bash
 bin/addax.sh job/stream2Databend.json
+```
 
 ## 参数说明
 
-该插件基于 [RDBMS Writer](../rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项, 并增加了如下配置项：
+该插件基于 [RDBMS Writer](rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项, 并增加了如下配置项：
 
 | 配置项           | 是否必须 | 类型   | 默认值   | 描述                                                                       |
 | :--------------- | :------: | ------ | -------- | -------------------------------------------------------------------------- |
@@ -50,4 +54,4 @@ bin/addax.sh job/stream2Databend.json
     "id"
   ]
 }
-````
+```

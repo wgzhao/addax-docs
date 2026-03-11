@@ -31,13 +31,12 @@ Iceberg Writer 提供向 已有的iceberg表写入数据的能力。
 
 依赖包设置:
 
-build.gradle
-
+```java
+//build.gradle
 groovy
 plugins {
 id 'java'
 }
-
 group = 'com.awol2005ex'
 version = '1.0-SNAPSHOT'
 ext["hadoop_version"] = "3.2.4"
@@ -144,6 +143,7 @@ implementation("com.fasterxml.woodstox:woodstox-core:${woodstox_version}")
 test {
 useJUnitPlatform()
 }
+```
 
 创建存储在minio,catalogType是hadoop的iceberg表
 

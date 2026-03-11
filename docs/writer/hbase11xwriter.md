@@ -2,7 +2,7 @@
 
 Hbase11X Writer 插件实现了从向 HBase 写数据的能力。在底层实现上，HBase11X Writer 通过 HBase 的 Java 客户端连接远程 HBase 服务，并通过 put 方式写入Hbase。
 
-如果 HBase 是 2.X 版本，则需要使用 [HBase20xsqlwriter](../hbase20xsqlwriter) 插件
+如果 HBase 是 2.X 版本，则需要使用 [HBase20xsqlwriter](hbase20xsqlwriter) 插件
 
 ## 配置样例
 

@@ -7,23 +7,20 @@ Excel Writer 实现了将数据写入到 Excel 文件的功能
 我们假定从内存读取数据，并写入到 Excel 文件中
 
 <<<@/public/assets/jobs/excelwriter.json
+
 讲上述内容保存为 `job/stream2excel.json`
 
 执行下面的命令：
 
-````bash
+```bash
 bin/addax.sh job/stream2excel.sh
-
+```
 
 应该得到类似如下的输出
 
-<details>
-<summary>点击展开</summary>
-
-```bash
+:::details
 <<<@/public/assets/output/excelwriter.txt
-
-</details>
+:::
 
 ## 参数说明
 
@@ -49,4 +46,4 @@ bin/addax.sh job/stream2excel.sh
 2. 如果指定的目录下有同名文件，当前会被覆盖，后续会统一处理目标目录的问题
 3. 当前日期格式的数据，设置单元格样式为 `yyyy-MM-dd HH:mm:ss`，且不能定制
 4. 不支持二进制类型的数据写入
-````
+

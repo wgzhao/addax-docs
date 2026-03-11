@@ -44,7 +44,6 @@
 
 创建如下 json 文件
 
-=== "excel2stream.json"
 
 <<<@/public/assets/jobs/excelreader.json
 
@@ -58,6 +57,7 @@ $ bin/addax.sh job/excel2stream.json
 
 :::details
 <<<@/public/assets/output/excelreader.txt
+:::
 
 ## 参数说明
 

@@ -135,8 +135,10 @@ Column必须显示填写，不允许为空！
 如果有多个字段符合要求，则优先使用数字类型的字段，其次使用字符类型的字段。如果没有符合要求的字段，则不切分表。
 如果配置了 `autoPk`，则任务执行时，有类似如下的日志输出:
 
+```
 2025-04-13 23:17:11.036 [ job-0] INFO CommonRdbmsReader$Job - The split key is not configured, try to guess the split key.
 2025-04-13 23:17:11.059 [       job-0] INFO  CommonRdbmsReader$Job - Take the field id as split key
+```
 
 该特性目前支持的数据库有：
 
@@ -148,7 +150,9 @@ Column必须显示填写，不允许为空！
 - SQLite
 - Sybase ASE
 
-⚠️ 注意，如果同时配置了 `splitPk` 和 `autoPk` ，则 `splitPk` 优先级更高，`autoPk` 将被忽略。
+::: warning
+注意，如果同时配置了 `splitPk` 和 `autoPk` ，则 `splitPk` 优先级更高，`autoPk` 将被忽略。
+:::
 
 ### session
 

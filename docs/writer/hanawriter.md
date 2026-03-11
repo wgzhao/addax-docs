@@ -6,6 +6,7 @@ HANA Writer 插件实现了写入数据到 [SAP HANA](https://www.sap.com/produc
 
 假定要写入的 HANA 表建表语句如下：
 
+```sql
 create table system.addax_tbl
 (
 col1 varchar(200) ,
@@ -14,10 +15,12 @@ col3 date,
 col4 boolean,
 col5 clob
 );
+```
 
 这里使用一份从内存产生到 HANA 导入的数据。
 
 <<<@/public/assets/jobs/hanawriter.json
+
 将上述配置文件保存为 `job/hana2stream.json`
 
 ### 执行采集命令
@@ -26,10 +29,8 @@ col5 clob
 
 ```bash
 bin/addax.sh job/hana2stream.json
+```
 
 ## 参数说明
 
-该插件基于 [RDBMS Writer](../rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项。
-
-
-```
+该插件基于 [RDBMS Writer](rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项。

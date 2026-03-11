@@ -25,10 +25,11 @@
 bin/addax.sh job/clickhouse2stream.json
 ```
 
-其输出信息如下（删除了非关键信息)
+其输出信息如下(删除了非关键信息)
 
 :::details
 <<<@/public/assets/output/clickhousereader.txt
+:::
 
 ## 参数说明
 

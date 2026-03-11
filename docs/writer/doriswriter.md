@@ -4,23 +4,24 @@ DorisWriter 插件用于向 [Doris](http://doris.incubator.apache.org/master/zh-
 Doris http 连接(8030)，然后通过 [stream load](http://doris.incubator.apache.org/master/zh-CN/administrator-guide/load-data/stream-load-manual.html)
 加载数据到数据中，相比 `insert into` 方式效率要高不少，也是官方推荐的生产环境下的数据加载方式。
 
-Doris 是一个兼容 MySQL 协议的数据库后端，因此 Doris 读取可以使用 [MySQL Reader](../../reader/mysqlreader) 进行访问。
+Doris 是一个兼容 MySQL 协议的数据库后端，因此 Doris 读取可以使用 [MySQL Reader](mysqlreader) 进行访问。
 
 ## 示例
 
 假定要写入的表的建表语句如下：
 
-CREATE
-DATABASE example_db;
+```sql
+CREATE DATABASE example_db;
 CREATE TABLE example_db.table1
 (
-siteid INT DEFAULT '10',
-citycode SMALLINT,
-username VARCHAR(32) DEFAULT '',
-pv BIGINT SUM DEFAULT '0'
+  siteid INT DEFAULT '10',
+  citycode SMALLINT,
+  username VARCHAR(32) DEFAULT '',
+  pv BIGINT SUM DEFAULT '0'
 ) AGGREGATE KEY(siteid, citycode, username)
 DISTRIBUTED BY HASH(siteid) BUCKETS 10
 PROPERTIES("replication_num" = "1");
+```
 
 下面配置一个从内存读取数据，然后写入到 doris 表的配置文件
 
@@ -29,14 +30,15 @@ PROPERTIES("replication_num" = "1");
 
 执行下面的命令
 
-````bash
+```bash
 bin/addax.sh job/stream2doris.json
+```
 
 输出类似如下：
 
-
+:::details
 <<<@/public/assets/output/doriswriter.txt
-
+:::
 
 ## 参数说明
 
@@ -54,7 +56,7 @@ bin/addax.sh job/stream2doris.json
 | preSql           |    否    | list   |        | 写入数据到目标表前要执行的 SQL 语句                                |
 | postSql          |    否    | list   |        | 数据写完后要执行的 SQL 语句                                        |
 
-[1]: ../rdbmswriter
+[1]: ./rdbmswriter
 [2]: https://github.com/apache/doris-streamloader/tree/master
 
 ## loadUrl
@@ -95,4 +97,4 @@ StreamLoad 的请求参数，详情参照StreamLoad介绍页面。[Stream load -
     "strip_outer_array": true
   }
 }
-```
+``
