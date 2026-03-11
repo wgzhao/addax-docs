@@ -10,40 +10,30 @@ Postgresql Writer 插件实现了写入数据到 [PostgreSQL](https://postgresql
 
 假定建表语句以及输入插入语句如下：
 
-```sql
---8<-- "sql/postgresql.sql"
-```
+<<<@/public/assets/sql/postgresql.sql
 
 创建需要插入的表的语句如下:
 
-```sql
-create table addax_tbl1 as select * from  addax_tbl where 1=2;
-```
+create table addax_tbl1 as select \* from addax_tbl where 1=2;
 
 ### 任务配置
 
 以下是配置文件
 
-=== "job/pg2pg.json"
-
-```json
---8<-- "jobs/pgwriter.json"
-```
-
+<<<@/public/assets/jobs/pgwriter.json
 将上述配置文件保存为 `job/pg2pg.json`
 
 ### 执行采集命令
 
 执行以下命令进行数据采集
 
-```shell
+```bash
 bin/addax.sh job/pg2pg.json
 ```
 
 ## 参数说明
 
 该插件基于 [RDBMS Writer](../rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项。
-
 
 ### writeMode
 

@@ -18,24 +18,22 @@ To solve the problem of heterogeneous data source synchronization, Addax transfo
 
 ## Framework Design
 
-```mermaid
+mermaid
 graph LR
 MySQL
 subgraph Addax
-	direction LR
-	subgraph reader["Reader Plugin"]
-		mr["MySQLReader"]
-	end
-	subgraph writer["Writer Plugin"]
-	hw["HDFSWriter"]
-	end
-	Framework
-	mr --> Framework --> writer
+direction LR
+subgraph reader["Reader Plugin"]
+mr["MySQLReader"]
+end
+subgraph writer["Writer Plugin"]
+hw["HDFSWriter"]
+end
+Framework
+mr --> Framework --> writer
 end
 
 MySQL ==> Addax ==> HDFS
-
-```
 
 Addax serves as an offline data synchronization framework, built with a Framework + plugin architecture. It abstracts data source reading and writing into Reader/Writer plugins, which are integrated into the entire synchronization framework.
 
@@ -49,57 +47,56 @@ Addax Framework provides simple interfaces for plugin interaction and a simple p
 
 This section uses a sequence diagram of an Addax job lifecycle to briefly explain the relationships between various modules from an overall architectural design perspective.
 
-```mermaid
+mermaid
 graph TB
 subgraph Job
 end
 subgraph task
-  direction TB
-  t1["Task"]
-  t2["Task"]
-  t3["Task"]
-  t4["Task"]
-  t5["Task"]
-  t6["Task"]
+direction TB
+t1["Task"]
+t2["Task"]
+t3["Task"]
+t4["Task"]
+t5["Task"]
+t6["Task"]
 end
 subgraph taskgroup[" "]
-	direction TB
-  subgraph tg1["TaskGroup"]
-    subgraph tg1_Task["Task"]
-      tg1_r["Reader"]
-      tg1_c["Channel"]
-      tg1_w["Writer"]
-    end
-    t7["Task"]
-    t8["Task"]
-  end
+direction TB
+subgraph tg1["TaskGroup"]
+subgraph tg1_Task["Task"]
+tg1_r["Reader"]
+tg1_c["Channel"]
+tg1_w["Writer"]
+end
+t7["Task"]
+t8["Task"]
+end
 
-  subgraph tg2["TaskGroup"]
-    subgraph tg2_Task["Task"]
-      direction LR
-      tg2_r["Reader"]
-      tg2_c["Channel"]
-      tg2_w["Writer"]
-    end
-    t9["Task"]
-    t10["Task"]
-  end
+subgraph tg2["TaskGroup"]
+subgraph tg2_Task["Task"]
+direction LR
+tg2_r["Reader"]
+tg2_c["Channel"]
+tg2_w["Writer"]
+end
+t9["Task"]
+t10["Task"]
+end
 
-  subgraph tg3["TaskGroup"]
-    direction LR
-    subgraph tg3_Task["Task"]
-      tg3_r["Reader"]
-      tg3_c["Channel"]
-      tg3_w["Writer"]
-    end
-    t11["Task"]
-    t12["Task"]
-  end
+subgraph tg3["TaskGroup"]
+direction LR
+subgraph tg3_Task["Task"]
+tg3_r["Reader"]
+tg3_c["Channel"]
+tg3_w["Writer"]
+end
+t11["Task"]
+t12["Task"]
+end
 end
 
 Job == split ==> task
 task == Schedule ==> taskgroup
-```
 
 ### Core Module Introduction
 
@@ -149,7 +146,7 @@ Provides three flow control modes including channel (concurrency), record flow, 
     "record": 10000
   }
 }
-```
+
 
 ### Strong Synchronization Performance
 
@@ -160,3 +157,4 @@ When both source and destination performance are sufficient, a single job can de
 
 Jobs are extremely susceptible to interference from external factors, and factors such as network interruptions and unstable data sources can easily cause synchronization jobs to report errors and stop halfway. Therefore, stability is a basic requirement for Addax. In the design of Addax, the stability of both framework and plugins has been improved.
 Currently, Addax can achieve multi-level local/global retries at the thread level and job level, ensuring stable operation of user jobs.
+```

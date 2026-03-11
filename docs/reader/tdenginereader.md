@@ -8,7 +8,7 @@ TDengine Reader 插件用于从涛思公司的 [TDengine](https://www.taosdata.c
 
 首先将 `plugin/reader/tdenginereader/libs/libtaos.so.2.0.16.0` 拷贝到 `/usr/lib64` 目录，然后执行下面的命令创建软链接
 
-```shell
+```bash
 ln -sf /usr/lib64/libtaos.so.2.0.16.0 /usr/lib64/libtaos.so.1
 ln -sf /usr/lib64/libtaos.so.1 /usr/lib64/libtaos.so
 ```
@@ -19,42 +19,38 @@ TDengine 数据自带了一个演示数据库 [taosdemo](https://www.taosdata.co
 
 以下是配置文件
 
-=== "job/tdengine2stream.json"
+<<<@/public/assets/jobs/tdenginereader.json
 
-  ```json
-  --8<-- "jobs/tdenginereader.json"
-  ```
-
-将上述配置文件保存为   `job/tdengine2stream.json`
+将上述配置文件保存为 `job/tdengine2stream.json`
 
 ### 执行采集命令
 
 执行以下命令进行数据采集
 
-```shell
+```bash
 bin/addax.sh job/tdengine2stream.json
 ```
 
 命令输出类似如下：
 
-```
---8<-- "output/tdenginereader.txt"
-```
+::: details
+
+<<<@/public/assets/output/tdenginereader.txt
 
 ## 参数说明
 
-| 配置项          | 是否必须 | 类型       | 默认值 |         描述   |
-| :-------------- | :------: | ------ |------------- |--------------|
-| jdbcUrl         |    是    | list | 无     | 对端数据库的JDBC连接信息，注意这里的 `TAOS` 必须大写 |
-| username        |    是    | string | 无     | 数据源的用户名 |
-| password        |    否    | string | 无     | 数据源指定用户名的密码 |
-| table           |    是    | list | 无     | 所选取的需要同步的表名,使用JSON数据格式，当配置为多张表时，用户自己需保证多张表是同一表结构 |
-| column          |    是    | list | 无     |  所配置的表中需要同步的列名集合，详细描述[rdbmreader](../rdbmsreader) |
-| where           |    否    | string | 无     | 针对表的筛选条件 |
-| querySql        |    否    | list | 无     | 使用自定义的SQL而不是指定表来获取数据，当配置了这一项之后，Addax系统就会忽略 `table`，`column`这些配置项 |
-| beginDateTime   |    是    | string | 无    | 数据的开始时间，Job迁移从 `begineDateTime` 到 `endDateTime` 的数据，格式为 `yyyy-MM-dd HH:mm:ss` |
-| endDateTime     |    是    | string | 无    | 数据的结束时间，Job迁移从 `begineDateTime` 到 `endDateTime` 的数据，格式为 `yyyy-MM-dd HH:mm:ss` |
-| splitInterval   |    是    | string | 无   | 按照 `splitInterval` 来划分 `task`, 每 `splitInterval` 创建一个 `task` |
+| 配置项        | 是否必须 | 类型   | 默认值 | 描述                                                                                                     |
+| :------------ | :------: | ------ | ------ | -------------------------------------------------------------------------------------------------------- |
+| jdbcUrl       |    是    | list   | 无     | 对端数据库的JDBC连接信息，注意这里的 `TAOS` 必须大写                                                     |
+| username      |    是    | string | 无     | 数据源的用户名                                                                                           |
+| password      |    否    | string | 无     | 数据源指定用户名的密码                                                                                   |
+| table         |    是    | list   | 无     | 所选取的需要同步的表名,使用JSON数据格式，当配置为多张表时，用户自己需保证多张表是同一表结构              |
+| column        |    是    | list   | 无     | 所配置的表中需要同步的列名集合，详细描述[rdbmreader](../rdbmsreader)                                     |
+| where         |    否    | string | 无     | 针对表的筛选条件                                                                                         |
+| querySql      |    否    | list   | 无     | 使用自定义的SQL而不是指定表来获取数据，当配置了这一项之后，Addax系统就会忽略 `table`，`column`这些配置项 |
+| beginDateTime |    是    | string | 无     | 数据的开始时间，Job迁移从 `begineDateTime` 到 `endDateTime` 的数据，格式为 `yyyy-MM-dd HH:mm:ss`         |
+| endDateTime   |    是    | string | 无     | 数据的结束时间，Job迁移从 `begineDateTime` 到 `endDateTime` 的数据，格式为 `yyyy-MM-dd HH:mm:ss`         |
+| splitInterval |    是    | string | 无     | 按照 `splitInterval` 来划分 `task`, 每 `splitInterval` 创建一个 `task`                                   |
 
 ### splitInterval
 
@@ -82,9 +78,7 @@ bin/addax.sh job/tdengine2stream.json
       "querySql": [
         "select * from test.meters where ts <'2017-07-14 10:40:02' and  loc='beijing' limit 100"
       ],
-      "jdbcUrl": [
-        "jdbc:TAOS-RS://127.0.0.1:6041/test"
-      ],
+      "jdbcUrl": ["jdbc:TAOS-RS://127.0.0.1:6041/test"],
       "driver": "com.taosdata.jdbc.rs.RestfulDriver"
     }
   ]

@@ -41,9 +41,7 @@ The following lists common databases and their corresponding driver names:
 
 Configure a job to write to RDBMS.
 
-```json
---8<-- "jobs/rdbmswriter.json"
-```
+<<<@/public/assets/jobs/rdbmswriter.json
 
 ## Parameters
 

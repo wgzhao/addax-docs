@@ -6,7 +6,7 @@ SQLite Reader plugin is used to read sqlite files in a specified directory. It i
 
 We create an example file:
 
-```shell
+```bash
 $ sqlite3  /tmp/test.sqlite3
 SQLite version 3.7.17 2013-05-20 00:56:22
 Enter ".help" for instructions
@@ -18,11 +18,7 @@ sqlite> .q
 
 The following configuration reads this table to terminal:
 
-=== "job/sqlite2stream.json"
-
-  ```json
-  --8<-- "jobs/sqlitereader.json"
-  ```
+<<<@/public/assets/jobs/sqlitereader.json
 
 Save the above configuration file as `job/sqlite2stream.json`
 
@@ -30,7 +26,7 @@ Save the above configuration file as `job/sqlite2stream.json`
 
 Execute the following command for data collection
 
-```shell
+```bash
 bin/addax.sh job/sqlite2stream.json
 ```
 

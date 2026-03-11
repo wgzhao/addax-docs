@@ -10,33 +10,24 @@ The following configuration demonstrates reading data from a specified PostgreSQ
 
 Assume the table creation statement and input insertion statement are as follows:
 
-```sql
---8<-- "sql/postgresql.sql"
-```
+<<<@/public/assets/sql/postgresql.sql
 
 The statement to create the table to be inserted is as follows:
 
-```sql
-create table addax_tbl1 as select * from  addax_tbl where 1=2;
-```
+create table addax_tbl1 as select \* from addax_tbl where 1=2;
 
 ### Task Configuration
 
 The following is the configuration file
 
-=== "job/pg2pg.json"
-
-```json
---8<-- "jobs/pgwriter.json"
-```
-
+<<<@/public/assets/jobs/pgwriter.json
 Save the above configuration file as `job/pg2pg.json`
 
 ### Execute Collection Command
 
 Execute the following command for data collection
 
-```shell
+```bash
 bin/addax.sh job/pg2pg.json
 ```
 
@@ -68,8 +59,8 @@ The following lists PostgresqlWriter's type conversion list for PostgreSQL:
 
 | Addax Internal Type | PostgreSQL Data Type                                      |
 | ------------------- | --------------------------------------------------------- |
-| Long                | bigint, bigserial, integer, smallint, serial             |
-| Double              | double precision, money, numeric, real                   |
+| Long                | bigint, bigserial, integer, smallint, serial              |
+| Double              | double precision, money, numeric, real                    |
 | String              | varchar, char, text, bit, inet,cidr,macaddr,uuid,xml,json |
 | Date                | date, time, timestamp                                     |
 | Boolean             | bool                                                      |

@@ -12,11 +12,7 @@ create table tbl_test(name varchar(20), file_size int, file_date date, file_open
 
 这里使用一份从内存产生到 Access 导入的数据。
 
-=== "job/stream2access.json"
-
-    ```json
-    --8<-- "jobs/accesswriter.json"
-    ```
+<<<@/public/assets/jobs/accesswriter.json
 
 将上述配置文件保存为 `job/stream2access.json`
 

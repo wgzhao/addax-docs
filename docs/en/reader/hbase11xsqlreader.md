@@ -8,26 +8,27 @@ Configure a job to synchronize and extract data from Phoenix to local:
 
 ```json
 {
-    "job": {
-        "setting": {
-            "speed": {
-                "byte":-1,
-              "channel": 1
-            }
-        },
-        "content": [ {
-                "reader": {
-                    "name": "hbase11xsqlreader",
-                    "parameter": {
-                        "queryServerAddress": "http://127.0.0.1:8765",
-                        "serialization": "PROTOBUF",
-                        "table": "TEST",
-                        "column": ["ID", "NAME"]
-                    }
-                }
-            }
-        ]
-    }
+  "job": {
+    "setting": {
+      "speed": {
+        "byte": -1,
+        "channel": 1
+      }
+    },
+    "content": [
+      {
+        "reader": {
+          "name": "hbase11xsqlreader",
+          "parameter": {
+            "queryServerAddress": "http://127.0.0.1:8765",
+            "serialization": "PROTOBUF",
+            "table": "TEST",
+            "column": ["ID", "NAME"]
+          }
+        }
+      }
+    ]
+  }
 }
 ```
 

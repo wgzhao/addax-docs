@@ -6,9 +6,7 @@ Redis Writer plugin is used to write data to Redis database.
 
 This plugin provides the ability to write data to Redis database. For detailed configuration and parameters, please refer to the original Redis Writer documentation.
 
-```json
---8<-- "jobs/rediswriter.json"
-```
+<<<@/public/assets/jobs/rediswriter.json
 
 ## Parameters
 

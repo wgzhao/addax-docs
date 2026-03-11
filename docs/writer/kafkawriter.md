@@ -8,23 +8,21 @@ Kafka Writer 插件实现了将数据以 json 格式写入 Kafka 的功能。
 
 ### 创建任务文件
 
-首先创建一个任务文件  `stream2kafka.json` , 内容如下：
+首先创建一个任务文件 `stream2kafka.json` , 内容如下：
 
-```json
---8<-- "jobs/stream2kafka.json"
-```
+<<<@/public/assets/jobs/stream2kafka.json
 
 ### 运行
 
-执行  `bin/addax.sh stream2kafka.json` 命令，获得类似下面的输出：
+执行 `bin/addax.sh stream2kafka.json` 命令，获得类似下面的输出：
 
-```shell
---8<-- "output/stream2kafka.txt"
-```
+````bash
+<<<@/public/assets/output/stream2kafka.txt
+
 
 我们使用 kafka 自带的 `kafka-console-consumer.sh` 尝试读取数据，输出如下：
 
-```shell
+```bash
 $ bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-1 --from-beginning
 
 {"col8":"41.12,-71.34","col9":"2017-05-25 11:22:33","col6":"hello world","col7":"long text","col4":19890604,"col5":19890604,"col2":"1.1.1.1","col3":1.9890604E7,"col1":916}
@@ -37,7 +35,7 @@ $ bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-1
 {"col8":"41.12,-71.34","col9":"2017-05-25 11:22:33","col6":"hello world","col7":"long text","col4":19890604,"col5":19890604,"col2":"1.1.1.1","col3":1.9890604E7,"col1":103}
 {"col8":"41.12,-71.34","col9":"2017-05-25 11:22:33","col6":"hello world","col7":"long text","col4":19890604,"col5":19890604,"col2":"1.1.1.1","col3":1.9890604E7,"col1":967}
 {"col8":"41.12,-71.34","col9":"2017-05-25 11:22:33","col6":"hello world","col7":"long text","col4":19890604,"col5":19890604,"col2":"1.1.1.1","col3":1.9890604E7,"col1":147}
-```
+
 
 ## 参数说明
 
@@ -53,3 +51,4 @@ $ bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-1
 
 1. 仅支持 Kafka `1.0` 及以上版本，低于该版本的无法确定是否能写入
 2. 当前不支持启用了 `kerberos` 认证的 kafka 服务
+````

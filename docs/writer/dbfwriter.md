@@ -4,15 +4,13 @@ Dbf Writer 提供了向本地文件写入类dbf格式的一个或者多个表文
 
 ## 配置样例
 
-```json
---8<-- "jobs/dbfwriter.json"
-```
+<<<@/public/assets/jobs/dbfwriter.json
 
 ## 参数说明
 
 | 配置项     | 是否必须 | 数据类型    | 默认值 | 描述                                                      |
 | :--------- | :------: | ----------- | ------ | --------------------------------------------------------- |
-| path       |    是    | string      | 无     | 文件目录，注意这里是文件夹，不是文件                   |
+| path       |    是    | string      | 无     | 文件目录，注意这里是文件夹，不是文件                      |
 | column     |    是    | `list<map>` | 无     | 所配置的表中需要同步的列集合，详见示例配置                |
 | fileName   |    是    | string      | 无     | 写入的文件名                                              |
 | writeMode  |    是    | string      | 无     | 写入前数据清理处理模式，详见下面描述                      |
@@ -32,13 +30,13 @@ Dbf Writer 提供了向本地文件写入类dbf格式的一个或者多个表文
 
 当前该插件支持写入的类型以及对应关系如下：
 
-| XBase Type    | XBase Symbol | Java Type used in JavaDBF |
-|------------   | ------------ | ---------------------------
-|Character      | C            | java.lang.String          |
-|Numeric        | N            | java.math.BigDecimal      |
-|Floating Point | F            | java.math.BigDecimal      |
-|Logical        | L            | java.lang.Boolean         |
-|Date           | D            | java.util.Date            |
+| XBase Type     | XBase Symbol | Java Type used in JavaDBF |
+| -------------- | ------------ | ------------------------- |
+| Character      | C            | java.lang.String          |
+| Numeric        | N            | java.math.BigDecimal      |
+| Floating Point | F            | java.math.BigDecimal      |
+| Logical        | L            | java.lang.Boolean         |
+| Date           | D            | java.util.Date            |
 
 其中：
 

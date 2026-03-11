@@ -10,25 +10,17 @@ The following example demonstrates reading content from one table in ClickHouse 
 
 Assume the table structure and data to be read are as follows:
 
-```sql
---8<-- "sql/clickhouse.sql"
-```
+<<<@/public/assets/sql/clickhouse.sql
 
 The table to be written uses the same structure as the read table, with the following DDL statement:
 
-```sql
 create table ck_addax_writer as ck_addax;
-```
 
 ## Configuration
 
 The following is the configuration file
 
-=== "job/clickhouse2clickhouse.json"
-
-  ```json
-  --8<-- "jobs/clickhousewriter.json"
-  ```
+<<<@/public/assets/jobs/clickhousewriter.json
 
 Save the above configuration file as `job/clickhouse2clickhouse.json`
 
@@ -36,7 +28,7 @@ Save the above configuration file as `job/clickhouse2clickhouse.json`
 
 Execute the following command for data collection
 
-```shell
+```bash
 bin/addax.sh job/clickhouse2clickhouse.json
 ```
 

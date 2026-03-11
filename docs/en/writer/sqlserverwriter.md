@@ -6,9 +6,7 @@ SQLServer Writer plugin implements the functionality of writing data to [SQL Ser
 
 Here we use data generated from memory to import into SQL Server.
 
-```json
---8<-- "jobs/sqlserverwriter.json"
-```
+<<<@/public/assets/jobs/sqlserverwriter.json
 
 ## Parameters
 

@@ -4,21 +4,17 @@ Iceberg Writer 提供向 已有的iceberg表写入数据的能力。
 
 ## 配置样例
 
-```json
---8<-- "jobs/icebergwriter.json"
-```
+<<<@/public/assets/jobs/icebergwriter.json
 
 ## 参数说明
 
-| 配置项          | 是否必须 | 数据类型   | 默认值 | 说明                                              |
-|:-------------|:----:|--------|----|-------------------------------------------------|
-| tableName    |  是   | string | 无  | 要写入的iceberg表名                                   |
-| catalogType  |  是   | string   | 无 | catalog类型, 目前支持 hive,hadoop                     |
-| warehouse    |  是   | string   | 无 | 仓库地址                                            |
-| writeMode    |  是   | string | 无  | 写入模式，详述见下                                       |
-| hadoopConfig |  是   | json   | {} | 里可以配置与 Iceberg catalog和Hadoop 相关的一些高级参数，比如HA的配置 |
-
-
+| 配置项       | 是否必须 | 数据类型 | 默认值 | 说明                                                                  |
+| :----------- | :------: | -------- | ------ | --------------------------------------------------------------------- |
+| tableName    |    是    | string   | 无     | 要写入的iceberg表名                                                   |
+| catalogType  |    是    | string   | 无     | catalog类型, 目前支持 hive,hadoop                                     |
+| warehouse    |    是    | string   | 无     | 仓库地址                                                              |
+| writeMode    |    是    | string   | 无     | 写入模式，详述见下                                                    |
+| hadoopConfig |    是    | json     | {}     | 里可以配置与 Iceberg catalog和Hadoop 相关的一些高级参数，比如HA的配置 |
 
 ### writeMode
 
@@ -37,9 +33,9 @@ Iceberg Writer 提供向 已有的iceberg表写入数据的能力。
 
 build.gradle
 
-```groovy
+groovy
 plugins {
-    id 'java'
+id 'java'
 }
 
 group = 'com.awol2005ex'
@@ -49,26 +45,26 @@ ext["hive_version"] = "3.1.3"
 ext["woodstox_version"] = "7.0.0"
 ext["iceberg_version"] = "1.8.0"
 repositories {
-    maven { url "https://maven.aliyun.com/repository/central" }
-    maven { url "https://maven.aliyun.com/repository/public" }
-    maven {
-        url 'https://repo.huaweicloud.com/repository/maven/'
-    }
-    maven {
-        url 'https://repo.spring.io/libs-milestone/'
-    }
-
+maven { url "https://maven.aliyun.com/repository/central" }
+maven { url "https://maven.aliyun.com/repository/public" }
+maven {
+url 'https://repo.huaweicloud.com/repository/maven/'
+}
+maven {
+url 'https://repo.spring.io/libs-milestone/'
+}
 
     maven {
         url 'https://repo.spring.io/libs-snapshot'
     }
     mavenCentral()
+
 }
 
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    implementation("org.apache.hadoop:hadoop-common:${hadoop_version}") {
+testImplementation platform('org.junit:junit-bom:5.10.0')
+testImplementation 'org.junit.jupiter:junit-jupiter'
+implementation("org.apache.hadoop:hadoop-common:${hadoop_version}") {
         exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
         exclude group: 'org.codehaus.jackson', module: 'jackson-core-asl'
         exclude group: 'org.codehaus.jackson', module: 'jackson-mapper-asl'
@@ -85,22 +81,22 @@ dependencies {
         exclude group: 'org.eclipse.jetty', module: 'jetty-util'
     }
     implementation("org.apache.hadoop:hadoop-aws:${hadoop_version}") {
-        exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
-        exclude group: 'org.codehaus.jackson', module: 'jackson-core-asl'
-        exclude group: 'org.codehaus.jackson', module: 'jackson-mapper-asl'
-        exclude group: 'com.fasterxml.woodstox', module: 'woodstox-core'
-        exclude group: 'commons-codec', module: 'commons-codec'
-        exclude group: 'commons-net', module: 'commons-net'
-        exclude group: 'io.netty', module: 'netty'
-        exclude group: 'log4j', module: 'log4j'
-        exclude group: 'net.minidev', module: 'json-smart'
-        exclude group: 'org.codehaus.jettison', module: 'jettison'
-        exclude group: 'org.eclipse.jetty', module: 'jetty-server'
-        exclude group: 'org.xerial.snappy', module: 'snappy-java'
-        exclude group: 'org.apache.zookeeper', module: 'zookeeper'
-        exclude group: 'org.eclipse.jetty', module: 'jetty-util'
-    }
-    implementation("org.apache.hadoop:hadoop-mapreduce-client-core:${hadoop_version}") {
+exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
+exclude group: 'org.codehaus.jackson', module: 'jackson-core-asl'
+exclude group: 'org.codehaus.jackson', module: 'jackson-mapper-asl'
+exclude group: 'com.fasterxml.woodstox', module: 'woodstox-core'
+exclude group: 'commons-codec', module: 'commons-codec'
+exclude group: 'commons-net', module: 'commons-net'
+exclude group: 'io.netty', module: 'netty'
+exclude group: 'log4j', module: 'log4j'
+exclude group: 'net.minidev', module: 'json-smart'
+exclude group: 'org.codehaus.jettison', module: 'jettison'
+exclude group: 'org.eclipse.jetty', module: 'jetty-server'
+exclude group: 'org.xerial.snappy', module: 'snappy-java'
+exclude group: 'org.apache.zookeeper', module: 'zookeeper'
+exclude group: 'org.eclipse.jetty', module: 'jetty-util'
+}
+implementation("org.apache.hadoop:hadoop-mapreduce-client-core:${hadoop_version}") {
         exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
         exclude group: 'org.codehaus.jackson', module: 'jackson-core-asl'
         exclude group: 'org.codehaus.jackson', module: 'jackson-mapper-asl'
@@ -117,22 +113,22 @@ dependencies {
         exclude group: 'org.eclipse.jetty', module: 'jetty-util'
     }
     implementation("org.apache.hive:hive-metastore:${hive_version}"){
-        exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
-        exclude group: 'org.codehaus.jackson', module: 'jackson-core-asl'
-        exclude group: 'org.codehaus.jackson', module: 'jackson-mapper-asl'
-        exclude group: 'com.fasterxml.woodstox', module: 'woodstox-core'
-        exclude group: 'commons-codec', module: 'commons-codec'
-        exclude group: 'commons-net', module: 'commons-net'
-        exclude group: 'io.netty', module: 'netty'
-        exclude group: 'log4j', module: 'log4j'
-        exclude group: 'net.minidev', module: 'json-smart'
-        exclude group: 'org.codehaus.jettison', module: 'jettison'
-        exclude group: 'org.eclipse.jetty', module: 'jetty-server'
-        exclude group: 'org.xerial.snappy', module: 'snappy-java'
-        exclude group: 'org.apache.zookeeper', module: 'zookeeper'
-        exclude group: 'org.eclipse.jetty', module: 'jetty-util'
-    }
-    implementation("com.fasterxml.woodstox:woodstox-core:${woodstox_version}")
+exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
+exclude group: 'org.codehaus.jackson', module: 'jackson-core-asl'
+exclude group: 'org.codehaus.jackson', module: 'jackson-mapper-asl'
+exclude group: 'com.fasterxml.woodstox', module: 'woodstox-core'
+exclude group: 'commons-codec', module: 'commons-codec'
+exclude group: 'commons-net', module: 'commons-net'
+exclude group: 'io.netty', module: 'netty'
+exclude group: 'log4j', module: 'log4j'
+exclude group: 'net.minidev', module: 'json-smart'
+exclude group: 'org.codehaus.jettison', module: 'jettison'
+exclude group: 'org.eclipse.jetty', module: 'jetty-server'
+exclude group: 'org.xerial.snappy', module: 'snappy-java'
+exclude group: 'org.apache.zookeeper', module: 'zookeeper'
+exclude group: 'org.eclipse.jetty', module: 'jetty-util'
+}
+implementation("com.fasterxml.woodstox:woodstox-core:${woodstox_version}")
 
     implementation("org.apache.iceberg:iceberg-common:${iceberg_version}")
     implementation("org.apache.iceberg:iceberg-api:${iceberg_version}")
@@ -142,16 +138,17 @@ dependencies {
     implementation("org.apache.iceberg:iceberg-parquet:${iceberg_version}")
     implementation("org.apache.iceberg:iceberg-orc:${iceberg_version}")
     implementation("org.apache.iceberg:iceberg-hive-metastore:${iceberg_version}")
+
 }
 
 test {
-    useJUnitPlatform()
+useJUnitPlatform()
 }
-```
 
 创建存储在minio,catalogType是hadoop的iceberg表
 
-```java
+```bash
+java
 package com.test;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.iceberg.hadoop.HadoopCatalog;
@@ -189,10 +186,10 @@ public class CreateMinioTable {
     }
 }
 
-```
+
 
 创建存储在hdfs,catalogType是hadoop的iceberg表
-```java
+java
 package com.test;
 
 import org.apache.hadoop.conf.Configuration;
@@ -266,10 +263,10 @@ public class CreateHdfsTable {
         catalog.close();
     }
 }
-```
+
 创建hive表
 
-```java
+java
 package com.test;
 
 import org.apache.hadoop.conf.Configuration;
@@ -351,14 +348,14 @@ public class CreateHiveTable {
 }
 
 
-```
+
 
 
 
 Spark 或者 flink 环境创建表
 
-```sql
-CREATE TABLE if not exists test1.test1_iceberg1 USING ICEBERG 
+
+CREATE TABLE if not exists test1.test1_iceberg1 USING ICEBERG
   TBLPROPERTIES(
      'format-version'='2',
      'write.metadata.delete-after-commit.enabled'=true,
@@ -367,9 +364,12 @@ CREATE TABLE if not exists test1.test1_iceberg1 USING ICEBERG
   )
   as select * from test1.test1 limit 0;
 
+
+
 ```
 
 s3 或者 minio hadoop catalog例子
+
 ```json
 {
   "job": {
@@ -414,6 +414,8 @@ s3 或者 minio hadoop catalog例子
             "warehouse": "s3a://pvc-91d1e2cd-4d25-45c9-8613-6c4f7bf0a4cc/iceberg",
             "hadoopConfig": {
 
+```
+
               "fs.s3a.endpoint": "http://localhost:9000",
               "fs.s3a.access.key": "gy0dX5lALP176g6c9fYf",
               "fs.s3a.secret.key": "ReuUrCzzu5wKWAegtswoHIWV389BYl9AB1ZQbiKr",
@@ -425,9 +427,12 @@ s3 或者 minio hadoop catalog例子
         }
       }
     ]
-  }
+
 }
-```
+}
+
+````
+
 
 
 hdfs hadoop catalog例子
@@ -505,8 +510,7 @@ hdfs hadoop catalog例子
     ]
   }
 }
-```
-
+````
 
 hive catalog例子
 
@@ -529,9 +533,7 @@ hive catalog例子
           "parameter": {
             "username": "root",
             "password": "root",
-            "column": [
-              "*"
-            ],
+            "column": ["*"],
             "connection": [
               {
                 "querySql": [
@@ -553,8 +555,8 @@ hive catalog例子
             "catalogType": "hive",
             "uri": "thrift://nn1:9083,thrift://nn2:9083",
             "warehouse": "/warehouse/tablespace/managed/hive",
-            "kerberosKeytabFilePath":"/tmp/hive@XXX.COM.keytab",
-            "kerberosPrincipal":"hive@XXX.COM",
+            "kerberosKeytabFilePath": "/tmp/hive@XXX.COM.keytab",
+            "kerberosPrincipal": "hive@XXX.COM",
             "hadoopConfig": {
               "fs.defaultFS": "hdfs://nameservice1",
               "hadoop.security.authentication": "kerberos",
@@ -577,10 +579,10 @@ hive catalog例子
               "dfs.balancer.keytab.file": "/tmp/hdfs@XXX.COM.keytab",
               "dfs.balancer.keytab.enabled": "true",
               "dfs.balancer.kerberos.principal": "hdfs/_HOST@XXX.COM",
-              "hive.metastore.uris":"thrift://nn1:9083,thrift://nn2:9083",
-              "hive.server2.authentication":"kerberos",
-              "hive.metastore.kerberos.principal":"hive/_HOST@XXX.COM",
-              "hive.metastore.sasl.enabled":"true"
+              "hive.metastore.uris": "thrift://nn1:9083,thrift://nn2:9083",
+              "hive.server2.authentication": "kerberos",
+              "hive.metastore.kerberos.principal": "hive/_HOST@XXX.COM",
+              "hive.metastore.sasl.enabled": "true"
             }
           }
         }
@@ -590,29 +592,29 @@ hive catalog例子
 }
 ```
 
-
 ## 类型转换
 
-| Addax 内部类型                   | Iceberg 数据类型 |
-|------------------------------|--------------|
-| Integer                      | INTEGER      |
-| Long                         | LONG         |
-| Double                       | DOUBLE       |
-| Float                        | FLOAT        |
-| Decimal                      | DECIMAL      |
-| String                       | STRING       |
-| Boolean                      | BOOLEAN      |
-| Date                         | DATE         |
-| TIMESTAMP                    | TIMESTAMP    |
-| Bytes                        | BINARY       |
-| STRING(逗号分隔如'a,b,c')      | ARRAY        |
-| STRING(json格式如'{"a":"1"}') | MAP          |
+| Addax 内部类型                | Iceberg 数据类型 |
+| ----------------------------- | ---------------- |
+| Integer                       | INTEGER          |
+| Long                          | LONG             |
+| Double                        | DOUBLE           |
+| Float                         | FLOAT            |
+| Decimal                       | DECIMAL          |
+| String                        | STRING           |
+| Boolean                       | BOOLEAN          |
+| Date                          | DATE             |
+| TIMESTAMP                     | TIMESTAMP        |
+| Bytes                         | BINARY           |
+| STRING(逗号分隔如'a,b,c')     | ARRAY            |
+| STRING(json格式如'{"a":"1"}') | MAP              |
 
 ##插件构建
 
-```shell
+```bash
 set JAVA_HOME=E:\jdk\openlogic-openjdk-17.0.13+11-windows-x64
 mvn package install -Pdefault -Piceberg   -pl plugin/writer/icebergwriter
+
+
+
 ```
-
-

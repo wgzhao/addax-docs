@@ -10,7 +10,7 @@ TDengine Writer 插件实现了将数据写入 [TDengine](https://www.taosdata.c
 
 首先将 `plugin/writer/tdenginewriter/libs/libtaos.so.2.0.16.0` 拷贝到 `/usr/lib64` 目录，然后执行下面的命令创建软链接
 
-```shell
+```bash
 ln -sf /usr/lib64/libtaos.so.2.0.16.0 /usr/lib64/libtaos.so.1
 ln -sf /usr/lib64/libtaos.so.1 /usr/lib64/libtaos.so
 ```
@@ -32,27 +32,22 @@ create table test.addax_test (
 
 以下是配置文件
 
-=== "job/stream2tdengine.json"
+<<<@/public/assets/jobs/tdenginewriter.json
 
-  ```json
-  --8<-- "jobs/tdenginewriter.json"
-  ```
-
-将上述配置文件保存为   `job/stream2tdengine.json`
+将上述配置文件保存为 `job/stream2tdengine.json`
 
 ### 执行采集命令
 
 执行以下命令进行数据采集
 
-```shell
+```bash
 bin/addax.sh job/tdengine2stream.json
 ```
 
 命令输出类似如下：
 
-```
---8<-- "output/tdenginewriter.txt"
-```
+:::details
+<<<@/public/assets/output/tdenginewriter.txt
 
 ## 参数说明
 
@@ -73,9 +68,7 @@ bin/addax.sh job/tdengine2stream.json
   "connection": [
     {
       "jdbcUrl": "jdbc:TAOS-RS://127.0.0.1:6041/test",
-      "table": [
-        "addax_test"
-      ],
+      "table": ["addax_test"],
       "driver": "com.taosdata.jdbc.rs.RestfulDriver"
     }
   ]

@@ -14,19 +14,13 @@
 
 这里我把目前插件支持的规则全部列举到下面的例子中
 
-=== "datareader2stream.json"
-
-```json
---8<-- "jobs/datareader.json"
-```
+<<<@/public/assets/jobs/datareader.json
 
 保存上述内容到 `job/datareader2stream.json`
 
 然后执行该任务，其输出结果类似如下：
 
-```shell
---8<-- "output/datareader.txt"
-```
+<<<@/public/assets/output/datareader.txt
 
 ## 配置说明
 
@@ -96,7 +90,7 @@
 | `company`      | 随机生成一个公司的名称                     | `万迅电脑科技有限公司`                 | string   |                                                  |
 | `creditCard`   | 随机生成一个信用卡卡号                     | `430405198908214042`                   | string   | 16 位                                            |
 | `debitCard`    | 随机生成一个储蓄卡卡号                     | `6227894836568607`                     | string   | 19 位                                            |
-| `email`        | 随机生成一个电子邮件地址                       | `ok2a@gmail.com` |string||
+| `email`        | 随机生成一个电子邮件地址                   | `ok2a@gmail.com`                       | string   |                                                  |
 | `idCard`       | 随机生成一个国内身份证号码                 | `350600198508222018`                   | string   | 18 位，负责校验规则，头 6 位编码满足行政区划要求 |
 | `lat`          | 随机生成维度数据                           | `48.6648764`                           | double   | 固定 7 位小数 ，也可以用`latitude` 表示          |
 | `lng`          | 随机生成经度数据                           | `120.6018163`                          | double   | 固定 7 位小数，也可以使用`longitude` 表示        |

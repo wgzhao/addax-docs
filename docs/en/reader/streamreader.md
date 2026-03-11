@@ -4,10 +4,7 @@ Stream Reader is a plugin that reads data from memory, mainly used to quickly ge
 
 A complete StreamReader configuration file is as follows:
 
-```json
---8<-- "jobs/streamreader.json"
-```
-
+<<<@/public/assets/jobs/streamreader.json
 The above configuration file will generate 10 records (assuming channel is 1), with each record containing:
 
 `unique_id,'1989-06-04 08:12:13',1984,1989.64,true,'a long text'`
@@ -15,7 +12,7 @@ The above configuration file will generate 10 records (assuming channel is 1), w
 Currently StreamReader supports all output data types listed above:
 
 - `string` String type
-- `date` Date type  
+- `date` Date type
 - `long` All integer types
 - `double` All floating point numbers
 - `bool` Boolean type
@@ -96,6 +93,7 @@ Increment also supports date type (introduced in version `4.0.1`), for example:
 
 `incr` consists of three parts: start date, step size, and step unit, separated by English commas (,).
 
+```
 - Start date: Correct date string, default format is `yyyy-MM-dd hh:mm:ss`. If time format is different, need to configure `dateFormat` to specify date format. This is mandatory.
 - Step size: Length to increase each time, default is 1. For decreasing, fill in negative number. This is optional.
 - Step unit: What time unit to increment/decrement by, default is by day. This is optional. Available units:
@@ -108,3 +106,4 @@ Increment also supports date type (introduced in version `4.0.1`), for example:
   - w/week
 
 Configuration item `sliceRecordCount` specifies the number of data records to generate. If `channel` is specified, actual generated records = `sliceRecordCount * channel`
+```

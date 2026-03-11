@@ -6,32 +6,25 @@ SQLite Writer 插件实现了写入数据到 [SQLite](https://sqlite.org/index.h
 
 假定要写入的表如下：
 
-```sql
 create table addax_tbl
 (
-    col1 varchar(20) ,
-    col2 int(4),
-    col3 datetime,
-    col4 boolean,
-    col5 binary
+col1 varchar(20) ,
+col2 int(4),
+col3 datetime,
+col4 boolean,
+col5 binary
 );
-```
 
 这里使用一份从内存产生到 SQLite 的数据。
 
-=== "job/stream2sqlite.json"
-
-```json
---8<-- "jobs/sqlitewriter.json"
-```
-
+<<<@/public/assets/jobs/sqlitewriter.json
 将上述配置文件保存为 `job/stream2sqlite.json`
 
 ### 执行采集命令
 
 执行以下命令进行数据采集
 
-```shell
+```bash
 bin/addax.sh job/stream2sqlite.json
 ```
 

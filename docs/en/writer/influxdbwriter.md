@@ -6,9 +6,7 @@ InfluxDB Writer plugin implements writing data to InfluxDB time series database.
 
 This plugin is used to write data to InfluxDB database. For detailed configuration and parameters, please refer to the original InfluxDB Writer documentation.
 
-```json
---8<-- "jobs/influxdbwriter.json"
-```
+<<<@/public/assets/jobs/influxdbwriter.json
 
 ## Parameters
 

@@ -6,11 +6,7 @@ Oracle Writer 插件实现了写入数据到 Oracle 目的表的功能。
 
 这里使用一份从内存产生到 Oracle 导入的数据。
 
-=== "job/stream2oracle.json"
-
-  ```json
-  --8<-- "jobs/oraclewriter.json"
-  ```
+<<<@/public/assets/jobs/oraclewriter.json
 
 ## 参数说明
 
@@ -19,7 +15,6 @@ Oracle Writer 插件实现了写入数据到 Oracle 目的表的功能。
 | 配置项    | 是否必须 | 默认值 | 描述                                     |
 | :-------- | :------: | ------ | ---------------------------------------- |
 | writeMode |    否    | insert | 写入方式，支持 insert， update，详见下文 |
-
 
 ### writeMode
 
@@ -34,6 +29,3 @@ Oracle Writer 插件实现了写入数据到 Oracle 目的表的功能。
 ```json
 "writeMode": "update(col1, col2)"
 ```
-
-
-

@@ -6,20 +6,18 @@ The PostgreSQLReader plugin enables reading data from PostgreSQL databases.
 
 Create a sample table in PostgreSQL:
 
-```sql
 CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
-    email VARCHAR(100),
-    age INTEGER,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+id SERIAL PRIMARY KEY,
+username VARCHAR(50) NOT NULL,
+email VARCHAR(100),
+age INTEGER,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO users (username, email, age) VALUES 
+INSERT INTO users (username, email, age) VALUES
 ('alice', 'alice@example.com', 28),
 ('bob', 'bob@example.com', 32),
 ('charlie', 'charlie@example.com', 25);
-```
 
 Configuration to read from PostgreSQL:
 
@@ -67,32 +65,32 @@ This plugin is based on the [RDBMS Reader](rdbmsreader.md) implementation.
 
 ### Required Parameters
 
-| Parameter | Description | Required | Default |
-|-----------|-------------|----------|---------|
-| jdbcUrl | PostgreSQL JDBC connection URL | Yes | None |
-| username | Database username | Yes | None |
-| password | Database password | Yes | None |
-| table | List of tables to read from | Yes | None |
-| column | List of columns to read | Yes | None |
+| Parameter | Description                    | Required | Default |
+| --------- | ------------------------------ | -------- | ------- |
+| jdbcUrl   | PostgreSQL JDBC connection URL | Yes      | None    |
+| username  | Database username              | Yes      | None    |
+| password  | Database password              | Yes      | None    |
+| table     | List of tables to read from    | Yes      | None    |
+| column    | List of columns to read        | Yes      | None    |
 
 ### Optional Parameters
 
-| Parameter | Description | Required | Default |
-|-----------|-------------|----------|---------|
-| splitPk | Primary key for data splitting | No | None |
-| where | WHERE clause for filtering | No | None |
-| fetchSize | JDBC fetch size | No | 1024 |
+| Parameter | Description                    | Required | Default |
+| --------- | ------------------------------ | -------- | ------- |
+| splitPk   | Primary key for data splitting | No       | None    |
+| where     | WHERE clause for filtering     | No       | None    |
+| fetchSize | JDBC fetch size                | No       | 1024    |
 
 ## Data Type Mapping
 
-| PostgreSQL Type | Addax Type | Notes |
-|-----------------|------------|-------|
-| SMALLINT, INTEGER, BIGINT | long | |
-| REAL, DOUBLE PRECISION, NUMERIC | double | |
-| VARCHAR, CHAR, TEXT | string | |
-| DATE, TIME, TIMESTAMP | date | |
-| BOOLEAN | bool | |
-| BYTEA | bytes | |
+| PostgreSQL Type                 | Addax Type | Notes |
+| ------------------------------- | ---------- | ----- |
+| SMALLINT, INTEGER, BIGINT       | long       |       |
+| REAL, DOUBLE PRECISION, NUMERIC | double     |       |
+| VARCHAR, CHAR, TEXT             | string     |       |
+| DATE, TIME, TIMESTAMP           | date       |       |
+| BOOLEAN                         | bool       |       |
+| BYTEA                           | bytes      |       |
 
 ## Performance Tips
 

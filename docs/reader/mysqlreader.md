@@ -6,25 +6,19 @@ MysqlReader 插件实现了从 MySQL 读取数据的能力
 
 我们在 MySQL 的 test 库上创建如下表，并插入一条记录
 
-```sql
---8<-- "sql/mysql.sql"
-```
+<<<@/public/assets/sql/mysql.sql
 
 下面的配置是读取该表到终端的作业:
 
-=== "job/mysql2stream.json"
+<<<@/public/assets/jobs/mysqlreader.json
 
-  ```json
-  --8<-- "jobs/mysqlreader.json"
-  ```
-
-将上述配置文件保存为   `job/mysql2stream.json`
+将上述配置文件保存为 `job/mysql2stream.json`
 
 ### 执行采集命令
 
 执行以下命令进行数据采集
 
-```shell
+```bash
 bin/addax.sh job/mysql2stream.json
 ```
 
@@ -50,9 +44,9 @@ bin/addax.sh job/mysql2stream.json
 
 ## 类型转换注意事项
 
-* `tinyint(1)` 会视为整形
-* `year` 被视为整形
-* `bit` 如果是 `bit(1)` 被视为布尔类型，否则当作二进制类型
+- `tinyint(1)` 会视为整形
+- `year` 被视为整形
+- `bit` 如果是 `bit(1)` 被视为布尔类型，否则当作二进制类型
 
 ## 注意事项
 

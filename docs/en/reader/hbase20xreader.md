@@ -6,7 +6,7 @@ HBase20 Reader plugin supports reading data from HBase 2.x version. Its implemen
 
 The following demonstration is based on the table and data created below:
 
-```shell
+```bash
 create 'users', {NAME=>'address', VERSIONS=>100},{NAME=>'info',VERSIONS=>1000}
 put 'users', 'lisi', 'address:country', 'china1', 20200101
 put 'users', 'lisi', 'address:province',    'beijing1', 20200101

@@ -8,7 +8,7 @@ Note that Databend has MySQL client protocol compatible implementation, so you c
 
 We can start Databend database in the following way
 
-```shell
+```bash
 docker run  -tid  --rm  -p 8000:8000 \
    -e QUERY_DEFAULT_USER=databend \
    -e QUERY_DEFAULT_PASSWORD=databend \
@@ -31,11 +31,7 @@ And populate necessary data
 
 The following configuration reads this table to terminal:
 
-=== "job/databend2stream.json"
-
-  ```json
-  --8<-- "jobs/databend2stream.json"
-  ```
+<<<@/public/assets/jobs/databend2stream.json
 
 Save the above configuration file as `job/databend2stream.json`
 
@@ -43,7 +39,7 @@ Save the above configuration file as `job/databend2stream.json`
 
 Execute the following command for data collection
 
-```shell
+```bash
 bin/addax.sh job/databend2stream.json
 ```
 

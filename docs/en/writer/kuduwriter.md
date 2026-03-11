@@ -6,9 +6,7 @@ Kudu Writer plugin implements writing data to Apache Kudu.
 
 This plugin is used to write data to Kudu database. For detailed configuration and parameters, please refer to the original Kudu Writer documentation.
 
-```json
---8<-- "jobs/kuduwriter.json"
-```
+<<<@/public/assets/jobs/kuduwriter.json
 
 ## Parameters
 

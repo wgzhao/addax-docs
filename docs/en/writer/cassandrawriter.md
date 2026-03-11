@@ -6,28 +6,24 @@ Cassandra Writer plugin is used to write data to [Cassandra](https://cassandra.a
 
 Configure a job to import data from memory to Cassandra:
 
-=== "jobs/stream2cassandra.json"
-
-```json
---8<-- "jobs/cassandrawriter.json"
-```
+<<<@/public/assets/jobs/cassandrawriter.json
 
 ## Parameters
 
-| Configuration           | Required | Data Type | Default Value  | Description                                                  |
-| :---------------------- | :------: | --------- | -------------- | ------------------------------------------------------------ |
-| host                    | Yes      | string    | None           | Domain or IP of connection points, multiple nodes separated by commas |
-| port                    | Yes      | int       | 9042           | Cassandra port                                               |
-| username                | No       | string    | None           | Username of data source                                      |
-| password                | No       | string    | None           | Password for specified username of data source              |
-| useSSL                  | No       | boolean   | false          | Whether to use SSL connection                                |
-| connectionsPerHost      | No       | int       | 8              | Client connection pool configuration: how many connections to establish with each server node |
-| maxPendingPerConnection | No       | int       | 128            | Client connection pool configuration: maximum requests per connection |
-| keyspace                | Yes      | string    | None           | Keyspace where the table to be synchronized is located      |
-| table                   | Yes      | string    | None           | Selected table to be synchronized                            |
-| column                  | Yes      | list      | None           | Collection of columns to be synchronized in the configured table |
-| consistancyLevel        | No       | string    | `LOCAL_QUORUM` | Data consistency level                                       |
-| batchSize               | No       | int       | 1              | Number of records in one batch submission (UNLOGGED BATCH)  |
+| Configuration           | Required | Data Type | Default Value  | Description                                                                                   |
+| :---------------------- | :------: | --------- | -------------- | --------------------------------------------------------------------------------------------- |
+| host                    |   Yes    | string    | None           | Domain or IP of connection points, multiple nodes separated by commas                         |
+| port                    |   Yes    | int       | 9042           | Cassandra port                                                                                |
+| username                |    No    | string    | None           | Username of data source                                                                       |
+| password                |    No    | string    | None           | Password for specified username of data source                                                |
+| useSSL                  |    No    | boolean   | false          | Whether to use SSL connection                                                                 |
+| connectionsPerHost      |    No    | int       | 8              | Client connection pool configuration: how many connections to establish with each server node |
+| maxPendingPerConnection |    No    | int       | 128            | Client connection pool configuration: maximum requests per connection                         |
+| keyspace                |   Yes    | string    | None           | Keyspace where the table to be synchronized is located                                        |
+| table                   |   Yes    | string    | None           | Selected table to be synchronized                                                             |
+| column                  |   Yes    | list      | None           | Collection of columns to be synchronized in the configured table                              |
+| consistancyLevel        |    No    | string    | `LOCAL_QUORUM` | Data consistency level                                                                        |
+| batchSize               |    No    | int       | 1              | Number of records in one batch submission (UNLOGGED BATCH)                                    |
 
 ### column
 

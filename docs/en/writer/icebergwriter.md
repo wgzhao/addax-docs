@@ -6,9 +6,7 @@ Iceberg Writer plugin implements writing data to Apache Iceberg.
 
 This plugin is used to write data to Iceberg tables. For detailed configuration and parameters, please refer to the original Iceberg Writer documentation.
 
-```json
---8<-- "jobs/icebergwriter.json"
-```
+<<<@/public/assets/jobs/icebergwriter.json
 
 ## Parameters
 

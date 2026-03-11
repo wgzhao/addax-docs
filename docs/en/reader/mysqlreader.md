@@ -6,19 +6,17 @@ The MySQLReader plugin enables reading data from MySQL databases.
 
 Let's create a table in MySQL's test database and insert a record:
 
-```sql
 CREATE TABLE IF NOT EXISTS test_table (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    age INT,
-    salary DECIMAL(10,2),
-    created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+id INT AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(100) NOT NULL,
+age INT,
+salary DECIMAL(10,2),
+created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO test_table (name, age, salary) VALUES 
+INSERT INTO test_table (name, age, salary) VALUES
 ('John Doe', 30, 50000.00),
 ('Jane Smith', 25, 45000.00);
-```
 
 Here's a configuration to read from this table to the console:
 
@@ -96,35 +94,35 @@ In your JSON file, configure `"driver": "com.mysql.jdbc.Driver"`
 
 ### Required Parameters
 
-| Parameter | Description | Required | Default |
-|-----------|-------------|----------|---------|
-| jdbcUrl | JDBC connection URL | Yes | None |
-| username | Database username | Yes | None |
-| password | Database password | Yes | None |
-| table | List of tables to read from | Yes | None |
-| column | List of columns to read | Yes | None |
+| Parameter | Description                 | Required | Default |
+| --------- | --------------------------- | -------- | ------- |
+| jdbcUrl   | JDBC connection URL         | Yes      | None    |
+| username  | Database username           | Yes      | None    |
+| password  | Database password           | Yes      | None    |
+| table     | List of tables to read from | Yes      | None    |
+| column    | List of columns to read     | Yes      | None    |
 
 ### Optional Parameters
 
-| Parameter | Description | Required | Default |
-|-----------|-------------|----------|---------|
-| splitPk | Primary key for data splitting | No | None |
-| where | WHERE clause for filtering | No | None |
-| querySql | Custom SQL query | No | None |
-| fetchSize | JDBC fetch size | No | 1024 |
-| driver | JDBC driver class name | No | com.mysql.cj.jdbc.Driver |
+| Parameter | Description                    | Required | Default                  |
+| --------- | ------------------------------ | -------- | ------------------------ |
+| splitPk   | Primary key for data splitting | No       | None                     |
+| where     | WHERE clause for filtering     | No       | None                     |
+| querySql  | Custom SQL query               | No       | None                     |
+| fetchSize | JDBC fetch size                | No       | 1024                     |
+| driver    | JDBC driver class name         | No       | com.mysql.cj.jdbc.Driver |
 
 ## Data Type Mapping
 
-| MySQL Type | Addax Type | Notes |
-|------------|------------|-------|
-| TINYINT, SMALLINT, MEDIUMINT, INT | long | |
-| BIGINT | long | |
-| FLOAT, DOUBLE, DECIMAL | double | |
-| VARCHAR, CHAR, TEXT | string | |
-| DATE, TIME, DATETIME, TIMESTAMP | date | |
-| BIT | bool | |
-| BINARY, VARBINARY, BLOB | bytes | |
+| MySQL Type                        | Addax Type | Notes |
+| --------------------------------- | ---------- | ----- |
+| TINYINT, SMALLINT, MEDIUMINT, INT | long       |       |
+| BIGINT                            | long       |       |
+| FLOAT, DOUBLE, DECIMAL            | double     |       |
+| VARCHAR, CHAR, TEXT               | string     |       |
+| DATE, TIME, DATETIME, TIMESTAMP   | date       |       |
+| BIT                               | bool       |       |
+| BINARY, VARBINARY, BLOB           | bytes      |       |
 
 ## Performance Tuning
 

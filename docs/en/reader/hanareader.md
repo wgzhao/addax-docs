@@ -6,11 +6,7 @@ HANA Reader plugin implements the ability to read data from SAP HANA.
 
 The following configuration reads this table to terminal:
 
-=== "job/hanareader.json"
-
-  ```json
-  --8<-- "jobs/hanareader.json"
-  ```
+<<<@/public/assets/jobs/hanareader.json
 
 Save the above configuration file as `job/hana2stream.json`
 
@@ -18,7 +14,7 @@ Save the above configuration file as `job/hana2stream.json`
 
 Execute the following command for data collection
 
-```shell
+```bash
 bin/addax.sh job/hana2stream.json
 ```
 

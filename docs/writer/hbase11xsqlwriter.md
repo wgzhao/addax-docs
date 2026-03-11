@@ -8,9 +8,7 @@ HBase11x SQL Writer 插件利用 [Phoniex](https://phoenix.apache.org)， 用于
 
 ## 配置样例
 
-```json
---8<-- "job/hbase11xsqlwriter.json"
-```
+<<<@/public/assets/job/hbase11xsqlwriter.json
 
 ## 参数说明
 
@@ -22,8 +20,8 @@ HBase11x SQL Writer 插件利用 [Phoniex](https://phoenix.apache.org)， 用于
 | batchSize              |    否    | int      | 256    | 一次写入的最大记录数                                        |
 | nullMode               |    否    | string   | skip   | 读取到的列值为 null 时，如何处理。                          |
 | haveKerberos           |    否    | bolean   | false  | 是否启用 Kerberos 认证, true 表示启用, false 表示不启用     |
-| kerberosPrincipal      |    否    | string   | 无      | kerberos 凭证信息，仅当 `havekerberos` 启用后有效           |
-| kerberosKeytabFilePath |    否    | string   | 无      | kerberos 凭证文件的绝对路径，仅当 `havekerberos` 启用后有效 |
+| kerberosPrincipal      |    否    | string   | 无     | kerberos 凭证信息，仅当 `havekerberos` 启用后有效           |
+| kerberosKeytabFilePath |    否    | string   | 无     | kerberos 凭证文件的绝对路径，仅当 `havekerberos` 启用后有效 |
 
 ### nullMode
 

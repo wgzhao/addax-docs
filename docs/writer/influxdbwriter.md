@@ -20,11 +20,7 @@ influx --execute "CREATE DATABASE addax"
 
 创建 `job/stream2influxdb.json` 文件，内容如下：
 
-=== "job/stream2influxdb.json"
-
-  ```json
-  --8<-- "jobs/influxdbwriter.json"
-  ```
+<<<@/public/assets/jobs/influxdbwriter.json
 
 ### 运行
 

@@ -6,9 +6,7 @@ Paimon Writer plugin implements writing data to Apache Paimon.
 
 This plugin is used to write data to Paimon tables. For detailed configuration and parameters, please refer to the original Paimon Writer documentation.
 
-```json
---8<-- "jobs/paimonwriter.json"
-```
+<<<@/public/assets/jobs/paimonwriter.json
 
 ## Parameters
 

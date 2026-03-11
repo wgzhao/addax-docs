@@ -4,12 +4,7 @@ JSON File Reader provides the ability to read data from local file system storag
 
 ## Configuration Example
 
-=== "job/json2stream.json"
-
-```json
---8<-- "jobs/jsonreader.json"
-```
-
+<<<@/public/assets/jobs/jsonreader.json
 Where `/tmp/test*.json` are multiple copies of the same JSON file, with content as follows:
 
 ```json
@@ -20,14 +15,14 @@ Where `/tmp/test*.json` are multiple copies of the same JSON file, with content 
 
 ## Parameters
 
-| Configuration  | Required | Data Type | Default Value | Description                                                                     |
-| :------------- | :------: | --------- | ------------- | ------------------------------------------------------------------------------- |
-| path           | Yes      | list      | None          | Local file system path information, note that multiple paths can be supported  |
-| column         | Yes      | list      | None          | List of fields to read, type specifies the type of source data                 |
-| fieldDelimiter | Yes      | string    | `,`           | Field delimiter for reading                                                     |
-| compress       | No       | string    | None          | Text compression type, default empty means no compression. Supports zip, gzip, bzip2 |
-| encoding       | No       | string    | utf-8         | Encoding configuration for reading files                                       |
-| singleLine     | No       | boolean   | true          | Whether each data record is on one line                                        |
+| Configuration  | Required | Data Type | Default Value | Description                                                                          |
+| :------------- | :------: | --------- | ------------- | ------------------------------------------------------------------------------------ |
+| path           |   Yes    | list      | None          | Local file system path information, note that multiple paths can be supported        |
+| column         |   Yes    | list      | None          | List of fields to read, type specifies the type of source data                       |
+| fieldDelimiter |   Yes    | string    | `,`           | Field delimiter for reading                                                          |
+| compress       |    No    | string    | None          | Text compression type, default empty means no compression. Supports zip, gzip, bzip2 |
+| encoding       |    No    | string    | utf-8         | Encoding configuration for reading files                                             |
+| singleLine     |    No    | boolean   | true          | Whether each data record is on one line                                              |
 
 ### path
 

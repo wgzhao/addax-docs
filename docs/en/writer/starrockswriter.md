@@ -6,9 +6,7 @@ StarRocks Writer plugin implements writing data to StarRocks.
 
 This plugin is used to write data to StarRocks database. For detailed configuration and parameters, please refer to the original StarRocks Writer documentation.
 
-```json
---8<-- "jobs/starrockswriter.json"
-```
+<<<@/public/assets/jobs/starrockswriter.json
 
 ## Parameters
 

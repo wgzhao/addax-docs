@@ -220,7 +220,6 @@ classDiagram
 	AbstractPlugin <|-- AbstractTaskPlugin
 
 	Pluginable <|-- AbstractPlugin
-
 ```
 
 ### 插件定义
@@ -257,8 +256,7 @@ ${ADDAX_HOME}
 ├── bin
 │     ├── addax.sh
 ├── conf
-│     ├── core.json
-│     └── logback.xml
+│     ├── core.json│     └── logback.xml
 ├── job
 ├── lib
 │     ├── addax-common-<version>.jar
@@ -272,16 +270,12 @@ ${ADDAX_HOME}
 │     │     │     ├── cassandrareader-<version>.jar
 │     │     │     ├── libs
 │     │     │     │     ├── <symbol link to shared folder>
-│     │     │     ├── plugin.json
-│     │     │     └── plugin_job_template.json
-│     └── writer
+│     │     │     ├── plugin.json│     │     │     └── plugin_job_template.json│     └── writer
 │         ├── cassandrawriter
 │         │     ├── cassandrawriter-<version>.jar
 │         │     ├── libs
 │         │     │     ├── <symbol link to shared folder>
-│         │     ├── plugin.json
-│         │     └── plugin_job_template.json
-├── shared
+│         │     ├── plugin.json│         │     └── plugin_job_template.json├── shared
 ```
 
 - `${ADDAX_HOME}/bin`: 可执行程序目录
@@ -306,9 +300,9 @@ ${ADDAX_HOME}
 
 `Addax` 使用 `json` 作为配置文件的格式。一个典型的 `Addax` 任务配置如下：
 
-```json
+````json
 --8<-- "jobs/pgwriter.json"
-```
+
 
 `Addax` 框架有 `core.json` 配置文件，指定了框架的默认行为。任务的配置里头可以指定框架中已经存在的配置项，而且具有更高的优先级，会覆盖 `core.json` 中的默认值。
 
@@ -328,7 +322,7 @@ ${ADDAX_HOME}
   - 合理使用集合类型，比如，用数组替代有分隔符的字符串。
 - 类似通用：遵守同一类型的插件的习惯，比如关系型数据库的 `connection` 参数都是如下结构：
 
-  ```json
+
   {
     "connection": [
       {
@@ -347,7 +341,7 @@ ${ADDAX_HOME}
       }
     ]
   }
-  ```
+
 
 ### 如何使用 `Configuration` 类
 
@@ -378,7 +372,7 @@ ${ADDAX_HOME}
   },
   "x": 4
 }
-```
+
 
 比如调用 `configuration.get(path)` 方法，当 path 为如下值的时候得到的结果为：
 
@@ -400,7 +394,7 @@ ${ADDAX_HOME}
 
 `Record` 有如下方法：
 
-```java
+java
 public interface Record
 {
     // 加入一个列，放在最后的位置
@@ -421,7 +415,7 @@ public interface Record
     // 计算整条记录在内存中占用的字节数
     int getByteSize();
 }
-```
+
 
 因为 `Record` 是一个接口，`Reader` 插件首先调用 `RecordSender.createRecord()` 创建一个 `Record` 实例，然后把 `Column` 一个个添加到 `Record` 中。
 
@@ -444,7 +438,7 @@ public interface Record
 
 `Column` 除了提供数据相关的方法外，还提供一系列以 `as` 开头的数据类型转换转换方法。
 
-```mermaid
+mermaid
 %%{init: {"theme": "neutral"}}%%
 classDiagram
 direction TB
@@ -469,7 +463,7 @@ Column <|-- Longcolumn
 Column <|-- Datecolumn
 Column <|-- Boolcolumn
 Column <|-- Bytescolumn
-```
+
 
 Addax 的内部类型在实现上会选用不同的 java 类型：
 
@@ -524,3 +518,4 @@ Addax 的内部类型在实现上会选用不同的 java 类型：
 
 [^1]: 处理 `NaN`, `Infinity`, `-Infinity` 等数值
 [^2]: 除非另有指定编码格式
+````

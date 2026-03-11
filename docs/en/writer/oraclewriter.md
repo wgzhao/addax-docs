@@ -6,19 +6,15 @@ Oracle Writer plugin implements the functionality of writing data to Oracle dest
 
 Here we use data generated from memory to import into Oracle.
 
-=== "job/stream2oracle.json"
-
-  ```json
-  --8<-- "jobs/oraclewriter.json"
-  ```
+<<<@/public/assets/jobs/oraclewriter.json
 
 ## Parameters
 
 This plugin is based on [RDBMS Writer](../rdbmswriter), so you can refer to all configuration items of RDBMS Writer, and adds some OracleWriter-specific configuration items.
 
-| Configuration | Required | Default Value | Description                                         |
-| :------------ | :------: | ------------- | --------------------------------------------------- |
-| writeMode     | No       | insert        | Write mode, supports insert, update, see below     |
+| Configuration | Required | Default Value | Description                                    |
+| :------------ | :------: | ------------- | ---------------------------------------------- |
+| writeMode     |    No    | insert        | Write mode, supports insert, update, see below |
 
 ### writeMode
 

@@ -167,7 +167,7 @@ bin/addax.sh -p "-Djob.setting.errorLimit.record=100" job.json
 # List all reader plugins
 bin/addax.sh --reader-plugin
 
-# List all writer plugins  
+# List all writer plugins
 bin/addax.sh --writer-plugin
 ```
 
@@ -176,8 +176,11 @@ bin/addax.sh --writer-plugin
 ```bash
 # Get MySQL reader details
 bin/addax.sh --reader-plugin mysqlreader
+```
 
 # Get PostgreSQL writer details
+
+```bash
 bin/addax.sh --writer-plugin postgresqlwriter
 ```
 

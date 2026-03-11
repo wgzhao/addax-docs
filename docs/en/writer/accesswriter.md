@@ -6,17 +6,11 @@ Access Writer plugin implements the functionality of writing data to [Access](ht
 
 Assume the Access table to be written has the following DDL statement:
 
-```sql
 create table tbl_test(name varchar(20), file_size int, file_date date, file_open boolean, memo blob);
-```
 
 Here we use data generated from memory to import into Access.
 
-=== "job/stream2access.json"
-
-    ```json
-    --8<-- "jobs/accesswriter.json"
-    ```
+<<<@/public/assets/jobs/accesswriter.json
 
 Save the above configuration file as `job/stream2access.json`
 
@@ -24,7 +18,7 @@ Save the above configuration file as `job/stream2access.json`
 
 Execute the following command for data collection
 
-```shell
+```bash
 bin/addax.sh job/stream2access.json
 ```
 

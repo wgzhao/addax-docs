@@ -6,11 +6,7 @@
 
 以下是读取 DBF 文件后打印到终端的配置样例
 
-=== "jobs/dbf2stream.json"
-
-```json
---8<-- "jobs/dbfreader.json"
-```
+<<<@/public/assets/jobs/dbfreader.json
 
 ## 参数说明
 

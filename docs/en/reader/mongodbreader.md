@@ -6,24 +6,20 @@ MongoDBReader plugin uses MongoDB's Java client MongoClient to perform MongoDB r
 
 This example reads a table from MongoDB and prints to terminal
 
-=== "job/mongo2stream.json"
-
-  ```json
-  --8<-- "jobs/mongoreader.json"
-  ```
+<<<@/public/assets/jobs/mongoreader.json
 
 ## Parameters
 
-| Configuration | Required | Type   | Default Value | Description                                               |
-| :------------ | :------: | ------ | ------------- | --------------------------------------------------------- |
-| address       | Yes      | list   | None          | MongoDB data address information, multiple can be written |
-| username      | No       | string | None          | MongoDB username                                          |
-| password      | No       | string | None          | MongoDB password                                          |
-| database      | Yes      | string | None          | MongoDB database                                          |
-| collection    | Yes      | string | None          | MongoDB collection name                                   |
-| column        | Yes      | list   | None          | MongoDB document column names, does not support `["*"]` to get all columns |
-| query         | No       | string | None          | Custom query conditions                                   |
-| fetchSize     | No       | int    | 2048          | Batch size for retrieving records                         |
+| Configuration | Required | Type   | Default Value | Description                                                                |
+| :------------ | :------: | ------ | ------------- | -------------------------------------------------------------------------- |
+| address       |   Yes    | list   | None          | MongoDB data address information, multiple can be written                  |
+| username      |    No    | string | None          | MongoDB username                                                           |
+| password      |    No    | string | None          | MongoDB password                                                           |
+| database      |   Yes    | string | None          | MongoDB database                                                           |
+| collection    |   Yes    | string | None          | MongoDB collection name                                                    |
+| column        |   Yes    | list   | None          | MongoDB document column names, does not support `["*"]` to get all columns |
+| query         |    No    | string | None          | Custom query conditions                                                    |
+| fetchSize     |    No    | int    | 2048          | Batch size for retrieving records                                          |
 
 ### collection
 
@@ -40,14 +36,7 @@ Based on the above assumptions, we can simplify the `column` configuration while
 
 ```json
 {
-  "column": [
-    "col1",
-    "col2",
-    "col3",
-    "'source_mongodb'",
-    "20211026",
-    "123.12"
-  ]
+  "column": ["col1", "col2", "col3", "'source_mongodb'", "20211026", "123.12"]
 }
 ```
 
@@ -57,12 +46,7 @@ If the field is nested, you can use a dot (`.`) to indicate the hierarchical rel
 
 ```json
 {
-  "column": [
-    "col1",
-    "col2.subcol1",
-    "col2.subcol2",
-    "col3"
-  ]
+  "column": ["col1", "col2.subcol1", "col2.subcol2", "col3"]
 }
 ```
 

@@ -8,35 +8,27 @@
 
 假定需要的读取的表的结构以及数据如下：
 
-```sql
---8<-- "sql/clickhouse.sql"
-```
+<<<@/public/assets/sql/clickhouse.sql
 
 ## 配置 json 文件
 
 下面的配置文件表示从 ClickHouse 数据库读取指定的表数据并打印到终端
 
-=== "job/clickhouse2stream.json"
-
-```json
---8<-- "jobs/clickhousereader.json"
-```
-
+<<<@/public/assets/jobs/clickhousereader.json
 将上述配置文件保存为 `job/clickhouse2stream.json`
 
 ### 执行采集命令
 
 执行以下命令进行数据采集
 
-```shell
+```bash
 bin/addax.sh job/clickhouse2stream.json
 ```
 
 其输出信息如下（删除了非关键信息)
 
-```
---8<-- "output/clickhousereader.txt"
-```
+:::details
+<<<@/public/assets/output/clickhousereader.txt
 
 ## 参数说明
 

@@ -6,14 +6,14 @@ Sybase Writer plugin implements the functionality of writing data to [Sybase](ht
 
 We can use Docker container to start a Sybase database
 
-```shell
+```bash
 docker run -tid --rm  -h dksybase --name sybase  -p 5000:5000  ifnazar/sybase_15_7 bash /sybase/start
 ```
 
 Then create a table as follows:
 
 ```sql
-create table addax_writer 
+create table addax_writer
 (
 	id int,
 	name varchar(255),
@@ -25,9 +25,7 @@ create table addax_writer
 
 Then use the following task configuration file:
 
-```json
---8<-- "jobs/sybasewriter.json"
-```
+<<<@/public/assets/jobs/sybasewriter.json
 
 ## Parameters
 

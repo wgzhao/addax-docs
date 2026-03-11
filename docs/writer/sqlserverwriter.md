@@ -6,9 +6,7 @@ SQLServer Writer 插件实现了写入数据到 [SQL Server](https://www.microso
 
 这里使用一份从内存产生到 SQL Server 导入的数据。
 
-```json
---8<-- "jobs/sqlserverwriter.json"
-```
+<<<@/public/assets/jobs/sqlserverwriter.json
 
 ## 参数说明
 

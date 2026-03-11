@@ -69,8 +69,8 @@ bin/addax.sh job/test.json -p "-Dusername=root -Dpassword=123456 -Dparam1=value1
 
 为了方便使用，程序内置了部分常见时间变量，可以直接。假定当前时间是 `2025-07-16 12:13:14`，下面列出可以直接使用的变量以及变量值：
 
-| 变量名                       | 变量值                   |
-|---------------------------|-----------------------|
+| 变量名                    | 变量值                |
+| ------------------------- | --------------------- |
 | `${curr_date_short}`      | `20250716`            |
 | `${curr_date_dash}`       | `2025-07-16`          |
 | `$curr_datetime_short}`   | `20250716121314`      |
@@ -81,4 +81,3 @@ bin/addax.sh job/test.json -p "-Dusername=root -Dpassword=123456 -Dparam1=value1
 | `${biz_datetime_dash}`    | `2025-07-15 12:13:14` |
 | `${biz_datetime_0_short}` | `20250715000000`      |
 | `${biz_datetime_0_dash}`  | `2025-07-15 00:00:00` |
-

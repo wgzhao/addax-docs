@@ -6,9 +6,7 @@ Doris Writer plugin implements writing data to Apache Doris.
 
 This plugin is used to write data to Doris database. For detailed configuration and parameters, please refer to the original Doris Writer documentation.
 
-```json
---8<-- "jobs/doriswriter.json"
-```
+<<<@/public/assets/jobs/doriswriter.json
 
 ## Parameters
 

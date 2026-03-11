@@ -4,20 +4,16 @@ Paimon Writer 提供向 已有的paimon表写入数据的能力。
 
 ## 配置样例
 
-```json
---8<-- "jobs/paimonwriter.json"
-```
+<<<@/public/assets/jobs/paimonwriter.json
 
 ## 参数说明
 
-| 配置项          | 是否必须 | 数据类型   | 默认值 | 说明                                             |
-|:-------------|:----:|--------|----|------------------------------------------------|
-| dbName       |  是   | string | 无  | 要写入的paimon数据库名                                 |
-| tableName    |  是   | string | 无  | 要写入的paimon表名                                   |
-| writeMode    |  是   | string | 无  | 写入模式，详述见下                                      |
-| paimonConfig |  是   | json   | {} | 里可以配置与 Paimon catalog和Hadoop 相关的一些高级参数，比如HA的配置 |
-
-
+| 配置项       | 是否必须 | 数据类型 | 默认值 | 说明                                                                 |
+| :----------- | :------: | -------- | ------ | -------------------------------------------------------------------- |
+| dbName       |    是    | string   | 无     | 要写入的paimon数据库名                                               |
+| tableName    |    是    | string   | 无     | 要写入的paimon表名                                                   |
+| writeMode    |    是    | string   | 无     | 写入模式，详述见下                                                   |
+| paimonConfig |    是    | json     | {}     | 里可以配置与 Paimon catalog和Hadoop 相关的一些高级参数，比如HA的配置 |
 
 ### writeMode
 
@@ -34,12 +30,14 @@ Paimon Writer 提供向 已有的paimon表写入数据的能力。
 
 pom.xml
 
-```xml
+xml
+
 <?xml version="1.0" encoding="UTF-8"?>
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<modelVersion>4.0.0</modelVersion>
 
     <groupId>com.test</groupId>
     <artifactId>paimon-java-api-test</artifactId>
@@ -52,13 +50,13 @@ pom.xml
         <hadoop.version>3.2.4</hadoop.version>
         <woodstox.version>7.0.0</woodstox.version>
     </properties>
+
 <dependencies>
     <dependency>
         <groupId>org.apache.paimon</groupId>
         <artifactId>paimon-bundle</artifactId>
         <version>1.0.0</version>
     </dependency>
-
 
     <dependency>
         <groupId>org.apache.hadoop</groupId>
@@ -218,9 +216,9 @@ pom.xml
         <artifactId>woodstox-core</artifactId>
         <version>${woodstox.version}</version>
     </dependency>
+
 </dependencies>
 </project>
-```
 
 ```java
 
@@ -242,7 +240,7 @@ public class CreatePaimonTable {
         return CatalogFactory.createCatalog(context);
     }
     /* 如果是minio则例子如下
-     
+
      public static Catalog createFilesystemCatalog() {
         Options options = new Options();
         options.set("warehouse", "s3a://pvc-91d1e2cd-4d25-45c9-8613-6c4f7bf0a4cc/paimon");
@@ -258,8 +256,8 @@ public class CreatePaimonTable {
 
         return CatalogFactory.createCatalog(context);
     }
-     * 
-     * 
+     *
+     *
      * */
 
     public static void main(String[] args) {
@@ -296,8 +294,6 @@ public class CreatePaimonTable {
 
     }
 }
-
-
 ```
 
 Spark 或者 flink 环境创建表
@@ -314,86 +310,81 @@ CREATE TABLE if not exists test.test2(id int ,name string)  tblproperties (
     'orc.compress'='lz4',
     'manifest.format'='orc'
 )
-
 ```
 
 本地文件例子
 
 ```json
 {
-					"name": "paimonwriter",
-					"parameter": {
-						"dbName": "test",
-                        "tableName": "test2",
-                        "writeMode": "truncate",
-                        "paimonConfig": {
-                           "warehouse": "file:///g:/paimon",
-                           "metastore": "filesystem"
-                         }
-					}
+  "name": "paimonwriter",
+  "parameter": {
+    "dbName": "test",
+    "tableName": "test2",
+    "writeMode": "truncate",
+    "paimonConfig": {
+      "warehouse": "file:///g:/paimon",
+      "metastore": "filesystem"
+    }
+  }
 }
 ```
 
 s3 或者 minio catalog例子
+
 ```json
 {
-	"job": {
-		"setting": {
-			"speed": {
-				"channel": 3
-			},
-			"errorLimit": {
-				"record": 0,
-				"percentage": 0
-			}
-		},
-		"content": [
-			{
-				"reader": {
-					"name": "rdbmsreader",
-					"parameter": {
-						"username": "root",
-						"password": "root",
-						"column": [
-							"*"
-						],
-						"connection": [
-							{
-								"querySql": [
-									"select 1+0 id ,'test1' as name"
-								],
-								"jdbcUrl": [
-									"jdbc:mysql://localhost:3306/ruoyi_vue_camunda?allowPublicKeyRetrieval=true"
-								]
-							}
-						],
-						"fetchSize": 1024
-					}
-				},
-				"writer": {
-					"name": "paimonwriter",
-					"parameter": {
-						"dbName": "test",
-						"tableName": "test2",
-						"writeMode": "truncate",
-						"paimonConfig": {
-							"warehouse": "s3a://pvc-91d1e2cd-4d25-45c9-8613-6c4f7bf0a4cc/paimon",
-							"metastore": "filesystem",
-							"fs.s3a.endpoint": "http://localhost:9000",
-							"fs.s3a.access.key": "gy0dX5lALP176g6c9fYf",
-							"fs.s3a.secret.key": "ReuUrCzzu5wKWAegtswoHIWV389BYl9AB1ZQbiKr",
-							"fs.s3a.connection.ssl.enabled": "false",
-							"fs.s3a.path.style.access": "true",
-							"fs.s3a.impl": "org.apache.hadoop.fs.s3a.S3AFileSystem"
-						}
-					}
-				}
-			}
-		]
-	}
+  "job": {
+    "setting": {
+      "speed": {
+        "channel": 3
+      },
+      "errorLimit": {
+        "record": 0,
+        "percentage": 0
+      }
+    },
+    "content": [
+      {
+        "reader": {
+          "name": "rdbmsreader",
+          "parameter": {
+            "username": "root",
+            "password": "root",
+            "column": ["*"],
+            "connection": [
+              {
+                "querySql": ["select 1+0 id ,'test1' as name"],
+                "jdbcUrl": [
+                  "jdbc:mysql://localhost:3306/ruoyi_vue_camunda?allowPublicKeyRetrieval=true"
+                ]
+              }
+            ],
+            "fetchSize": 1024
+          }
+        },
+        "writer": {
+          "name": "paimonwriter",
+          "parameter": {
+            "dbName": "test",
+            "tableName": "test2",
+            "writeMode": "truncate",
+            "paimonConfig": {
+              "warehouse": "s3a://pvc-91d1e2cd-4d25-45c9-8613-6c4f7bf0a4cc/paimon",
+              "metastore": "filesystem",
+              "fs.s3a.endpoint": "http://localhost:9000",
+              "fs.s3a.access.key": "gy0dX5lALP176g6c9fYf",
+              "fs.s3a.secret.key": "ReuUrCzzu5wKWAegtswoHIWV389BYl9AB1ZQbiKr",
+              "fs.s3a.connection.ssl.enabled": "false",
+              "fs.s3a.path.style.access": "true",
+              "fs.s3a.impl": "org.apache.hadoop.fs.s3a.S3AFileSystem"
+            }
+          }
+        }
+      }
+    ]
+  }
 }
 ```
-
 
 hdfs catalog例子
 
@@ -402,41 +393,39 @@ hdfs catalog例子
   "paimonConfig": {
     "warehouse": "hdfs://nameservice1/user/hive/paimon",
     "metastore": "filesystem",
-    "fs.defaultFS":"hdfs://nameservice1",
-    "hadoop.security.authentication" : "kerberos",
-    "hadoop.kerberos.principal" : "hive/_HOST@XXXX.COM",
-    "hadoop.kerberos.keytab" : "/tmp/hive@XXXX.COM.keytab",
-    "ha.zookeeper.quorum" : "test-pr-nn1:2181,test-pr-nn2:2181,test-pr-nn3:2181",
-    "dfs.nameservices" : "nameservice1",
-    "dfs.namenode.rpc-address.nameservice1.namenode371" : "test-pr-nn2:8020",
+    "fs.defaultFS": "hdfs://nameservice1",
+    "hadoop.security.authentication": "kerberos",
+    "hadoop.kerberos.principal": "hive/_HOST@XXXX.COM",
+    "hadoop.kerberos.keytab": "/tmp/hive@XXXX.COM.keytab",
+    "ha.zookeeper.quorum": "test-pr-nn1:2181,test-pr-nn2:2181,test-pr-nn3:2181",
+    "dfs.nameservices": "nameservice1",
+    "dfs.namenode.rpc-address.nameservice1.namenode371": "test-pr-nn2:8020",
     "dfs.namenode.rpc-address.nameservice1.namenode265": "test-pr-nn1:8020",
-    "dfs.namenode.keytab.file" : "/tmp/hdfs@XXXX.COM.keytab",
-    "dfs.namenode.keytab.enabled" : "true",
-    "dfs.namenode.kerberos.principal" : "hdfs/_HOST@XXXX.COM",
-    "dfs.namenode.kerberos.internal.spnego.principal" : "HTTP/_HOST@XXXX.COM",
-    "dfs.ha.namenodes.nameservice1" : "namenode265,namenode371",
-    "dfs.datanode.keytab.file" : "/tmp/hdfs@XXXX.COM.keytab",
-    "dfs.datanode.keytab.enabled" : "true",
-    "dfs.datanode.kerberos.principal" : "hdfs/_HOST@XXXX.COM",
-    "dfs.client.use.datanode.hostname" : "false",
-    "dfs.client.failover.proxy.provider.nameservice1" : "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider",
-    "dfs.balancer.keytab.file" : "/tmp/hdfs@XXXX.COM.keytab",
-    "dfs.balancer.keytab.enabled" : "true",
-    "dfs.balancer.kerberos.principal" : "hdfs/_HOST@XXXX.COM"
+    "dfs.namenode.keytab.file": "/tmp/hdfs@XXXX.COM.keytab",
+    "dfs.namenode.keytab.enabled": "true",
+    "dfs.namenode.kerberos.principal": "hdfs/_HOST@XXXX.COM",
+    "dfs.namenode.kerberos.internal.spnego.principal": "HTTP/_HOST@XXXX.COM",
+    "dfs.ha.namenodes.nameservice1": "namenode265,namenode371",
+    "dfs.datanode.keytab.file": "/tmp/hdfs@XXXX.COM.keytab",
+    "dfs.datanode.keytab.enabled": "true",
+    "dfs.datanode.kerberos.principal": "hdfs/_HOST@XXXX.COM",
+    "dfs.client.use.datanode.hostname": "false",
+    "dfs.client.failover.proxy.provider.nameservice1": "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider",
+    "dfs.balancer.keytab.file": "/tmp/hdfs@XXXX.COM.keytab",
+    "dfs.balancer.keytab.enabled": "true",
+    "dfs.balancer.kerberos.principal": "hdfs/_HOST@XXXX.COM"
   }
 }
 ```
 
-
 ## 类型转换
 
-| Addax 内部类型 | Paimon 数据类型                  |
-|------------|------------------------------|
-| Integer    | TINYINT,SMALLINT,INT,INTEGER |
-| Long       | BIGINT                       |
-| Double     | FLOAT,DOUBLE,DECIMAL         |
-| String     | STRING,VARCHAR,CHAR          |
-| Boolean    | BOOLEAN                      |
-| Date       | DATE,TIMESTAMP               |
-| Bytes      | BINARY                       |
-
+| Addax 内部类型 | Paimon 数据类型              |
+| -------------- | ---------------------------- |
+| Integer        | TINYINT,SMALLINT,INT,INTEGER |
+| Long           | BIGINT                       |
+| Double         | FLOAT,DOUBLE,DECIMAL         |
+| String         | STRING,VARCHAR,CHAR          |
+| Boolean        | BOOLEAN                      |
+| Date           | DATE,TIMESTAMP               |
+| Bytes          | BINARY                       |

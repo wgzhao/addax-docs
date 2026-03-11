@@ -12,11 +12,7 @@
 
 我们假定本地部署的 `Addax` 在 `/opt/app/addax/4.0.3` 文件夹下。其 `job` 目录下有这样的一个 `job.json` 配置文件，内容如下：
 
-=== "job/job.json"
-
-  ```json
-  --8<-- "jobs/quickstart.json"
-  ```
+<<<@/public/assets/jobs/quickstart.json
 
 上述 job 文件运行没有符合我们的预期，猜测是 `streamreader` 这个插件的 `parseMixupFunctions` 函数有问题，我想调试看具体问题在哪里。
 
@@ -78,7 +74,7 @@
 - Configuration:
   - Host: 填写远程服务器IP地址，这里填写 `192.168.1.100`
   - Port: 填写调试端口，这里填写 `9999` 或者你修改过的端口
-  
+
 其他保持不变，点击 `Apply` 按钮，得到如下配置信息：
 
 ![setup remote debug config](images/debug-5.png)
@@ -100,12 +96,12 @@
 如果运行正常，会得到如下信息：
 
 ```shell
-bin/addax.sh -d job/job.json
-Listening for transport dt_socket at address: 9999
-```
+bin/addax.sh -d job/job.jsonListening for transport dt_socket at address: 9999
+
 
 表示程序监听在 `9999` 端口上，等待联接。
 
 返回 `IDEA` 窗口，点击工具栏上绿色 DEBUG 小虫按钮，开始调试，如果运行正常，会得到类似下图的调试窗口：
 
 ![running remote debug](images/debug-7.png)
+```

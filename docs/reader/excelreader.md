@@ -46,26 +46,18 @@
 
 === "excel2stream.json"
 
-    ```json
-    --8<-- "jobs/excelreader.json"
-    ```
+<<<@/public/assets/jobs/excelreader.json
 
 将输出内容存保为到 `job/excel2stream.json` 文件中，执行采集命令：
 
-```shell
+```bash
 $ bin/addax.sh job/excel2stream.json
 ```
 
 如果没有报错，应该得到如下输出：
 
-<details>
-<summary>点击展开</summary>
-
-```shell
---8<-- "output/excelreader.txt"
-```
-
-</details>
+:::details
+<<<@/public/assets/output/excelreader.txt
 
 ## 参数说明
 

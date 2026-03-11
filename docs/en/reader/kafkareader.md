@@ -10,9 +10,7 @@ The following configuration demonstrates how to read from specified topics in Ka
 
 First create a task file `kafka2stream.json`, with the following content:
 
-```json
---8<-- "jobs/kafka2stream.json"
-```
+<<<@/public/assets/jobs/kafka2stream.json
 
 ### Run
 
@@ -20,13 +18,13 @@ Execute the `bin/addax.sh kafka2stream.json` command.
 
 ## Parameters
 
-| Configuration   | Required | Data Type | Default Value | Description                                                    |
-| :-------------- | :------: | --------- | ------------- | -------------------------------------------------------------- |
-| brokerList      | Yes      | string    | None          | Broker configuration for connecting to kafka service, like `localhost:9092`, multiple brokers separated by commas (`,`) |
-| topic           | Yes      | string    | None          | Topic to write to                                              |
-| column          | Yes      | list      | None          | Collection of column names to be synchronized in the configured table, detailed below |
-| missingKeyValue | No       | string    | None          | What value to fill when field does not exist, detailed below  |
-| properties      | No       | map       | None          | Other kafka connection parameters to be set                    |
+| Configuration   | Required | Data Type | Default Value | Description                                                                                                             |
+| :-------------- | :------: | --------- | ------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| brokerList      |   Yes    | string    | None          | Broker configuration for connecting to kafka service, like `localhost:9092`, multiple brokers separated by commas (`,`) |
+| topic           |   Yes    | string    | None          | Topic to write to                                                                                                       |
+| column          |   Yes    | list      | None          | Collection of column names to be synchronized in the configured table, detailed below                                   |
+| missingKeyValue |    No    | string    | None          | What value to fill when field does not exist, detailed below                                                            |
+| properties      |    No    | map       | None          | Other kafka connection parameters to be set                                                                             |
 
 ### column
 

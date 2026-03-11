@@ -25,24 +25,22 @@ Currently HdfsReader supports the following file formats:
 
 ## Configuration Example
 
-```json
---8<-- "jobs/hdfsreader.json"
-```
+<<<@/public/assets/jobs/hdfsreader.json
 
 ## Configuration Parameters
 
-| Configuration          | Required | Data Type   | Default Value | Description                                                      |
-|:-----------------------| :------: |-------------| ------------- |------------------------------------------------------------------|
-| path                   | Yes      | string      | None          | File path to read                                                |
-| defaultFS              | Yes      | string      | None          | HDFS `NAMENODE` node address, if HA mode is configured, it is the value of `defaultFS` |
-| fileType               | Yes      | string      | None          | File type                                                        |
-| column                 | Yes      | `list<map>` | None          | List of fields to read                                           |
-| fieldDelimiter         | No       | char        | `,`           | Specify text file field delimiter, binary files do not need to specify this |
-| encoding               | No       | string      | `utf-8`       | File encoding configuration, currently only supports `utf-8`    |
-| nullFormat             | No       | string      | None          | Characters that can represent null, if user configures: `"\\N"`, then if source data is `"\N"`, it's treated as `null` field |
-| haveKerberos           | No       | boolean     | None          | Whether to enable Kerberos authentication, if enabled, need to configure the following two items |
-| kerberosKeytabFilePath | No       | string      | None          | Kerberos authentication credential file path, e.g. `/your/path/addax.service.keytab` |
-| kerberosPrincipal      | No       | string      | None          | Kerberos authentication credential principal, e.g. `addax/node1@WGZHAO.COM` |
-| compress               | No       | string      | None          | Specify compression format of files to read                      |
-| hadoopConfig           | No       | map         | None          | Can configure some advanced parameters related to Hadoop, such as HA configuration |
-| hdfsSitePath           | No       | string      | None          | Path to `hdfs-site.xml`, detailed explanation below             |
+| Configuration          | Required | Data Type   | Default Value | Description                                                                                                                  |
+| :--------------------- | :------: | ----------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| path                   |   Yes    | string      | None          | File path to read                                                                                                            |
+| defaultFS              |   Yes    | string      | None          | HDFS `NAMENODE` node address, if HA mode is configured, it is the value of `defaultFS`                                       |
+| fileType               |   Yes    | string      | None          | File type                                                                                                                    |
+| column                 |   Yes    | `list<map>` | None          | List of fields to read                                                                                                       |
+| fieldDelimiter         |    No    | char        | `,`           | Specify text file field delimiter, binary files do not need to specify this                                                  |
+| encoding               |    No    | string      | `utf-8`       | File encoding configuration, currently only supports `utf-8`                                                                 |
+| nullFormat             |    No    | string      | None          | Characters that can represent null, if user configures: `"\\N"`, then if source data is `"\N"`, it's treated as `null` field |
+| haveKerberos           |    No    | boolean     | None          | Whether to enable Kerberos authentication, if enabled, need to configure the following two items                             |
+| kerberosKeytabFilePath |    No    | string      | None          | Kerberos authentication credential file path, e.g. `/your/path/addax.service.keytab`                                         |
+| kerberosPrincipal      |    No    | string      | None          | Kerberos authentication credential principal, e.g. `addax/node1@WGZHAO.COM`                                                  |
+| compress               |    No    | string      | None          | Specify compression format of files to read                                                                                  |
+| hadoopConfig           |    No    | map         | None          | Can configure some advanced parameters related to Hadoop, such as HA configuration                                           |
+| hdfsSitePath           |    No    | string      | None          | Path to `hdfs-site.xml`, detailed explanation below                                                                          |

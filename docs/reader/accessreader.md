@@ -8,19 +8,14 @@ AccessReader 实现了从 [Access](https://en.wikipedia.org/wiki/Microsoft_Acces
 
 下面的配置是读取该表到终端的作业:
 
-=== "job/access2stream.json"
-
-```json
---8<-- "jobs/accessreader.json"
-```
-
+<<< @/public/assets/jobs/accessreader.json
 将上述配置文件保存为 `job/access2stream.json`
 
 ### 执行采集命令
 
 执行以下命令进行数据采集
 
-```shell
+```bash
 bin/addax.sh job/access2stream.json
 ```
 

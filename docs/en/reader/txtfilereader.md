@@ -6,12 +6,11 @@ The TxtFileReader plugin reads data from text files with configurable delimiters
 
 Sample CSV file (`/tmp/users.csv`):
 
-```csv
+csv
 id,name,age,email
 1,John Doe,30,john@example.com
 2,Jane Smith,25,jane@example.com
 3,Bob Johnson,35,bob@example.com
-```
 
 Configuration to read the CSV file:
 
@@ -69,35 +68,35 @@ Configuration to read the CSV file:
 
 ### Required Parameters
 
-| Parameter | Description | Type | Default |
-|-----------|-------------|------|---------|
-| path | File path or directory path | string | None |
-| column | Column configuration | array | None |
+| Parameter | Description                 | Type   | Default |
+| --------- | --------------------------- | ------ | ------- |
+| path      | File path or directory path | string | None    |
+| column    | Column configuration        | array  | None    |
 
 ### Optional Parameters
 
-| Parameter | Description | Type | Default |
-|-----------|-------------|------|---------|
-| encoding | File encoding | string | UTF-8 |
-| fieldDelimiter | Field delimiter | string | , |
-| compress | Compression format | string | None |
-| skipHeader | Skip first line | boolean | false |
-| nullFormat | Null value representation | string | \\N |
+| Parameter      | Description               | Type    | Default |
+| -------------- | ------------------------- | ------- | ------- |
+| encoding       | File encoding             | string  | UTF-8   |
+| fieldDelimiter | Field delimiter           | string  | ,       |
+| compress       | Compression format        | string  | None    |
+| skipHeader     | Skip first line           | boolean | false   |
+| nullFormat     | Null value representation | string  | \\N     |
 
 ## Column Configuration
 
 Each column in the `column` array can be configured with:
 
-| Property | Description | Type | Required |
-|----------|-------------|------|----------|
-| index | Column index (0-based) | integer | Yes |
-| type | Data type | string | Yes |
-| value | Constant value | string | No |
+| Property | Description            | Type    | Required |
+| -------- | ---------------------- | ------- | -------- |
+| index    | Column index (0-based) | integer | Yes      |
+| type     | Data type              | string  | Yes      |
+| value    | Constant value         | string  | No       |
 
 ### Supported Data Types
 
 - `long`: Integer numbers
-- `double`: Floating point numbers  
+- `double`: Floating point numbers
 - `string`: Text data
 - `date`: Date and time
 - `bool`: Boolean values
@@ -169,7 +168,7 @@ Each column in the `column` array can be configured with:
 
 ```json
 {
-  "path": "/data/users.csv.bz2",  
+  "path": "/data/users.csv.bz2",
   "compress": "bzip2"
 }
 ```
@@ -202,7 +201,7 @@ Each column in the `column` array can be configured with:
 ```json
 {
   "reader": {
-    "name": "txtfilereader", 
+    "name": "txtfilereader",
     "parameter": {
       "path": "/var/log/app.log",
       "encoding": "UTF-8",
@@ -229,7 +228,7 @@ Each column in the `column` array can be configured with:
       "type": "long"
     },
     {
-      "index": 1, 
+      "index": 1,
       "type": "string"
     },
     {

@@ -6,32 +6,25 @@ MySQL Writer 插件实现了写入数据到 [MySQL](https://mysql.com) 目的表
 
 假定要写入的 MySQL 表建表语句如下：
 
-```sql
 create table test.addax_tbl
 (
-  col1 varchar(20) ,
-  col2 int(4),
-  col3 datetime,
-  col4 boolean,
-  col5 binary
+col1 varchar(20) ,
+col2 int(4),
+col3 datetime,
+col4 boolean,
+col5 binary
 ) default charset utf8;
-```
 
 这里使用一份从内存产生到 MySQL 导入的数据。
 
-=== "job/stream2mysql.json"
-
-```json
---8<-- "jobs/mysqlwriter.json"
-```
-
+<<<@/public/assets/jobs/mysqlwriter.json
 将上述配置文件保存为 `job/stream2mysql.json`
 
 ### 执行采集命令
 
 执行以下命令进行数据采集
 
-```shell
+```bash
 bin/addax.sh job/stream2mysql.json
 ```
 
@@ -50,17 +43,16 @@ bin/addax.sh job/stream2mysql.json
 如果你需要采集的 MySQL 服务低于 `5.6`，需要使用到 `Connector/J 5.1` 驱动，则可以采取下面的步骤：
 
 1. 替换插件内置的驱动
-  `rm -f plugin/writer/mysqlwriter/libs/mysql-connector-java-*.jar`
+   `rm -f plugin/writer/mysqlwriter/libs/mysql-connector-java-*.jar`
 
 2. 拷贝老的驱动到插件目录
-  `cp mysql-connector-java-5.1.48.jar plugin/writer/mysqlwriter/libs/`
+   `cp mysql-connector-java-5.1.48.jar plugin/writer/mysqlwriter/libs/`
 
 3. 指定驱动类名称
-  在你的 json 文件类，配置 `"driver": "com.mysql.jdbc.Driver"`
+   在你的 json 文件类，配置 `"driver": "com.mysql.jdbc.Driver"`
 
 ### writeMode
 
 - `insert` 表示采用 `insert into`
 - `replace`表示采用`replace into`方式
 - `update` 表示采用 `ON DUPLICATE KEY UPDATE` 语句
-

@@ -4,9 +4,7 @@ Redis Writer 提供了还原 Redis dump 命令的能力，并写入到目标 Red
 
 ## 配置样例
 
-```json
---8<-- "jobs/rediswriter.json"
-```
+<<<@/public/assets/jobs/rediswriter.json
 
 ## 参数说明
 

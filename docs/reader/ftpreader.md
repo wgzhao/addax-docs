@@ -6,35 +6,31 @@ Ftp Reader 提供了读取远程 FTP/SFTP 文件系统数据存储的能力。
 
 ### 配置样例
 
-=== "job/ftp2stream.json"
-
-```json
---8<-- "jobs/ftpreader.json"
-```
+<<<@/public/assets/jobs/ftpreader.json
 
 ### 参数说明
 
-| 配置项            | 是否必须 | 数据类型    | 默认值 | 描述                                                                          |
-| :---------------- | :------: | ----------- | ------ | ----------------------------------------------------------------------------- |
-| protocol          |    是    | string      | 无     | 服务器协议，目前支持传输协议有 `ftp` 和 `sftp`                                |
-| host              |    是    | string      | 无     | 服务器地址                                                                    |
-| port              |    否    | int         | 22/21  | 若传输协议是 `sftp` 协议，默认值是 22；若传输协议是标准 ftp 协议，默认值是 21 |
-| timeout           |    否    | int         | 60000  | 连接 ftp 服务器连接超时时间，单位毫秒(ms)                                     |
-| connectPattern    |    否    | string      | PASV   | 连接模式，仅支持 `PORT`, `PASV` 模式。该参数仅在 ftp 协议时使用               |
-| username          |    是    | string      | 无     | ftp 服务器访问用户名                                                          |
-| password          |    否    | string      | 无     | ftp 服务器访问密码                                                            |
-| useKey            |    否    | boolean     | false  | 是否使用私钥登录，仅针对 sftp 登录有效                           |
-| keyPath           |    否    | string      | `~/.ssh/id_rsa` | 私钥地址                                                         |
-| keyPass           |    否    | string      | 无              | 私钥密码，若没有设置私钥密码，则无需配置该项                     |
-| path              |    是    | list        | 无     | 远程 FTP 文件系统的路径信息，注意这里可以支持填写多个路径，详细描述见下       |
-| column            |    是    | `list<map>` | 无     | 读取字段列表，type 指定源数据的类型，详见下文                                 |
-| fieldDelimiter    |    是    | string      | `,`    | 描述：读取的字段分隔符                                                        |
-| compress          |    否    | string      | 无     | 文本压缩类型，默认不填写意味着没有压缩。支持压缩类型为 `zip`、`gz`、`bzip2`   |
-| encoding          |    否    | string      | `utf-8`  | 读取文件的编码配置                                                            |
-| skipHeader        |    否    | boolean      | false  | 类 CSV 格式文件可能存在表头为标题情况，需要跳过。默认不跳过                   |
-| nullFormat        |    否    | char      | `\N`   | 定义哪些字符串可以表示为 null                                                 |
-| maxTraversalLevel |    否    | int       | 100    | 允许遍历文件夹的最大层数                                                      |
-| csvReaderConfig   |    否    | map      | 无     | 读取 CSV 类型文件参数配置，Map 类型。不配置则使用默认值,详见下文              |
+| 配置项            | 是否必须 | 数据类型    | 默认值          | 描述                                                                          |
+| :---------------- | :------: | ----------- | --------------- | ----------------------------------------------------------------------------- |
+| protocol          |    是    | string      | 无              | 服务器协议，目前支持传输协议有 `ftp` 和 `sftp`                                |
+| host              |    是    | string      | 无              | 服务器地址                                                                    |
+| port              |    否    | int         | 22/21           | 若传输协议是 `sftp` 协议，默认值是 22；若传输协议是标准 ftp 协议，默认值是 21 |
+| timeout           |    否    | int         | 60000           | 连接 ftp 服务器连接超时时间，单位毫秒(ms)                                     |
+| connectPattern    |    否    | string      | PASV            | 连接模式，仅支持 `PORT`, `PASV` 模式。该参数仅在 ftp 协议时使用               |
+| username          |    是    | string      | 无              | ftp 服务器访问用户名                                                          |
+| password          |    否    | string      | 无              | ftp 服务器访问密码                                                            |
+| useKey            |    否    | boolean     | false           | 是否使用私钥登录，仅针对 sftp 登录有效                                        |
+| keyPath           |    否    | string      | `~/.ssh/id_rsa` | 私钥地址                                                                      |
+| keyPass           |    否    | string      | 无              | 私钥密码，若没有设置私钥密码，则无需配置该项                                  |
+| path              |    是    | list        | 无              | 远程 FTP 文件系统的路径信息，注意这里可以支持填写多个路径，详细描述见下       |
+| column            |    是    | `list<map>` | 无              | 读取字段列表，type 指定源数据的类型，详见下文                                 |
+| fieldDelimiter    |    是    | string      | `,`             | 描述：读取的字段分隔符                                                        |
+| compress          |    否    | string      | 无              | 文本压缩类型，默认不填写意味着没有压缩。支持压缩类型为 `zip`、`gz`、`bzip2`   |
+| encoding          |    否    | string      | `utf-8`         | 读取文件的编码配置                                                            |
+| skipHeader        |    否    | boolean     | false           | 类 CSV 格式文件可能存在表头为标题情况，需要跳过。默认不跳过                   |
+| nullFormat        |    否    | char        | `\N`            | 定义哪些字符串可以表示为 null                                                 |
+| maxTraversalLevel |    否    | int         | 100             | 允许遍历文件夹的最大层数                                                      |
+| csvReaderConfig   |    否    | map         | 无              | 读取 CSV 类型文件参数配置，Map 类型。不配置则使用默认值,详见下文              |
 
 #### path
 
@@ -102,7 +98,7 @@ Ftp Reader 提供了读取远程 FTP/SFTP 文件系统数据存储的能力。
 
 所有配置项及默认值,配置时 csvReaderConfig 的 map 中请 **严格按照以下字段名字进行配置**：
 
-```ini
+ini
 boolean caseSensitive = true;
 char textQualifier = 34;
 boolean trimWhitespace = true;
@@ -115,7 +111,6 @@ int escapeMode = 1;
 boolean safetySwitch = true;//单列长度是否限制100000字符
 boolean skipEmptyRecords = true;//是否跳过空行
 boolean captureRawRecord = true;
-```
 
 ### 类型转换
 

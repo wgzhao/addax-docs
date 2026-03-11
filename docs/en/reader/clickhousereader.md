@@ -8,35 +8,26 @@
 
 Assume the table structure and data to be read are as follows:
 
-```sql
---8<-- "sql/clickhouse.sql"
-```
+<<<@/public/assets/sql/clickhouse.sql
 
 ## Configure JSON File
 
 The following configuration file reads specified table data from ClickHouse database and prints to terminal
 
-=== "job/clickhouse2stream.json"
-
-```json
---8<-- "jobs/clickhousereader.json"
-```
-
+<<<@/public/assets/jobs/clickhousereader.json
 Save the above configuration file as `job/clickhouse2stream.json`
 
 ### Execute Collection Command
 
 Execute the following command for data collection
 
-```shell
+```bash
 bin/addax.sh job/clickhouse2stream.json
 ```
 
 The output information is as follows (non-critical information removed):
 
-```
---8<-- "output/clickhousereader.txt"
-```
+<<<@/public/assets/output/clickhousereader.txt
 
 ## Parameters
 

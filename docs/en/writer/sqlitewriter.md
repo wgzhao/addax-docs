@@ -6,32 +6,25 @@ SQLite Writer plugin implements the functionality of writing data to [SQLite](ht
 
 Assume the table to be written is as follows:
 
-```sql
 create table addax_tbl
 (
-    col1 varchar(20) ,
-    col2 int(4),
-    col3 datetime,
-    col4 boolean,
-    col5 binary
+col1 varchar(20) ,
+col2 int(4),
+col3 datetime,
+col4 boolean,
+col5 binary
 );
-```
 
 Here we use data generated from memory to SQLite.
 
-=== "job/stream2sqlite.json"
-
-```json
---8<-- "jobs/sqlitewriter.json"
-```
-
+<<<@/public/assets/jobs/sqlitewriter.json
 Save the above configuration file as `job/stream2sqlite.json`
 
 ### Execute Collection Command
 
 Execute the following command for data collection
 
-```shell
+```bash
 bin/addax.sh job/stream2sqlite.json
 ```
 

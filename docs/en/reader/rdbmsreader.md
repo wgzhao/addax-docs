@@ -39,29 +39,25 @@ The following lists common databases and their corresponding driver names:
 
 The following configuration shows how to read data from Presto database to terminal
 
-=== "job/rdbms2stream.json"
-
-  ```json
-  --8<-- "jobs/rdbmsreader.json"
-  ```
+<<<@/public/assets/jobs/rdbmsreader.json
 
 ## Parameters
 
-| Configuration | Required | Data Type | Default Value | Description                                                      |
-| :------------ | :------: | --------- | ------------- | ---------------------------------------------------------------- |
-| jdbcUrl       | Yes      | list      | None          | JDBC connection information of the target database, jdbcUrl follows RDBMS official specifications and can include connection attachment control information |
-| driver        | No       | string    | None          | Custom driver class name to solve compatibility issues, see description below |
-| username      | Yes      | string    | None          | Username of the data source                                      |
-| password      | No       | string    | None          | Password for the specified username of the data source          |
-| table         | Yes      | list      | None          | Selected table names to be synchronized, using JSON data format. When configured for multiple tables, users need to ensure that multiple tables have the same table structure |
-| column        | Yes      | list      | None          | Collection of column names to be synchronized in the configured table, detailed description below |
-| splitPk       | No       | string    | None          | Use the field represented by splitPk for data sharding, which can greatly improve data synchronization efficiency, see notes below |
-| autoPk        | No       | boolean   | false         | Whether to automatically guess the sharding primary key, introduced in version `3.2.6`, see description below |
-| where         | No       | string    | None          | Filtering conditions for the table                               |
-| session       | No       | list      | None          | For local connections, modify session configuration, see below   |
-| querySql      | No       | string    | None          | Use custom SQL instead of specified table to get data. When this item is configured, `table` and `column` configuration items are ignored |
-| fetchSize     | No       | int       | 1024          | Defines the number of batch data fetched between plugin and database server each time. Increasing this value may cause Addax OOM |
-| excludeColumn | No       | list      | None          | Column name fields to be excluded, only valid when `column` is configured as `*` |
+| Configuration | Required | Data Type | Default Value | Description                                                                                                                                                                   |
+| :------------ | :------: | --------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| jdbcUrl       |   Yes    | list      | None          | JDBC connection information of the target database, jdbcUrl follows RDBMS official specifications and can include connection attachment control information                   |
+| driver        |    No    | string    | None          | Custom driver class name to solve compatibility issues, see description below                                                                                                 |
+| username      |   Yes    | string    | None          | Username of the data source                                                                                                                                                   |
+| password      |    No    | string    | None          | Password for the specified username of the data source                                                                                                                        |
+| table         |   Yes    | list      | None          | Selected table names to be synchronized, using JSON data format. When configured for multiple tables, users need to ensure that multiple tables have the same table structure |
+| column        |   Yes    | list      | None          | Collection of column names to be synchronized in the configured table, detailed description below                                                                             |
+| splitPk       |    No    | string    | None          | Use the field represented by splitPk for data sharding, which can greatly improve data synchronization efficiency, see notes below                                            |
+| autoPk        |    No    | boolean   | false         | Whether to automatically guess the sharding primary key, introduced in version `3.2.6`, see description below                                                                 |
+| where         |    No    | string    | None          | Filtering conditions for the table                                                                                                                                            |
+| session       |    No    | list      | None          | For local connections, modify session configuration, see below                                                                                                                |
+| querySql      |    No    | string    | None          | Use custom SQL instead of specified table to get data. When this item is configured, `table` and `column` configuration items are ignored                                     |
+| fetchSize     |    No    | int       | 1024          | Defines the number of batch data fetched between plugin and database server each time. Increasing this value may cause Addax OOM                                              |
+| excludeColumn |    No    | list      | None          | Column name fields to be excluded, only valid when `column` is configured as `*`                                                                                              |
 
 ### jdbcUrl
 

@@ -1,6 +1,6 @@
 # DatabendWriter
 
-Databend 插件用于向 [Databend](https://databend.rs/zh-CN/doc/) 数据库以 JDBC 方式写入数据。 
+Databend 插件用于向 [Databend](https://databend.rs/zh-CN/doc/) 数据库以 JDBC 方式写入数据。
 
 Databend 是一个兼容 MySQL 协议的数据库后端，因此 Databend 写入可以使用 [MySQLWriter](../../writer/mysqlwriter) 进行访问。
 
@@ -8,31 +8,25 @@ Databend 是一个兼容 MySQL 协议的数据库后端，因此 Databend 写入
 
 假定要写入的表的建表语句如下：
 
-```sql
 CREATE
 DATABASE example_db;
 CREATE TABLE `example_db`.`table1`
 (
-    `siteid`   INT DEFAULT CAST(10 AS INT),
-    `citycode` INT,
-    `username` VARCHAR,
-    `pv`       BIGINT
+`siteid` INT DEFAULT CAST(10 AS INT),
+`citycode` INT,
+`username` VARCHAR,
+`pv` BIGINT
 );
-```
 
 下面配置一个从内存读取数据，然后写入到 databend 表的配置文件
 
-```json
---8<-- "jobs/databendwriter.json"
-```
-
+<<<@/public/assets/jobs/databendwriter.json
 将上述配置文件保存为 `job/stream2databend.json`
 
 执行下面的命令
 
-```shell
+````bash
 bin/addax.sh job/stream2Databend.json
-```
 
 ## 参数说明
 
@@ -56,4 +50,4 @@ bin/addax.sh job/stream2Databend.json
     "id"
   ]
 }
-```
+````

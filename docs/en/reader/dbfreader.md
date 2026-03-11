@@ -6,22 +6,18 @@
 
 The following is a configuration example for reading DBF files and printing to terminal
 
-=== "jobs/dbf2stream.json"
-
-```json
---8<-- "jobs/dbfreader.json"
-```
+<<<@/public/assets/jobs/dbfreader.json
 
 ## Parameters
 
 `parameter` configuration supports the following configurations:
 
-| Configuration | Required | Default Value | Description                                                                              |
-| :------------ | :------: | ------------- | ---------------------------------------------------------------------------------------- |
-| path          | Yes      | None          | DBF file path, supports writing multiple paths, detailed description below              |
-| column        | Yes      | None          | Collection of columns to be synchronized in the configured table, is a collection of `{type: value}` or `{type: index}`, detailed configuration below |
-| encoding      | No       | GBK           | DBF file encoding, such as `GBK`, `UTF-8`                                               |
-| nullFormat    | No       | `\N`          | Define which string can represent null                                                  |
+| Configuration | Required | Default Value | Description                                                                                                                                           |
+| :------------ | :------: | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| path          |   Yes    | None          | DBF file path, supports writing multiple paths, detailed description below                                                                            |
+| column        |   Yes    | None          | Collection of columns to be synchronized in the configured table, is a collection of `{type: value}` or `{type: index}`, detailed configuration below |
+| encoding      |    No    | GBK           | DBF file encoding, such as `GBK`, `UTF-8`                                                                                                             |
+| nullFormat    |    No    | `\N`          | Define which string can represent null                                                                                                                |
 
 ### path
 

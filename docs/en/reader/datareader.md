@@ -16,28 +16,23 @@ Here I list all the rules currently supported by the plugin in the example below
 
 === "datareader2stream.json"
 
-```json
---8<-- "jobs/datareader.json"
-```
-
+<<<@/public/assets/jobs/datareader.json
 Save the above content to `job/datareader2stream.json`
 
 Then execute this task, the output result is similar to the following:
 
-```shell
---8<-- "output/datareader.txt"
-```
+<<<@/public/assets/output/datareader.txt
 
 ## Configuration Description
 
 The configuration of `column` is slightly different from other plugins. A field consists of the following configuration items:
 
-| Configuration | Required | Default Value         | Example               | Description                                    |
-| ------------- | -------- | --------------------- | --------------------- | ---------------------------------------------- |
-| value         | No       | None                  | `Addax`               | Data value, required in some cases            |
+| Configuration | Required | Default Value         | Example               | Description                                      |
+| ------------- | -------- | --------------------- | --------------------- | ------------------------------------------------ |
+| value         | No       | None                  | `Addax`               | Data value, required in some cases               |
 | rule          | No       | `constant`            | `idCard`              | Data generation rule, detailed description below |
-| type          | No       | `string`              | `double`              | Data value type                                |
-| dateFormat    | No       | `yyyy-MM-dd HH:mm:ss` | `yyyy/MM/dd HH:mm:ss` | Date format, only valid when `type` is `date` |
+| type          | No       | `string`              | `double`              | Data value type                                  |
+| dateFormat    | No       | `yyyy-MM-dd HH:mm:ss` | `yyyy/MM/dd HH:mm:ss` | Date format, only valid when `type` is `date`    |
 
 ### rule Description
 
@@ -89,23 +84,23 @@ This means the field data is a random string with length 1 to 10 (both 1 and 10 
 
 For more detailed configuration rules and precautions for this field, refer to the `random` description in [streamreader](../streamreader).
 
-| Rule Name      | Meaning                                              | Example                                | Data Type | Description                                      |
-| -------------- | ---------------------------------------------------- | -------------------------------------- | --------- | ------------------------------------------------ |
-| `address`      | Randomly generate address information that basically meets domestic actual conditions | `辽宁省兰州市徐汇区东山街176号`        | string    |                                                  |
-| `bank`         | Randomly generate a domestic bank name               | `华夏银行`                             | string    |                                                  |
-| `company`      | Randomly generate a company name                     | `万迅电脑科技有限公司`                 | string    |                                                  |
-| `creditCard`   | Randomly generate a credit card number               | `430405198908214042`                   | string    | 16 digits                                        |
-| `debitCard`    | Randomly generate a debit card number                | `6227894836568607`                     | string    | 19 digits                                        |
-| `email`        | Randomly generate an email address                   | `ok2a@gmail.com`                       | string    |                                                  |
-| `idCard`       | Randomly generate a domestic ID card number          | `350600198508222018`                   | string    | 18 digits, follows validation rules, first 6 digits meet administrative division requirements |
-| `lat`          | Randomly generate latitude data                      | `48.6648764`                           | double    | Fixed 7 decimal places, can also use `latitude` |
-| `lng`          | Randomly generate longitude data                     | `120.6018163`                          | double    | Fixed 7 decimal places, can also use `longitude` |
-| `name`         | Randomly generate a domestic name                    | `池浩`                                 | string    | Currently doesn't consider surname distribution in China |
-| `job`          | Randomly generate a domestic job title               | `系统工程师`                           | string    | Data source from recruitment websites            |
-| `phone`        | Randomly generate a domestic mobile phone number     | `15292600492`                          | string    | Currently doesn't consider virtual phone numbers |
-| `stockCode`    | Randomly generate a 6-digit stock code               | `687461`                               | string    | First two digits meet domestic stock code standards |
-| `stockAccount` | Randomly generate a 10-digit stock trading account   | `0692522928`                           | string    | Completely random, doesn't meet account standards |
-| `uuid`         | Randomly generate a UUID string                      | `bc1cf125-929b-43b7-b324-d7c4cc5a75d2` | string    | Completely random                                |
-| `zipCode`      | Randomly generate a domestic postal code             | `411105`                               | long      | Doesn't fully meet domestic postal code standards |
+| Rule Name      | Meaning                                                                               | Example                                | Data Type | Description                                                                                   |
+| -------------- | ------------------------------------------------------------------------------------- | -------------------------------------- | --------- | --------------------------------------------------------------------------------------------- |
+| `address`      | Randomly generate address information that basically meets domestic actual conditions | `辽宁省兰州市徐汇区东山街176号`        | string    |                                                                                               |
+| `bank`         | Randomly generate a domestic bank name                                                | `华夏银行`                             | string    |                                                                                               |
+| `company`      | Randomly generate a company name                                                      | `万迅电脑科技有限公司`                 | string    |                                                                                               |
+| `creditCard`   | Randomly generate a credit card number                                                | `430405198908214042`                   | string    | 16 digits                                                                                     |
+| `debitCard`    | Randomly generate a debit card number                                                 | `6227894836568607`                     | string    | 19 digits                                                                                     |
+| `email`        | Randomly generate an email address                                                    | `ok2a@gmail.com`                       | string    |                                                                                               |
+| `idCard`       | Randomly generate a domestic ID card number                                           | `350600198508222018`                   | string    | 18 digits, follows validation rules, first 6 digits meet administrative division requirements |
+| `lat`          | Randomly generate latitude data                                                       | `48.6648764`                           | double    | Fixed 7 decimal places, can also use `latitude`                                               |
+| `lng`          | Randomly generate longitude data                                                      | `120.6018163`                          | double    | Fixed 7 decimal places, can also use `longitude`                                              |
+| `name`         | Randomly generate a domestic name                                                     | `池浩`                                 | string    | Currently doesn't consider surname distribution in China                                      |
+| `job`          | Randomly generate a domestic job title                                                | `系统工程师`                           | string    | Data source from recruitment websites                                                         |
+| `phone`        | Randomly generate a domestic mobile phone number                                      | `15292600492`                          | string    | Currently doesn't consider virtual phone numbers                                              |
+| `stockCode`    | Randomly generate a 6-digit stock code                                                | `687461`                               | string    | First two digits meet domestic stock code standards                                           |
+| `stockAccount` | Randomly generate a 10-digit stock trading account                                    | `0692522928`                           | string    | Completely random, doesn't meet account standards                                             |
+| `uuid`         | Randomly generate a UUID string                                                       | `bc1cf125-929b-43b7-b324-d7c4cc5a75d2` | string    | Completely random                                                                             |
+| `zipCode`      | Randomly generate a domestic postal code                                              | `411105`                               | long      | Doesn't fully meet domestic postal code standards                                             |
 
 Note: The data types returned by the rules in the above table are fixed and cannot be modified, so `type` doesn't need to be configured, and the configured type will be ignored. Since data generation comes from internal rules, `value` also doesn't need to be configured, and the configured content will be ignored.

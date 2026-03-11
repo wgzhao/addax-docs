@@ -21,9 +21,8 @@ bin/encrypt.sh mypassword123
 ```
 
 Output:
-```
+
 Encrypted password: addax:enc:AES:7kMgvpYVGh2kH5tZ1AxyHQ==
-```
 
 ## Using Encrypted Passwords
 
@@ -89,6 +88,7 @@ Addax uses AES (Advanced Encryption Standard) for password encryption:
 The encryption key is derived from system properties. For enhanced security:
 
 1. **Set custom encryption key**:
+
    ```bash
    export ADDAX_ENCRYPT_KEY="your-custom-key-here"
    ```
@@ -97,8 +97,7 @@ The encryption key is derived from system properties. For enhanced security:
    ```bash
    # Development
    export ADDAX_ENCRYPT_KEY="dev-key-2024"
-   
-   # Production  
+   # Production
    export ADDAX_ENCRYPT_KEY="prod-key-2024"
    ```
 
@@ -123,7 +122,7 @@ public class CustomPasswordEncryptor implements PasswordEncryptor {
         // Your custom encryption logic
         return "custom:enc:" + encryptedPassword;
     }
-    
+
     @Override
     public String decrypt(String encryptedPassword) {
         // Your custom decryption logic
@@ -193,6 +192,7 @@ done
 ### Multiple Environments
 
 **Development (dev.json)**:
+
 ```json
 {
   "parameter": {
@@ -202,6 +202,7 @@ done
 ```
 
 **Production (prod.json)**:
+
 ```json
 {
   "parameter": {
@@ -257,7 +258,6 @@ cp config/job.json config/job.json.backup
 
 # Replace passwords (adjust patterns as needed)
 sed -i 's/"password": "plainpassword"/"password": "addax:enc:AES:encryptedvalue"/g' config/job.json
-
 echo "Migration complete. Test the configuration before deploying."
 ```
 

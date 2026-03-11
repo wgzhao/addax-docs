@@ -6,9 +6,7 @@ HBase11x Writer plugin implements writing data to HBase 1.x version.
 
 This plugin is used to write data to HBase 1.x database. For detailed configuration and parameters, please refer to the original HBase11x Writer documentation.
 
-```json
---8<-- "jobs/hbase11xwriter.json"
-```
+<<<@/public/assets/jobs/hbase11xwriter.json
 
 ## Parameters
 

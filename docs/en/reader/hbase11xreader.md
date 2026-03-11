@@ -8,7 +8,7 @@ HBase11X Reader plugin supports reading data from HBase 1.x version. Its impleme
 
 The following demonstration is based on the table and data created below:
 
-```shell
+```bash
 create 'users', 'address','info'
 put 'users', 'lisi', 'address:country', 'china'
 put 'users', 'lisi', 'address:province',    'beijing'
@@ -27,7 +27,7 @@ put 'users', 'xiaoming', 'info:company',    'alibaba'
 
 Read HBase table as a normal two-dimensional table (horizontal table), reading the latest version data. For example:
 
-```shell
+```bash
 hbase(main):017:0> scan 'users'
 ROW           COLUMN+CELL
  lisi         column=address:city, timestamp=1457101972764, value=beijing

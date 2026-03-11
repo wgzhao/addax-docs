@@ -7,8 +7,9 @@
 ```shell
 $ bin/encrypt_password.sh 123456
 The encrypt string is : '${enc:tFd05jnm1mSq+PEK9t/Rgg==}', you can paste it to json file.
-```
+
 
 上述结果中的 `tFd05jnm1mSq+PEK9t/Rgg==` 为 `123456` 的密文。 `${enc:` 开头是为了让 `addax` 知道这是一个加密密文。
 
 你将上述字符串 `${enc:tFd05jnm1mSq+PEK9t/Rgg==}` 替换你的配置文件中设置密码为 `123456` 的地方即可。
+```

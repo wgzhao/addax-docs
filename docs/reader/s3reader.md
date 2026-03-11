@@ -5,32 +5,28 @@ html) 编写。
 
 同时本插件也支持读取兼容 S3 协议的存储服务，比如 [MinIO](https://min.io/)
 
-
 ## 配置样例
 
 以下样例配置用于从 S3 存储上读取两个文件，并打印出来
 
-```json
---8<-- "jobs/s3reader.json"
-```
+<<<@/public/assets/jobs/s3reader.json
 
 ## 参数说明
 
-
-| 配置项                    | 是否必须 | 数据类型    | 默认值           | 描述                                                   |
-|:-----------------------|:----:|---------|---------------|------------------------------------------------------|
-| endpoint               |  是   | string  | 无             | S3 Server的 EndPoint地址，例如 `s3.xx.amazonaws.com`       |
-| region                 |  是   | string  | 无             | S3 Server的 Region 地址，例如 `ap-southeast-1`             |
-| accessId               |  是   | string  | 无             | 访问 ID                                                |
-| accessKey              |  是   | string  | 无             | 访问 Key                                               |
-| bucket                 |  是   | string  | 无             | 要读取的 bucket                                          |
-| object                 |  是   | list    | 无             | 要读取的 object，可以填写多个以及通配符方式，详见下面说明                     |
-| column                 |  是   | list    | 无             | 读取的 object 的列信息，填写方式见[RDBMS Reader][1] 中 `column` 描述 |
-| fieldDelimiter         |  否   | string  | `,`           | 读取的字段分隔符，仅支持单字符                                      |
-| compress               |  否   | string  | 无             | 文件压缩格式，默认不压缩                                         |
-| encoding               |  否   | string  | `utf8`        | 文件编码格式                                               |
-| writeMode              |  否   | string  | `nonConflict` |                                                      |
-| pathStyleAccessEnabled |  否   | boolean | false         | 是否启用路径访问模式                                           |
+| 配置项                 | 是否必须 | 数据类型 | 默认值        | 描述                                                                 |
+| :--------------------- | :------: | -------- | ------------- | -------------------------------------------------------------------- |
+| endpoint               |    是    | string   | 无            | S3 Server的 EndPoint地址，例如 `s3.xx.amazonaws.com`                 |
+| region                 |    是    | string   | 无            | S3 Server的 Region 地址，例如 `ap-southeast-1`                       |
+| accessId               |    是    | string   | 无            | 访问 ID                                                              |
+| accessKey              |    是    | string   | 无            | 访问 Key                                                             |
+| bucket                 |    是    | string   | 无            | 要读取的 bucket                                                      |
+| object                 |    是    | list     | 无            | 要读取的 object，可以填写多个以及通配符方式，详见下面说明            |
+| column                 |    是    | list     | 无            | 读取的 object 的列信息，填写方式见[RDBMS Reader][1] 中 `column` 描述 |
+| fieldDelimiter         |    否    | string   | `,`           | 读取的字段分隔符，仅支持单字符                                       |
+| compress               |    否    | string   | 无            | 文件压缩格式，默认不压缩                                             |
+| encoding               |    否    | string   | `utf8`        | 文件编码格式                                                         |
+| writeMode              |    否    | string   | `nonConflict` |                                                                      |
+| pathStyleAccessEnabled |    否    | boolean  | false         | 是否启用路径访问模式                                                 |
 
 [1]: ../rdbmsreader
 
@@ -47,7 +43,7 @@ html) 编写。
 ### pathStyleAccessEnabled
 
 是否启用路径访问模式,如果启用，则访问 bucket 的路径为 `example.com/bucket-name`,否则为 `bucket-name.example.com` ，详细情况可以参观
-[path vs virtual access](https://min.io/docs/minio/linux/administration/object-management.html#minio-object-management-path-virtual-access) 
+[path vs virtual access](https://min.io/docs/minio/linux/administration/object-management.html#minio-object-management-path-virtual-access)
 
 ## 类型转换
 

@@ -6,11 +6,7 @@ SqlServerReader plugin is used to read data from SQLServer.
 
 Configure a job to synchronize and extract data from SQLServer database to local:
 
-=== "job/sqlserver2stream.json"
-
-  ```json
-  --8<-- "jobs/sqlserverreader.json"
-  ```
+<<<@/public/assets/jobs/sqlserverreader.json
 
 ## Parameters
 

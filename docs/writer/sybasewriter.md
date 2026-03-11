@@ -6,14 +6,14 @@ Sybase Writer 插件实现了写入数据到 [Sybase](https://en.wikipedia.org/w
 
 我们可以用 Docker 容器来启动一个 Sybase 数据库
 
-```shell
+```bash
 docker run -tid --rm  -h dksybase --name sybase  -p 5000:5000  ifnazar/sybase_15_7 bash /sybase/start
 ```
 
 然后创建一张如下表
 
 ```sql
-create table addax_writer 
+create table addax_writer
 (
 	id int,
 	name varchar(255),
@@ -25,9 +25,7 @@ create table addax_writer
 
 再使用下面的任务配置文件
 
-```json
---8<-- "jobs/sybasewriter.json"
-```
+<<<@/public/assets/jobs/sybasewriter.json
 
 ## 参数说明
 

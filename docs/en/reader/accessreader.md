@@ -8,19 +8,14 @@ We download the test file [AccessThemeDemo.zip](http://www.databasedev.co.uk/dow
 
 The following configuration reads the table to the terminal:
 
-=== "job/access2stream.json"
-
-```json
---8<-- "jobs/accessreader.json"
-```
-
+<<<@/public/assets/jobs/accessreader.json
 Save the above configuration file as `job/access2stream.json`
 
 ### Execute Collection Command
 
 Execute the following command for data collection
 
-```shell
+```bash
 bin/addax.sh job/access2stream.json
 ```
 

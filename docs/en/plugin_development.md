@@ -30,8 +30,8 @@ The startup steps are:
 
 To handle the differences between various data sources while providing consistent synchronization primitives and extensibility, `Addax` uses a `Framework` + `Plugin` model:
 
--   Plugins only need to care about reading from or writing to the data source itself.
--   Common synchronization issues, such as type conversion, performance, and statistics, are handled by the framework.
+- Plugins only need to care about reading from or writing to the data source itself.
+- Common synchronization issues, such as type conversion, performance, and statistics, are handled by the framework.
 
 As a plugin developer, you need to focus on two issues:
 
@@ -44,11 +44,11 @@ As a plugin developer, you need to focus on two issues:
 
 Plugin developers don't need to worry about too much; they mainly need to focus on reading from and writing to specific systems, and how their code is logically executed—which method is called and when. Before that, you need to understand the following concepts:
 
--   `Job`: Describes a synchronization job from a source to a destination, representing the smallest business unit of data synchronization. For example, synchronizing a table from MySQL to a table in PostgreSQL.
--   `Task`: The smallest execution unit, obtained by splitting a `Job` to maximize performance. For example, a `Job` reading from a sharded MySQL database with 1024 sub-tables can be split into 1024 read `Tasks`, executed concurrently.
--   `TaskGroup`: A collection of `Tasks`. A set of `Tasks` executed within the same `TaskGroupContainer` is called a `TaskGroup`.
--   `JobContainer`: The `Job` executor, a work unit responsible for the global splitting, scheduling, pre- and post-statements of a `Job`. Similar to the JobTracker in [Yarn][1].
--   `TaskGroupContainer`: The `TaskGroup` executor, a work unit responsible for executing a group of `Tasks`. Similar to the TaskTracker in [Yarn][1].
+- `Job`: Describes a synchronization job from a source to a destination, representing the smallest business unit of data synchronization. For example, synchronizing a table from MySQL to a table in PostgreSQL.
+- `Task`: The smallest execution unit, obtained by splitting a `Job` to maximize performance. For example, a `Job` reading from a sharded MySQL database with 1024 sub-tables can be split into 1024 read `Tasks`, executed concurrently.
+- `TaskGroup`: A collection of `Tasks`. A set of `Tasks` executed within the same `TaskGroupContainer` is called a `TaskGroup`.
+- `JobContainer`: The `Job` executor, a work unit responsible for the global splitting, scheduling, pre- and post-statements of a `Job`. Similar to the JobTracker in [Yarn][1].
+- `TaskGroupContainer`: The `TaskGroup` executor, a work unit responsible for executing a group of `Tasks`. Similar to the TaskTracker in [Yarn][1].
 
 In short, a `Job` is split into `Tasks`, which are executed in containers provided by the framework. The plugin only needs to implement the logic for `Job` and `Task`.
 
@@ -126,25 +126,25 @@ public class SomeReader
 
 The `Job` interface functions are as follows:
 
--   `init`: Initialization work for the Job object. At this point, you can get the plugin-related configuration via `super.getPluginJobConf()`. The read plugin gets the `reader` section of the configuration, and the write plugin gets the `writer` section.
--   `prepare`: Global preparation work, such as clearing the target table in MySQL.
--   `split`: Splits the job into `Tasks`. The `adviceNumber` parameter is the number of splits suggested by the framework, usually the concurrency level configured at runtime. The return value is a list of `Task` configurations.
--   `post`: Global post-processing work, such as the `rename` operation for a MySQL writer after synchronizing to a shadow table.
--   `destroy`: Destruction work for the Job object itself.
+- `init`: Initialization work for the Job object. At this point, you can get the plugin-related configuration via `super.getPluginJobConf()`. The read plugin gets the `reader` section of the configuration, and the write plugin gets the `writer` section.
+- `prepare`: Global preparation work, such as clearing the target table in MySQL.
+- `split`: Splits the job into `Tasks`. The `adviceNumber` parameter is the number of splits suggested by the framework, usually the concurrency level configured at runtime. The return value is a list of `Task` configurations.
+- `post`: Global post-processing work, such as the `rename` operation for a MySQL writer after synchronizing to a shadow table.
+- `destroy`: Destruction work for the Job object itself.
 
 The `Task` interface functions are as follows:
 
--   `init`: Initialization of the Task object. At this point, you can get the `Task`-related configuration via `super.getPluginJobConf()`. This configuration is one of the configurations returned by the `Job#split` method.
--   `prepare`: Local preparation work.
--   `startRead`: Reads data from the data source and writes it to the `RecordSender`. The `RecordSender` writes the data to the buffer queue connecting the `Reader` and `Writer`.
--   `startWrite`: Reads data from the `RecordReceiver` and writes it to the target data source. The data in the `RecordReceiver` comes from the buffer queue between the `Reader` and `Writer`.
--   `post`: Local post-processing work.
--   `destroy`: Destruction work for the Task object itself.
+- `init`: Initialization of the Task object. At this point, you can get the `Task`-related configuration via `super.getPluginJobConf()`. This configuration is one of the configurations returned by the `Job#split` method.
+- `prepare`: Local preparation work.
+- `startRead`: Reads data from the data source and writes it to the `RecordSender`. The `RecordSender` writes the data to the buffer queue connecting the `Reader` and `Writer`.
+- `startWrite`: Reads data from the `RecordReceiver` and writes it to the target data source. The data in the `RecordReceiver` comes from the buffer queue between the `Reader` and `Writer`.
+- `post`: Local post-processing work.
+- `destroy`: Destruction work for the Task object itself.
 
 Please note:
 
--   There must be no shared variables between `Job` and `Task`, because in a distributed runtime, there is no guarantee that shared variables will be initialized correctly. They can only depend on each other through configuration files.
--   `prepare` and `post` exist in both `Job` and `Task`. The plugin needs to determine where to perform operations based on the actual situation.
+- There must be no shared variables between `Job` and `Task`, because in a distributed runtime, there is no guarantee that shared variables will be initialized correctly. They can only depend on each other through configuration files.
+- `prepare` and `post` exist in both `Job` and `Task`. The plugin needs to determine where to perform operations based on the actual situation.
 
 The framework executes the `Job` and `Task` interfaces in the following order:
 
@@ -217,7 +217,6 @@ classDiagram
 	AbstractPlugin <|-- AbstractTaskPlugin
 
 	Pluginable <|-- AbstractPlugin
-
 ```
 
 ### Plugin Definition
@@ -233,10 +232,10 @@ In each plugin's project, there is a `plugin.json` file that defines the plugin'
 }
 ```
 
--   `name`: The plugin name, case-sensitive. The framework searches for the plugin based on the name specified by the user in the configuration file. **Very important**.
--   `class`: The fully qualified name of the entry class. The framework creates an instance of the entry class via reflection. **Very important**.
--   `description`: Descriptive information.
--   `developer`: The developer.
+- `name`: The plugin name, case-sensitive. The framework searches for the plugin based on the name specified by the user in the configuration file. **Very important**.
+- `class`: The fully qualified name of the entry class. The framework creates an instance of the entry class via reflection. **Very important**.
+- `description`: Descriptive information.
+- `developer`: The developer.
 
 ### Packaging and Publishing
 
@@ -254,8 +253,7 @@ ${ADDAX_HOME}
 ├── bin
 │     ├── addax.sh
 ├── conf
-│     ├── core.json
-│     └── logback.xml
+│     ├── core.json│     └── logback.xml
 ├── job
 ├── lib
 │     ├── addax-common-<version>.jar
@@ -269,29 +267,25 @@ ${ADDAX_HOME}
 │     │     │     ├── cassandrareader-<version>.jar
 │     │     │     ├── libs
 │     │     │     │     ├── <symbol link to shared folder>
-│     │     │     ├── plugin.json
-│     │     │     └── plugin_job_template.json
-│     └── writer
+│     │     │     ├── plugin.json│     │     │     └── plugin_job_template.json│     └── writer
 │         ├── cassandrawriter
 │         │     ├── cassandrawriter-<version>.jar
 │         │     ├── libs
 │         │     │     ├── <symbol link to shared folder>
-│         │     ├── plugin.json
-│         │     └── plugin_job_template.json
-├── shared
+│         │     ├── plugin.json│         │     └── plugin_job_template.json├── shared
 ```
 
--   `${ADDAX_HOME}/bin`: Executable program directory
--   `${ADDAX_HOME}/conf`: Framework configuration directory
--   `${ADDAX_HOME}/lib`: Framework dependency library directory
--   `${ADDAX_HOME}/shared`: Plugin dependency directory
--   `${ADDAX_HOME}/plugin`: Plugin directory
+- `${ADDAX_HOME}/bin`: Executable program directory
+- `${ADDAX_HOME}/conf`: Framework configuration directory
+- `${ADDAX_HOME}/lib`: Framework dependency library directory
+- `${ADDAX_HOME}/shared`: Plugin dependency directory
+- `${ADDAX_HOME}/plugin`: Plugin directory
 
 The plugin directory is divided into `reader` and `writer` subdirectories, where read and write plugins are stored respectively. The plugin directory structure is as follows:
 
--   `${PLUGIN_HOME}/libs`: The plugin's dependency libraries. To reduce package size, these dependencies are symbolic links to the `shared` directory.
--   `${PLUGIN_HOME}/plugin-name-version.jar`: The plugin's own jar file.
--   `${PLUGIN_HOME}/plugin.json`: The plugin description file.
+- `${PLUGIN_HOME}/libs`: The plugin's dependency libraries. To reduce package size, these dependencies are symbolic links to the `shared` directory.
+- `${PLUGIN_HOME}/plugin-name-version.jar`: The plugin's own jar file.
+- `${PLUGIN_HOME}/plugin.json`: The plugin description file.
 
 Although the framework adds all jar files under `${PLUGIN_HOME}` to the `classpath` when loading the plugin, it is recommended to keep dependency library jars and the plugin's own jar separate.
 
@@ -303,9 +297,7 @@ Although the framework adds all jar files under `${PLUGIN_HOME}` to the `classpa
 
 `Addax` uses `json` as the format for configuration files. A typical `Addax` task configuration is as follows:
 
-```json
---8<-- "jobs/pgwriter.json"
-```
+<<<@/public/assets/jobs/pgwriter.json
 
 The `Addax` framework has a `core.json` configuration file that specifies the framework's default behavior. A task's configuration can specify configuration items that already exist in the framework, and these will have a higher priority, overriding the settings in `core.json`.
 
@@ -317,33 +309,33 @@ The `value` part of `job.content.reader.parameter` in the configuration is passe
 
 The `parameter` section under `reader` and `writer` in the task configuration contains the plugin's configuration parameters. These parameters should follow these principles:
 
--   Camel Case: All configuration items should use lower camel case, with the first letter being lowercase.
--   Orthogonality Principle: Configuration items must be orthogonal, with no overlapping functionality or hidden rules.
--   Rich Types: Use JSON types appropriately to reduce unnecessary processing logic and the possibility of errors.
-    -   Use the correct data types. For example, for a `bool` type, use `true`/`false` instead of `"yes"`/`"true"`/`0`.
-    -   Use collection types reasonably, for example, use an array instead of a delimited string.
--   Consistency with Similar Plugins: Follow the conventions of similar plugin types. For example, the `connection` parameter for relational databases usually has the following structure:
+- Camel Case: All configuration items should use lower camel case, with the first letter being lowercase.
+- Orthogonality Principle: Configuration items must be orthogonal, with no overlapping functionality or hidden rules.
+- Rich Types: Use JSON types appropriately to reduce unnecessary processing logic and the possibility of errors.
+  - Use the correct data types. For example, for a `bool` type, use `true`/`false` instead of `"yes"`/`"true"`/`0`.
+  - Use collection types reasonably, for example, use an array instead of a delimited string.
+- Consistency with Similar Plugins: Follow the conventions of similar plugin types. For example, the `connection` parameter for relational databases usually has the following structure:
 
-  ```json
-  {
-    "connection": [
-      {
-        "table": ["table_1", "table_2"],
-        "jdbcUrl": [
-          "jdbc:mysql://127.0.0.1:3306/database_1",
-          "jdbc:mysql://127.0.0.2:3306/database_1_slave"
-        ]
-      },
-      {
-        "table": ["table_3", "table_4"],
-        "jdbcUrl": [
-          "jdbc:mysql://127.0.0.3:3306/database_2",
-          "jdbc:mysql://127.0.0.4:3306/database_2_slave"
-        ]
-      }
-    ]
-  }
-  ```
+```json
+{
+  "connection": [
+    {
+      "table": ["table_1", "table_2"],
+      "jdbcUrl": [
+        "jdbc:mysql://127.0.0.1:3306/database_1",
+        "jdbc:mysql://127.0.0.2:3306/database_1_slave"
+      ]
+    },
+    {
+      "table": ["table_3", "table_4"],
+      "jdbcUrl": [
+        "jdbc:mysql://127.0.0.3:3306/database_2",
+        "jdbc:mysql://127.0.0.4:3306/database_2_slave"
+      ]
+    }
+  ]
+}
+```
 
 ### How to Use the `Configuration` Class
 
@@ -378,11 +370,11 @@ For example, to operate on the following json:
 
 When calling the `configuration.get(path)` method, the results for the following path values are:
 
--   `x`: `4`
--   `a.b.c`: `2`
--   `a.b.c.d`: `null`
--   `a.f[0]`: `1`
--   `a.f[2].g`: `true`
+- `x`: `4`
+- `a.b.c`: `2`
+- `a.b.c.d`: `null`
+- `a.f[0]`: `1`
+- `a.f[2].g`: `true`
 
 Note that because the configuration seen by the plugin is only a part of the whole configuration, you need to be aware of the current root path when using a `Configuration` object.
 
@@ -428,13 +420,13 @@ If the transfer has already ended, it will return `null`, and the `Writer` plugi
 
 To standardize type conversion operations between the source and destination and ensure data integrity, Addax supports six internal data types:
 
--   `Long`: Fixed-point numbers (Int, Short, Long, BigInteger, etc.).
--   `Double`: Floating-point numbers (Float, Double, BigDecimal (infinite precision), etc.).
--   `String`: String type, with no length limit, using a universal character set (Unicode).
--   `Date`: Date type.
--   `Timestamp`: Timestamp type.
--   `Bool`: Boolean value.
--   `Bytes`: Binary data, which can store unstructured data such as MP3s.
+- `Long`: Fixed-point numbers (Int, Short, Long, BigInteger, etc.).
+- `Double`: Floating-point numbers (Float, Double, BigDecimal (infinite precision), etc.).
+- `String`: String type, with no length limit, using a universal character set (Unicode).
+- `Date`: Date type.
+- `Timestamp`: Timestamp type.
+- `Bool`: Boolean value.
+- `Bytes`: Binary data, which can store unstructured data such as MP3s.
 
 Correspondingly, there are seven `Column` implementations: `DateColumn`, `LongColumn`, `DoubleColumn`, `BytesColumn`, `StringColumn`, `BoolColumn`, and `TimestampColumn`.
 
@@ -469,26 +461,26 @@ Column <|-- Bytescolumn
 
 Addax's internal types use different Java types in their implementation:
 
-| Internal Type | Implementation Type  | Notes                            |
-|---------------|----------------------|----------------------------------|
-| Date          | java.util.Date       |                                  |
-| Timestamp     | java.sql.Timestamp   | Can be precise to the nanosecond |
+| Internal Type | Implementation Type  | Notes                                                           |
+| ------------- | -------------------- | --------------------------------------------------------------- |
+| Date          | java.util.Date       |                                                                 |
+| Timestamp     | java.sql.Timestamp   | Can be precise to the nanosecond                                |
 | Long          | java.math.BigInteger | Uses infinite-precision integers to ensure no loss of precision |
-| Double        | java.lang.String     | Represented as a String to ensure no loss of precision |
-| Bytes         | byte[]               |                                  |
-| String        | java.lang.String     |                                  |
-| Bool          | java.lang.Boolean    |                                  |
+| Double        | java.lang.String     | Represented as a String to ensure no loss of precision          |
+| Bytes         | byte[]               |                                                                 |
+| String        | java.lang.String     |                                                                 |
+| Bool          | java.lang.Boolean    |                                                                 |
 
 The relationships for converting between types are as follows:
 
-| from/to | Date                    | Long                     | Double                       | Bytes                        | String                     | Bool                                        |
-|---------|-------------------------|--------------------------|------------------------------|------------------------------|----------------------------|---------------------------------------------|
-| Date    | -                       | Use millisecond timestamp| Not supported                | Not supported                | Convert according to configured format | Not supported |
-| Long    | Construct Date from ms  | -                        | `BigDecimal.doubleValue()`   | Not supported                | `BigInteger.toString()`    | 0 is `false`, others are `true` |
-| Double  | Not supported           | `BigDecimal.longValue()` | -                            | Not supported                | Return internal String directly | Not supported |
-| Bytes   | Not supported           | Not supported            | Not supported                | -                            | Convert to `byte[]` with UTF-8 encoding | Not supported |
-| String  | Parse with configured format | `BigDecimal.longValue`   | `BigDecimal.doubleValue`[^1] | Convert to `byte[]` with UTF-8 encoding[^2] | -                          | "true" is `true`, "false" is `false` |
-| Bool    | Not supported           | `true` is `1L`, else `0L`| `true` is `1.0`, else `0.0`  | Not supported                | `Boolean.toString()`       | -                          |
+| from/to | Date                         | Long                      | Double                       | Bytes                                       | String                                  | Bool                                 |
+| ------- | ---------------------------- | ------------------------- | ---------------------------- | ------------------------------------------- | --------------------------------------- | ------------------------------------ |
+| Date    | -                            | Use millisecond timestamp | Not supported                | Not supported                               | Convert according to configured format  | Not supported                        |
+| Long    | Construct Date from ms       | -                         | `BigDecimal.doubleValue()`   | Not supported                               | `BigInteger.toString()`                 | 0 is `false`, others are `true`      |
+| Double  | Not supported                | `BigDecimal.longValue()`  | -                            | Not supported                               | Return internal String directly         | Not supported                        |
+| Bytes   | Not supported                | Not supported             | Not supported                | -                                           | Convert to `byte[]` with UTF-8 encoding | Not supported                        |
+| String  | Parse with configured format | `BigDecimal.longValue`    | `BigDecimal.doubleValue`[^1] | Convert to `byte[]` with UTF-8 encoding[^2] | -                                       | "true" is `true`, "false" is `false` |
+| Bool    | Not supported                | `true` is `1L`, else `0L` | `true` is `1.0`, else `0.0`  | Not supported                               | `Boolean.toString()`                    | -                                    |
 
 ## Dirty Data Handling
 
@@ -517,4 +509,5 @@ Users can specify a limit on the number of dirty data records or a percentage li
 [2]: https://github.com/wgzhao/Addax/blob/master/common/src/main/java/com/wgzhao/addax/common/util/Configuration.java
 
 [^1]: Handles values like `NaN`, `Infinity`, `-Infinity`.
+
 [^2]: Unless another encoding format is specified.

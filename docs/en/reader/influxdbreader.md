@@ -23,11 +23,7 @@ influx -import -path=NOAA_data.txt -precision=s -database=NOAA_water_database
 
 Create `job/influxdb2stream.json` file with the following content:
 
-=== "job/influxdb2stream.json"
-
-```json
---8<-- "jobs/influxdbreader.json"
-```
+<<<@/public/assets/jobs/influxdbreader.json
 
 ### Run
 
@@ -39,19 +35,19 @@ bin/addax.sh job/influxdb2stream.json
 
 ## Parameters
 
-| Configuration | Required | Data Type | Default Value | Description                                                                        |
-| :------------ | :------: | --------- | ------------- | ---------------------------------------------------------------------------------- |
-| endpoint      | Yes      | string    | None          | InfluxDB connection string                                                         |
-| username      | Yes      | string    | None          | Username of data source                                                            |
-| password      | No       | string    | None          | Password for specified username of data source                                     |
-| database      | Yes      | string    | None          | Database specified by data source                                                  |
-| table         | Yes      | string    | None          | Selected table name to be synchronized                                             |
-| column        | Yes      | list      | None          | Collection of column names to be synchronized in configured table, detailed description see [rdbmreader][1] |
-| connTimeout   | No       | int       | 15            | Set connection timeout value, in seconds                                           |
-| readTimeout   | No       | int       | 20            | Set read timeout value, in seconds                                                 |
-| writeTimeout  | No       | int       | 20            | Set write timeout value, in seconds                                                |
-| where         | No       | string    | None          | Filtering conditions for the table                                                 |
-| querySql      | No       | string    | None          | Use SQL query to get data, if configured, `table` and `column` configuration items are invalid |
+| Configuration | Required | Data Type | Default Value | Description                                                                                                 |
+| :------------ | :------: | --------- | ------------- | ----------------------------------------------------------------------------------------------------------- |
+| endpoint      |   Yes    | string    | None          | InfluxDB connection string                                                                                  |
+| username      |   Yes    | string    | None          | Username of data source                                                                                     |
+| password      |    No    | string    | None          | Password for specified username of data source                                                              |
+| database      |   Yes    | string    | None          | Database specified by data source                                                                           |
+| table         |   Yes    | string    | None          | Selected table name to be synchronized                                                                      |
+| column        |   Yes    | list      | None          | Collection of column names to be synchronized in configured table, detailed description see [rdbmreader][1] |
+| connTimeout   |    No    | int       | 15            | Set connection timeout value, in seconds                                                                    |
+| readTimeout   |    No    | int       | 20            | Set read timeout value, in seconds                                                                          |
+| writeTimeout  |    No    | int       | 20            | Set write timeout value, in seconds                                                                         |
+| where         |    No    | string    | None          | Filtering conditions for the table                                                                          |
+| querySql      |    No    | string    | None          | Use SQL query to get data, if configured, `table` and `column` configuration items are invalid              |
 
 ## Type Conversion
 

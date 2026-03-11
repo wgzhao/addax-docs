@@ -20,54 +20,45 @@ The interface accepts GET requests with the following parameters:
 
 The following is a sample of accessed data (actual returned data may vary slightly):
 
-```json
---8<-- "sql/http.json"
-```
-
+<<<@/public/assets/sql/http.json
 We need to get partial key value data from the `result` results.
 
 ### Configuration
 
 The following configuration implements getting data from the interface and printing to terminal
 
-=== "job/httpreader2stream.json"
-
-```json
---8<-- "jobs/httpreader.json"
-```
-
+<<<@/public/assets/jobs/httpreader.json
 Save the above content as `job/httpreader2stream.json` file.
 
 ### Execution
 
 Execute the following command for collection
 
-```shell
+```bash
 bin/addax.sh job/httpreader2stream.json
 ```
 
 The output of the above command is roughly as follows:
 
-```
---8<-- "output/httpreader.txt"
-```
+:::details
+<<<@/public/assets/output/httpreader.txt
 
 ## Parameters
 
-| Configuration | Required | Data Type | Default Value | Description                                                                          |
-| ------------- | :------: | :-------: | :-----------: | ------------------------------------------------------------------------------------ |
-| url           | Yes      |  string   |     None      | HTTP address to access                                                               |
-| reqParams     | No       |    map    |     None      | Interface request parameters                                                         |
-| resultKey     | No       |  string   |     None      | Key value to get results, if getting entire return value, no need to fill          |
-| method        | No       |  string   |      get      | Request mode, only supports GET and POST, case insensitive                         |
-| column        | Yes      |   list    |     None      | Keys to get, configure as `"*"` to get all key values                              |
-| username      | No       |  string   |     None      | Authentication account required for interface request (if any)                      |
-| password      | No       |  string   |     None      | Password required for interface request (if any)                                   |
-| authConfig    | No       |    map    |     None      | Auth endpoint config; fetch token first, then inject it into business request headers |
-| proxy         | No       |    map    |     None      | Proxy address, see description below                                                |
-| headers       | No       |    map    |     None      | Custom request header information                                                    |
-| isPage        | No       | boolean   |     None      | Whether interface supports pagination                                                |
-| pageParams    | No       |    map    |     None      | Pagination parameters                                                                |
+| Configuration | Required | Data Type | Default Value | Description                                                                           |
+| ------------- | :------: | :-------: | :-----------: | ------------------------------------------------------------------------------------- |
+| url           |   Yes    |  string   |     None      | HTTP address to access                                                                |
+| reqParams     |    No    |    map    |     None      | Interface request parameters                                                          |
+| resultKey     |    No    |  string   |     None      | Key value to get results, if getting entire return value, no need to fill             |
+| method        |    No    |  string   |      get      | Request mode, only supports GET and POST, case insensitive                            |
+| column        |   Yes    |   list    |     None      | Keys to get, configure as `"*"` to get all key values                                 |
+| username      |    No    |  string   |     None      | Authentication account required for interface request (if any)                        |
+| password      |    No    |  string   |     None      | Password required for interface request (if any)                                      |
+| authConfig    |    No    |    map    |     None      | Auth endpoint config; fetch token first, then inject it into business request headers |
+| proxy         |    No    |    map    |     None      | Proxy address, see description below                                                  |
+| headers       |    No    |    map    |     None      | Custom request header information                                                     |
+| isPage        |    No    |  boolean  |     None      | Whether interface supports pagination                                                 |
+| pageParams    |    No    |    map    |     None      | Pagination parameters                                                                 |
 
 ### reqParams
 
@@ -78,7 +69,7 @@ In particular, in `POST` mode, if your request body is not a `k-v` structure, yo
 ```json
 {
   "reqParams": {
-    "": [123,3456]
+    "": [123, 3456]
   }
 }
 ```
@@ -191,18 +182,13 @@ If we want to read `CURR_DATE`, `ID`, `COL1`, `COL2` as four fields, your `colum
 
 ```json
 {
-  "column": [
-    "CURR_DATE",
-    "DEPT.ID",
-    "KK[0].COL1",
-    "KK[1].COL2"
-  ]
+  "column": ["CURR_DATE", "DEPT.ID", "KK[0].COL1", "KK[1].COL2"]
 }
 ```
 
 The execution result is as follows:
 
-```shell
+```bash
 ...
 2021-10-30 14:01:50.273 [ taskGroup-0] INFO  Channel              - Channel set record_speed_limit to -1, No tps activated.
 

@@ -4,12 +4,7 @@ JSON File Reader 提供了读取本地文件系统数据存储的能力。
 
 ## 配置样例
 
-=== "job/json2stream.json"
-
-```json
---8<-- "jobs/jsonreader.json"
-```
-
+<<<@/public/assets/jobs/jsonreader.json
 其中 `/tmp/test*.json` 为同一个 json 文件的多个复制，内容如下：
 
 ```json
@@ -27,7 +22,7 @@ JSON File Reader 提供了读取本地文件系统数据存储的能力。
 | fieldDelimiter |    是    | string   | `,`    | 描述：读取的字段分隔符                                                 |
 | compress       |    否    | string   | 无     | 文本压缩类型，默认不填写意味着没有压缩。支持压缩类型为zip、gzip、bzip2 |
 | encoding       |    否    | string   | utf-8  | 读取文件的编码配置                                                     |
-| singleLine     |    否    | boolean  | true  |  每条数据是否为一行， 详见下文                                   |
+| singleLine     |    否    | boolean  | true   | 每条数据是否为一行， 详见下文                                          |
 
 ### path
 

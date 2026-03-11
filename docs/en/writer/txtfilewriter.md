@@ -4,28 +4,26 @@ TxtFile Writer provides writing CSV-like format to one or more table files in lo
 
 ## Configuration Example
 
-```json
---8<-- "jobs/txtwriter.json"
-```
+<<<@/public/assets/jobs/txtwriter.json
 
 ## Parameters
 
-| Configuration  | Required | Data Type | Default Value | Description                                                          |
-| :------------- | :------: | --------- | ------------- | -------------------------------------------------------------------- |
-| path           | Yes      | string    | None          | Path information of local file system, write multiple files under Path directory |
-| fileName       | Yes      | string    | None          | Name of file to write, this filename will have random suffix added as actual filename for each thread |
-| writeMode      | Yes      | string    | None          | Data cleanup processing mode before writing, see below              |
-| fieldDelimiter | Yes      | string    | `,`           | Field delimiter for reading                                          |
-| compress       | No       | string    | None          | Text compression type, supports `zip`, `lzo`, `lzop`, `tgz`, `bzip2` |
-| encoding       | No       | string    | utf-8         | Encoding configuration for reading files                            |
-| nullFormat     | No       | string    | `\N`          | Define which strings can represent null                             |
-| dateFormat     | No       | string    | None          | Format when date type data is serialized to file, e.g. `"yyyy-MM-dd"` |
-| fileFormat     | No       | string    | text          | Format of file output, see below                                    |
-| table          | Yes      | string    | None          | Table name to specify in SQL mode                                   |
-| column         | No       | list      | None          | Optional column names to specify in SQL mode                        |
-| extendedInsert | No       | boolean   | true          | Whether to use batch insert syntax in SQL mode, see below          |
-| batchSize      | No       | int       | 2048          | Batch size for batch insert syntax in SQL mode, see below          |
-| header         | No       | list      | None          | Table header for text output, example `['id', 'name', 'age']`      |
+| Configuration  | Required | Data Type | Default Value | Description                                                                                           |
+| :------------- | :------: | --------- | ------------- | ----------------------------------------------------------------------------------------------------- |
+| path           |   Yes    | string    | None          | Path information of local file system, write multiple files under Path directory                      |
+| fileName       |   Yes    | string    | None          | Name of file to write, this filename will have random suffix added as actual filename for each thread |
+| writeMode      |   Yes    | string    | None          | Data cleanup processing mode before writing, see below                                                |
+| fieldDelimiter |   Yes    | string    | `,`           | Field delimiter for reading                                                                           |
+| compress       |    No    | string    | None          | Text compression type, supports `zip`, `lzo`, `lzop`, `tgz`, `bzip2`                                  |
+| encoding       |    No    | string    | utf-8         | Encoding configuration for reading files                                                              |
+| nullFormat     |    No    | string    | `\N`          | Define which strings can represent null                                                               |
+| dateFormat     |    No    | string    | None          | Format when date type data is serialized to file, e.g. `"yyyy-MM-dd"`                                 |
+| fileFormat     |    No    | string    | text          | Format of file output, see below                                                                      |
+| table          |   Yes    | string    | None          | Table name to specify in SQL mode                                                                     |
+| column         |    No    | list      | None          | Optional column names to specify in SQL mode                                                          |
+| extendedInsert |    No    | boolean   | true          | Whether to use batch insert syntax in SQL mode, see below                                             |
+| batchSize      |    No    | int       | 2048          | Batch size for batch insert syntax in SQL mode, see below                                             |
+| header         |    No    | list      | None          | Table header for text output, example `['id', 'name', 'age']`                                         |
 
 ### writeMode
 

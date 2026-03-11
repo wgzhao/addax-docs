@@ -6,7 +6,7 @@
 
 发送的数据类似如下：
 
-```json
+````json
 {
   "jobName": "test",
   "startTimeStamp": 1587971621,
@@ -21,7 +21,7 @@
     "配置内容省略": "此处为实际任务配置"
   }
 }
-```
+
 
 服务接口在 `$ADDAX/conf/core.json` 文件中的 `core.server.address` 中定义，比如：
 
@@ -34,11 +34,11 @@
     }
   }
 }
-```
+
 
 这里的 <http://localhost:9090/api/v1/addax/jobReport> 接口服务需要自行开发，我们可以使用 Python 的 `flask` 快速开发这样的一个接口服务：
 
-```python
+python
 #!/bin/env python3
 # pip install flask
 from flask import Flask, request, jsonify
@@ -51,7 +51,7 @@ def process_job():
     # 检查请求是否为 JSON 格式
     if not request.is_json:
         return jsonify({"error": "Invalid request. JSON data is expected."}), 400
-    
+
     data = request.get_json()  # 获取 JSON 数据
 
     # 打印接收到的 JSON 数据
@@ -65,7 +65,7 @@ def process_job():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=9090, debug=True)
-```
+
 
 Java 代码示例可以参考 [AddaxReportController.java](https://github.com/wgzhao/addax-admin/blob/master/src/main/java/com/wgzhao/addax/admin/controller/AddaxReportController.java)
 
@@ -88,7 +88,6 @@ Java 代码示例可以参考 [AddaxReportController.java](https://github.com/wg
 
 ```shell
 bin/addax.sh -p "-DjobName=test" job/job.json
-```
 
 执行采集任务时，POST 传递给接口的 `jobName` 就是上述指定的 `test` 值。
 
@@ -147,6 +146,7 @@ bin/addax.sh -p "-DjobName=test" job/job.json
     }
   }
 }
-```
+
 
 那么先取出 `/ods/odstl/tbl/logdate=${logdate}`，然后按照 `/` 切分，获取第二项 `odstl`，第三项 `tbl`，然后拼接成 `odstl.tbl` 这个值就是 `jobName` 值
+````

@@ -8,7 +8,7 @@ DatabendReader 插件实现了从 [Databend](https://databend.rs) 读取数据
 
 我们可以通过如下方式启动 Databend 数据库
 
-```shell
+```bash
 docker run  -tid  --rm  -p 8000:8000 \
    -e QUERY_DEFAULT_USER=databend \
    -e QUERY_DEFAULT_PASSWORD=databend \
@@ -29,22 +29,17 @@ docker run  -tid  --rm  -p 8000:8000 \
 
 并填充必要的数据
 
-
 下面的配置是读取该表到终端的作业:
 
-=== "job/databend2stream.json"
+<<<@/public/assets/jobs/databend2stream.json
 
-  ```json
-  --8<-- "jobs/databend2stream.json"
-  ```
-
-将上述配置文件保存为   `job/databend2stream.json`
+将上述配置文件保存为 `job/databend2stream.json`
 
 ### 执行采集命令
 
 执行以下命令进行数据采集
 
-```shell
+```bash
 bin/addax.sh job/databend2stream.json
 ```
 

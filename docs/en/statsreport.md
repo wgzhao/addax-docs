@@ -7,7 +7,7 @@ Addax provides detailed statistics and monitoring during job execution to help y
 During execution, Addax reports various metrics including:
 
 - Records processed per second
-- Bytes transferred per second  
+- Bytes transferred per second
 - Error counts and percentages
 - Channel performance
 - Memory usage
@@ -19,17 +19,14 @@ During execution, Addax reports various metrics including:
 
 During job execution, Addax displays real-time statistics:
 
-```
 2023-12-07 10:30:15.123 [Statistics] INFO - Total records: 15000, Speed: 1500 rec/s (1.2 MB/s), Errors: 0 (0.00%)
 2023-12-07 10:30:25.124 [Statistics] INFO - Total records: 30000, Speed: 1500 rec/s (1.2 MB/s), Errors: 2 (0.01%)
 2023-12-07 10:30:35.125 [Statistics] INFO - Total records: 45000, Speed: 1500 rec/s (1.2 MB/s), Errors: 2 (0.00%)
-```
 
 ### Final Report
 
 At job completion, a comprehensive report is displayed:
 
-```
 ====================Job Statistics====================
 Job ID: 202312071030001
 Start Time: 2023-12-07 10:30:00
@@ -37,24 +34,25 @@ End Time: 2023-12-07 10:35:30
 Total Time: 5m30s
 
 Records:
-  - Total Read: 100000
-  - Total Written: 99998
-  - Errors: 2
-  - Error Rate: 0.002%
+
+- Total Read: 100000
+- Total Written: 99998
+- Errors: 2
+- Error Rate: 0.002%
 
 Performance:
-  - Average Speed: 303 rec/s
-  - Peak Speed: 450 rec/s
-  - Total Bytes: 12.5 MB
-  - Throughput: 38.5 KB/s
+
+- Average Speed: 303 rec/s
+- Peak Speed: 450 rec/s
+- Total Bytes: 12.5 MB
+- Throughput: 38.5 KB/s
 
 Channels:
-  - Channel 0: 25000 records, 310 rec/s
-  - Channel 1: 25000 records, 305 rec/s  
-  - Channel 2: 24999 records, 298 rec/s
-  - Channel 3: 24999 records, 295 rec/s
-========================================================
-```
+
+- Channel 0: 25000 records, 310 rec/s
+- Channel 1: 25000 records, 305 rec/s
+- Channel 2: 24999 records, 298 rec/s
+- # Channel 3: 24999 records, 295 rec/s
 
 ## Enabling Detailed Statistics
 
@@ -87,12 +85,12 @@ Add to job configuration:
 
 ### Performance Metrics
 
-| Metric | Description | Unit |
-|--------|-------------|------|
-| Records/sec | Number of records processed per second | rec/s |
-| Bytes/sec | Amount of data transferred per second | B/s |
-| Error Rate | Percentage of failed records | % |
-| Channel Utilization | Performance of each parallel channel | rec/s |
+| Metric              | Description                            | Unit  |
+| ------------------- | -------------------------------------- | ----- |
+| Records/sec         | Number of records processed per second | rec/s |
+| Bytes/sec           | Amount of data transferred per second  | B/s   |
+| Error Rate          | Percentage of failed records           | %     |
+| Channel Utilization | Performance of each parallel channel   | rec/s |
 
 ### Memory Statistics
 
@@ -101,6 +99,7 @@ bin/addax.sh -j "-Daddax.stats.memory=true" job.json
 ```
 
 Output includes:
+
 - JVM heap usage
 - Memory allocation rates
 - Garbage collection statistics
@@ -114,6 +113,7 @@ bin/addax.sh -j "-Daddax.stats.io=true" job.json
 ```
 
 Includes:
+
 - Network I/O rates
 - Disk read/write speeds
 - Connection pool statistics
@@ -191,24 +191,21 @@ bin/addax.sh -j "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.p
 Look for these patterns in statistics:
 
 **Reader Bottleneck:**
-```
+
 Channel 0: 1000 rec/s (reader working hard)
 Channel 1: 100 rec/s (waiting for reader)
 Channel 2: 100 rec/s (waiting for reader)
-```
 
 **Writer Bottleneck:**
-```
+
 Channel 0: 200 rec/s (waiting for writer)
 Channel 1: 200 rec/s (waiting for writer)  
 Channel 2: 200 rec/s (waiting for writer)
-```
 
 **Network Bottleneck:**
-```
+
 High record rate but low byte rate indicates small records
 Low record rate but high byte rate indicates large records
-```
 
 ### Optimization Recommendations
 
@@ -266,16 +263,19 @@ Alert on low performance:
 ### Common Issues
 
 **Job Running Slowly:**
+
 - Check channel utilization
 - Monitor memory usage
 - Verify network connectivity
 
 **High Error Rate:**
+
 - Review data type mappings
 - Check source data quality
 - Verify target constraints
 
 **Memory Errors:**
+
 - Monitor heap usage trends
 - Check for memory leaks
 - Adjust JVM settings

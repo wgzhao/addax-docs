@@ -4,9 +4,7 @@ Redis Reader 插件用于读取 [Redis RDB](https://redis.io) 数据
 
 ## 配置样例
 
-```json
---8<-- "jobs/redisreader.json"
-```
+<<<@/public/assets/jobs/redisreader.json
 
 ## 参数说明
 

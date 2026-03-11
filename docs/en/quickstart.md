@@ -112,7 +112,7 @@ Here's a more practical example - synchronizing data from MySQL to PostgreSQL.
 
 ### Create Job Configuration
 
-```json
+````json
 {
   "job": {
     "content": [
@@ -155,13 +155,13 @@ Here's a more practical example - synchronizing data from MySQL to PostgreSQL.
     }
   }
 }
-```
+`
 
 ### Execute Job
 
 ```bash
 bin/addax.sh mysql_to_postgresql.json
-```
+````
 
 ## Next Steps
 

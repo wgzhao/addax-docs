@@ -4,11 +4,7 @@ TxtFile Reader 提供了读取本地文件系统数据存储的能力。
 
 ## 配置样例
 
-=== "job/txtfile2stream.json"
-
-  ```json
-  --8<-- "jobs/txtreader.json"
-  ```
+<<<@/public/assets/jobs/txtreader.json
 
 ## 参数说明
 
@@ -51,9 +47,7 @@ TxtFile Reader 提供了读取本地文件系统数据存储的能力。
 
 ```json
 {
-  "column": [
-    "*"
-  ]
+  "column": ["*"]
 }
 ```
 
@@ -114,6 +108,7 @@ TxtFile Reader 提供了读取本地文件系统数据存储的能力。
 
 所有配置项及默认值,配置时 csvReaderConfig 的map中请**严格按照以下字段名字进行配置**：
 
+````
 ```ini
 boolean caseSensitive = true;
 char textQualifier = 34;
@@ -127,7 +122,7 @@ int escapeMode = 1;
 boolean safetySwitch = true;//单列长度是否限制100000字符
 boolean skipEmptyRecords = true;//是否跳过空行
 boolean captureRawRecord = true;
-```
+````
 
 ## 类型转换
 
@@ -138,4 +133,3 @@ boolean captureRawRecord = true;
 | String         | String            |
 | Boolean        | Boolean           |
 | Date           | Date              |
-

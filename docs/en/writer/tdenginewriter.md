@@ -8,7 +8,7 @@ Considering performance issues, this plugin uses TDengine's JDBC-JNI driver, whi
 
 First copy `plugin/writer/tdenginewriter/libs/libtaos.so.2.0.16.0` to `/usr/lib64` directory, then execute the following commands to create soft links:
 
-```shell
+```bash
 ln -sf /usr/lib64/libtaos.so.2.0.16.0 /usr/lib64/libtaos.so.1
 ln -sf /usr/lib64/libtaos.so.1 /usr/lib64/libtaos.so
 ```

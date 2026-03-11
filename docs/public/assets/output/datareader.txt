@@ -1,5 +1,4 @@
 $ bin/addax.sh job/datareader2stream.json
-
   ___      _     _
  / _ \    | |   | |
 / /_\ \ __| | __| | __ ___  __

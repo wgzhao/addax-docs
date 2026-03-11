@@ -5,11 +5,7 @@ ElasticSearch Writer 插件用于向 [ElasticSearch](https://www.elastic.co/cn/e
 
 ## 配置样例
 
-=== "job/stream2es.json"
-
-```json
---8<-- "jobs/eswriter.json"
-```
+<<<@/public/assets/jobs/eswriter.json
 
 ## 参数说明
 

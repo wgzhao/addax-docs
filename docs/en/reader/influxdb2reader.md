@@ -12,11 +12,7 @@ The following example demonstrates how this plugin reads data from specified tab
 
 Create `job/influx2stream.json` file with the following content:
 
-=== "job/influx2stream.json"
-
-  ```json
-  --8<-- "jobs/influx2stream.json"
-  ```
+<<<@/public/assets/jobs/influx2stream.json
 
 ### Run
 
@@ -28,16 +24,16 @@ bin/addax.sh job/influx2stream.json
 
 ## Parameters
 
-| Configuration | Required | Data Type | Default Value | Description                                                             |
-| :------------ | :------: | --------- | ------------- | ----------------------------------------------------------------------- |
-| endpoint      | Yes      | string    | None          | InfluxDB connection string                                              |
-| token         | Yes      | string    | None          | Token for accessing database                                            |
-| table         | No       | list      | None          | Selected table names (i.e., metrics) to be synchronized               |
-| org           | Yes      | string    | None          | Specify InfluxDB org name                                               |
-| bucket        | Yes      | string    | None          | Specify InfluxDB bucket name                                            |
-| column        | No       | list      | None          | Collection of column names to be synchronized in configured table, detailed description see [rdbmreader][1] |
-| range         | Yes      | list      | None          | Time range for reading data                                             |
-| limit         | No       | int       | None          | Limit number of records to get                                          |
+| Configuration | Required | Data Type | Default Value | Description                                                                                                 |
+| :------------ | :------: | --------- | ------------- | ----------------------------------------------------------------------------------------------------------- |
+| endpoint      |   Yes    | string    | None          | InfluxDB connection string                                                                                  |
+| token         |   Yes    | string    | None          | Token for accessing database                                                                                |
+| table         |    No    | list      | None          | Selected table names (i.e., metrics) to be synchronized                                                     |
+| org           |   Yes    | string    | None          | Specify InfluxDB org name                                                                                   |
+| bucket        |   Yes    | string    | None          | Specify InfluxDB bucket name                                                                                |
+| column        |    No    | list      | None          | Collection of column names to be synchronized in configured table, detailed description see [rdbmreader][1] |
+| range         |   Yes    | list      | None          | Time range for reading data                                                                                 |
+| limit         |    No    | int       | None          | Limit number of records to get                                                                              |
 
 ### column
 
