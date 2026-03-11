@@ -251,32 +251,8 @@ mvn package assembly:single
 
 `Addax` 插件需要遵循统一的目录结构：
 
-```ini
-${ADDAX_HOME}
-├── bin
-│     ├── addax.sh
-├── conf
-│     ├── core.json│     └── logback.xml
-├── job
-├── lib
-│     ├── addax-common-<version>.jar
-│     ├── addax-core-<version>.jar
-│     ├── addax-rdbms-<version>.jar
-│     ├── addax-storage-<version>.jar
-├── log
-├── plugin
-│     ├── reader
-│     │     ├── cassandrareader
-│     │     │     ├── cassandrareader-<version>.jar
-│     │     │     ├── libs
-│     │     │     │     ├── <symbol link to shared folder>
-│     │     │     ├── plugin.json│     │     │     └── plugin_job_template.json│     └── writer
-│         ├── cassandrawriter
-│         │     ├── cassandrawriter-<version>.jar
-│         │     ├── libs
-│         │     │     ├── <symbol link to shared folder>
-│         │     ├── plugin.json│         │     └── plugin_job_template.json├── shared
-```
+<<<@/public/assets/output/code-layout.txt
+
 
 - `${ADDAX_HOME}/bin`: 可执行程序目录
 - `${ADDAX_HOME}/conf`: 框架配置目录

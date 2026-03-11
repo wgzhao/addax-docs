@@ -97,11 +97,10 @@
 
 ```shell
 bin/addax.sh -d job/job.jsonListening for transport dt_socket at address: 9999
-
+```
 
 表示程序监听在 `9999` 端口上，等待联接。
 
 返回 `IDEA` 窗口，点击工具栏上绿色 DEBUG 小虫按钮，开始调试，如果运行正常，会得到类似下图的调试窗口：
 
 ![running remote debug](images/debug-7.png)
-```

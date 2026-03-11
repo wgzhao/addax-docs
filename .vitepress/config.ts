@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress'
+import { withMermaid } from "vitepress-plugin-mermaid";
 
 const readerPlugins = [
   { path: 'reader/accessreader', name: 'Access Reader' },
@@ -163,5 +164,10 @@ export default defineConfig({
         ]
       }
     }
-  }
+  },
+  mermaid:{
+    //mermaidConfig !theme here works for light mode since dark theme is forced in dark mode
+  },
 })
+
+
