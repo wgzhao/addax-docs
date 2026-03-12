@@ -1,6 +1,6 @@
 # 命令行工具
 
-这里介绍 [addax.sh](https://github.com/wgzhao/Addax/blob/master/bin/addax.sh) 命令行工具的使用方法。
+这里介绍 [addax.sh](https://github.com/wgzhao/Addax/blob/master/core/src/main/bin/addax.sh) 命令行工具的使用方法。
 
 ## 命令行工具
 
@@ -23,7 +23,7 @@ bin/addax.sh <job_file>
 - `-h`, `--help`: 显示帮助信息。
 - `-v`, `--version`: 显示 Addax 的版本信息。
 - `-l`, `--log`: 指定日志文件路径，默认是在 `$ADDAX_HOME/log` 目录下。
-- `-d`, `--debug`: 启用调试模式，详见 [调试模式](docs/debug.md)。
+- `-d`, `--debug`: 启用调试模式，详见 [调试模式](debug.md)。
 - `-L`, `--log-level`: 设置日志级别，支持 `DEBUG`, `INFO`, `WARN`, `ERROR` 等级别，默认是 `INFO`。
 - `-j`, `--jvm`: 指定 JVM 参数，可以传递给 Java 虚拟机的参数。
 - `-p`, `--params` : 传递额外的参数给作业配置文件，可以在作业配置中使用 `${param}` 的方式引用这些参数。

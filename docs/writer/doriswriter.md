@@ -4,7 +4,7 @@ DorisWriter 插件用于向 [Doris](http://doris.incubator.apache.org/master/zh-
 Doris http 连接(8030)，然后通过 [stream load](http://doris.incubator.apache.org/master/zh-CN/administrator-guide/load-data/stream-load-manual.html)
 加载数据到数据中，相比 `insert into` 方式效率要高不少，也是官方推荐的生产环境下的数据加载方式。
 
-Doris 是一个兼容 MySQL 协议的数据库后端，因此 Doris 读取可以使用 [MySQL Reader](mysqlreader) 进行访问。
+Doris 是一个兼容 MySQL 协议的数据库后端，因此 Doris 读取可以使用 [MySQL Reader](../reader/mysqlreader) 进行访问。
 
 ## 示例
 
@@ -26,6 +26,7 @@ PROPERTIES("replication_num" = "1");
 下面配置一个从内存读取数据，然后写入到 doris 表的配置文件
 
 <<<@/public/assets/jobs/doriswriter.json
+
 将上述配置文件保存为 `job/stream2doris.json`
 
 执行下面的命令
@@ -75,9 +76,9 @@ StreamLoad 的请求参数，详情参照StreamLoad介绍页面。[Stream load -
 
 ## 类型转换
 
-默认传入的数据均会被转为字符串，并以\t作为列分隔符，\n作为行分隔符，组成csv文件进行StreamLoad导入操作。
+默认传入的数据均会被转为字符串，并以 `\t` 作为列分隔符，`\n` 作为行分隔符，组成 csv 文件进行 StreamLoad 导入操作。
 
-默认是csv格式导入，如需更改列分隔符， 则正确配置 loadProps 即可
+默认是 csv 格式导入，如需更改列分隔符， 则正确配置 loadProps 即可
 
 ```json
 {

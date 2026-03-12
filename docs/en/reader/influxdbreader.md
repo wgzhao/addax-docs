@@ -57,4 +57,4 @@ Current implementation treats all fields as strings.
 
 1. Current plugin only supports version 1.x, version 2.0 and above are not supported
 
-[1]: ../rdbmsreader
+[1]: rdbmsreader

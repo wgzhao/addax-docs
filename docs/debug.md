@@ -20,7 +20,7 @@
 
 打开 IDEA工具，并打开 `addax` 项目源代码，打开 `plugin/reader/streamreader/StreamReader.java` 文件，找到 `parseMixupFunctions` 函数，并在函数申明处的点击左侧边缘处增加断点。如下图所示：
 
-![setup debug point](images/debug-1.png)
+![setup debug point](/images/debug-1.png)
 
 点击 `IDEA` 的 `Run->Edit Configurations...` 菜单，在弹出的 `Run/Debug Configurations` 窗口，点击左上角的 `+` 按钮，然后选择 选择 `Application` ，在右侧配置框中，填写相关信息如下：
 
@@ -36,15 +36,15 @@
 
 其他保持不变，点击 `Apply` 按钮。得到类似下图配置内容
 
-![setup debug configuration](images/debug-2.png)
+![setup debug configuration](/images/debug-2.png)
 
 点击 `OK` 按钮保存上述配置，回到 `IDEA` 主窗口，在窗口菜单栏有绿色`🔨`的右侧，应该可以看到刚才配置的描述文件，类似下图：
 
-![debug profile](images/debug-3.png)
+![debug profile](/images/debug-3.png)
 
 点击上述截图中的绿色 DEBUG 小虫按钮，进入调试，得到类似下图的调试窗口：
 
-![run debug](images/debug-4.png)
+![run debug](/images/debug-4.png)
 
 ## 远程调试
 
@@ -66,7 +66,7 @@
 
 打开 IDEA工具，并打开 `addax` 项目源代码，打开 `plugin/reader/streamreader/StreamReader.java` 文件，找到 `parseMixupFunctions` 函数，并在函数申明处的点击左侧边缘处增加断点。如下图所示：
 
-![setup debug point](images/debug-1.png)
+![setup debug point](/images/debug-1.png)
 
 点击 `IDEA` 的 `Run->Edit Configurations...` 菜单，在弹出的 `Run/Debug Configurations` 窗口，点击左上角的 `+` 按钮，然后选择 选择 `Remove JVM Debug` ，在右侧配置框中，填写相关信息如下：
 
@@ -77,13 +77,13 @@
 
 其他保持不变，点击 `Apply` 按钮，得到如下配置信息：
 
-![setup remote debug config](images/debug-5.png)
+![setup remote debug config](/images/debug-5.png)
 
 点击 `OK` 按钮保存并返回到 `IDEA` 主窗口
 
 确保在窗口工具栏有绿色`🔨`的右侧选择的是上述填写 `Name` 的描述配置，否则在下拉框中选择刚才的配置。
 
-![remove debug profile](images/debug-6.png)
+![remove debug profile](/images/debug-6.png)
 
 ### 运行调试
 
@@ -103,4 +103,4 @@ bin/addax.sh -d job/job.jsonListening for transport dt_socket at address: 9999
 
 返回 `IDEA` 窗口，点击工具栏上绿色 DEBUG 小虫按钮，开始调试，如果运行正常，会得到类似下图的调试窗口：
 
-![running remote debug](images/debug-7.png)
+![running remote debug](/images/debug-7.png)

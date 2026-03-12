@@ -322,4 +322,4 @@ bin/addax.sh job.json -p "-Dhost=localhost -Dport=3306"
 }
 ```
 
-For plugin-specific configuration details, please refer to the respective plugin documentation in the [reader](reader/) and [writer](writer/) sections.
+For plugin-specific configuration details, please refer to the respective plugin documentation in the readerand writer sections.

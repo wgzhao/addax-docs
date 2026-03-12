@@ -32,4 +32,4 @@ bin/addax.sh job/hive2stream.json
 | username      |   Yes    | string | None          | Username of data source                                                       |
 | password      |    No    | string | None          | Password for specified username of data source, can be omitted if no password |
 
-[1]: ../rdbmsreader
+[1]: rdbmsreader

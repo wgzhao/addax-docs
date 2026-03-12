@@ -165,7 +165,7 @@ bin/addax.sh mysql_to_postgresql.json
 
 ## Next Steps
 
-- Learn more about [job configuration](setupJob.md)
-- Explore available [reader plugins](reader/)
-- Explore available [writer plugins](writer/)
-- Learn about [performance tuning](debug.md)
+- Learn more about [job configuration](job-setup)
+- Explore available reader plugins
+- Explore available writer plugins
+- Learn about [performance tuning](debug)
