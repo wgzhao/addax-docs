@@ -97,17 +97,17 @@ const zhWriterNavItems = writerPlugins.map(plugin => ({
 }))
 
 const enNav = [
-  { text: 'Home', link: '/en/introduce' },
-  { text: 'Quickstart', link: '/en/quickstart'}
+  { text: 'Home', link: '/en/' },
+  { text: 'Quickstart', link: '/en/quick-start'}
 ]
 const enSiderbar = [
-  { text: 'Job Setup', link: '/en/setupJob' },
+  { text: 'Job Setup', link: '/en/job-setup' },
   { text: 'Command Line', link: '/en/commandline' },
-  { text: 'Debug', link: '/en/debug' },
-  { text: 'Encrypt Password', link: '/en/encrypt_password' },
-  { text: 'Stats Report', link: '/en/statsreport' },
+  { text: 'Debug', link: '/en/howto-debug' },
+  { text: 'Encrypt Password', link: '/en/encrypt-password' },
+  { text: 'Stats Report', link: '/en/statistic-report' },
   { text: 'Transformer', link: '/en/transformer' },
-  { text: 'Plugin Development', link: '/en/plugin_development' },
+  { text: 'Plugin Development', link: '/en/plugin-development' },
   { text: 'Server', link: '/en/server' },
   { text: 'Plugins', 
     items: [
