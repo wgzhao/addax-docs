@@ -168,4 +168,4 @@ bin/addax.sh mysql_to_postgresql.json
 - Learn more about [job configuration](job-setup)
 - Explore available reader plugins
 - Explore available writer plugins
-- Learn about [performance tuning](debug)
+- Learn about [performance tuning](howto-debug)

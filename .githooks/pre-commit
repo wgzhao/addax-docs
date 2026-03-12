@@ -1,0 +1,17 @@
+#!/bin/sh
+# Tracked pre-commit hook: run build and abort commit on failure
+echo "pre-commit: running 'bun run build'..."
+if command -v bun >/dev/null 2>&1; then
+  if ! bun run build; then
+    echo "pre-commit: 'bun run build' failed. Commit aborted."
+    exit 1
+  fi
+else
+  echo "pre-commit: 'bun' not found; trying 'npm run build'..."
+  if ! npm run build; then
+    echo "pre-commit: 'npm run build' failed. Commit aborted."
+    exit 1
+  fi
+fi
+echo "pre-commit: build succeeded."
+exit 0
