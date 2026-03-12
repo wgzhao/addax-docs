@@ -50,7 +50,8 @@
 
 ### 一些假定
 
-假定程序部署在远程服务器上，需要直接调试远程服务器上运行的程序，假定远程服务器IP地址为 `192.168.1.100`，`Addax` 部署在 `/opt/addax/4.0.3` 目录下，其 `job` 文件夹下，也有一个和本地调试中描述的 `job.json` 文件。
+假定程序部署在远程服务器上，需要直接调试远程服务器上运行的程序，假定远程服务器IP地址为 `192.168.1.100`，
+`Addax` 部署在 `/opt/addax/4.0.3` 目录下，其 `job` 文件夹下，也有一个和本地调试中描述的 `job.json` 文件。
 同样的，上述 job 文件运行没有符合我们的预期，猜测是 `streamreader` 这个插件的 `parseMixupFunctions` 函数有问题，我想调试看具体问题在哪里。
 
 注意：远程调试需要在服务器打开 `9999` 端口，因此要保证服务器上的 `9999` 端口没有被占用，如果被占用，则需要修改此端口。
@@ -62,13 +63,13 @@
 3. 将 `9999` 修改成其他未被占用的端口
 4. 保存退出
 
-### 配置 IDEA
+### 配置 IDEA 用于远程调试
 
 打开 IDEA工具，并打开 `addax` 项目源代码，打开 `plugin/reader/streamreader/StreamReader.java` 文件，找到 `parseMixupFunctions` 函数，并在函数申明处的点击左侧边缘处增加断点。如下图所示：
 
 ![setup debug point](/images/debug-1.png)
 
-点击 `IDEA` 的 `Run->Edit Configurations...` 菜单，在弹出的 `Run/Debug Configurations` 窗口，点击左上角的 `+` 按钮，然后选择 选择 `Remove JVM Debug` ，在右侧配置框中，填写相关信息如下：
+点击 `IDEA` 的 `Run->Edit Configurations...` 菜单，在弹出的 `Run/Debug Configurations` 窗口，点击左上角的 `+` 按钮，然后选择 选择 `Remote JVM Debug` ，在右侧配置框中，填写相关信息如下：
 
 - Name: 调试描述名称，这里可以按照自己喜好填写
 - Configuration:
@@ -83,7 +84,7 @@
 
 确保在窗口工具栏有绿色`🔨`的右侧选择的是上述填写 `Name` 的描述配置，否则在下拉框中选择刚才的配置。
 
-![remove debug profile](/images/debug-6.png)
+![remote debug profile](/images/debug-6.png)
 
 ### 运行调试
 

@@ -101,6 +101,7 @@ const enNav = [
   { text: 'Quickstart', link: '/en/quick-start'}
 ]
 const enSiderbar = [
+  { text: 'Introduction', link: '/en/introduction' },
   { text: 'Job Setup', link: '/en/job-setup' },
   { text: 'Command Line', link: '/en/commandline' },
   { text: 'Debug', link: '/en/howto-debug' },
@@ -123,6 +124,7 @@ const zhNav = [
 ]
 
 const zhSidebar = [
+  { text: '简介', link: '/introduction' },
   { text: '作业配置', link: '/job-setup' },
   { text: '命令行', link: '/commandline' },
   { text: '调试', link: '/debug' },

@@ -24,7 +24,7 @@ Addax 运行一个任务的大致流程如下：
 11. `split()` 方法 reader 插件会根据 channel 的值进行拆分，但是有些 reader 插件可能不会参考 channel 的值，writer 插件会完全根据 reader 的插件 1:1 进行返回
 12. `split()` 方法内部的 `mergeReaderAndWriterTaskConfigs()` 负责合并 reader、writer、以及 transformer 三者关系，生成 task 的配置，并且重写 `job.content` 的配置
 13. `schedule()` 方法根据 `split()` 拆分生成的 task 配置分配生成 taskGroup 对象，根据 task 的数量和单个 taskGroup 支持的 task 数量进行配置，两者相除就可以得出 taskGroup 的数量
-14. `schedule()` 内部通过 AbstractScheduler 的 `schedule()` 执行，继续执行` startAllTaskGroup()` 方法创建所有的 TaskGroupContainer 组织相关的
+14. `schedule()` 内部通过 AbstractScheduler 的 `schedule()` 执行，继续执行`startAllTaskGroup()` 方法创建所有的 TaskGroupContainer 组织相关的
     task，TaskGroupContainerRunner 负责运行 TaskGroupContainer 执行分配的 task。scheduler 的具体实现类为 `ProcessInnerScheduler`。
 15. `taskGroupContainerExecutorService` 启动固定的线程池用以执行 `TaskGroupContainerRunner` 对象，TaskGroupContainerRunner 的 `run()` 方法调用 `taskGroupContainer.
 start()` 方法，针对每个 channel 创建一个 TaskExecutor，通过 `taskExecutor.doStart()` 启动任务。
@@ -158,8 +158,8 @@ Init:::job --> Prepare:::job
 Prepare --> Split:::job
 Split --> Schedule:::fw
 state Schedule {
-	direction LR
-	init\nprepare\nstartRead\npost\ndestroy1 --> init\nprepare\nstartRead\npost\ndestroy : Channel
+ direction LR
+ init\nprepare\nstartRead\npost\ndestroy1 --> init\nprepare\nstartRead\npost\ndestroy : Channel
 }
 Schedule --> Post:::job
 
@@ -175,51 +175,51 @@ classDef ctask fill:blue
 ```mermaid
 %%{init: {"theme": "neutral"}}%%
 classDiagram
-	class Pluginable {
-	+ init()
-	+ destroy()
-	+ others()
-	}
-	class AbstractPlugin {
-		+ prepare()
-		+ post()
-		+ others()
-	}
-	class AbstractJobPlugin {
-		+ getJobPluginCollector(): JobPluginCollector
-		+ setJobPluginCollector(JobPluginCollector)
-	}
+ class Pluginable {
+ + init()
+ + destroy()
+ + others()
+ }
+ class AbstractPlugin {
+  + prepare()
+  + post()
+  + others()
+ }
+ class AbstractJobPlugin {
+  + getJobPluginCollector(): JobPluginCollector
+  + setJobPluginCollector(JobPluginCollector)
+ }
 
-	class AbstractTaskPlugin {
-		+ getTaskPluginCollector(): TaskPluginCollector
-		+ setTaskPluginCollector(TaskPluginCollector)
-	}
-	class Reader_Job {
-		+ split(init): List<<Configuration>>
-	}
+ class AbstractTaskPlugin {
+  + getTaskPluginCollector(): TaskPluginCollector
+  + setTaskPluginCollector(TaskPluginCollector)
+ }
+ class Reader_Job {
+  + split(init): List<<Configuration>>
+ }
 
-	class Writer_Job {
-		+ split(init): List<<Configuration>>
-	}
+ class Writer_Job {
+  + split(init): List<<Configuration>>
+ }
 
-	class Reader_Task {
-		+ startRead(RecordSender)
-	}
+ class Reader_Task {
+  + startRead(RecordSender)
+ }
 
-	class Writer_Task {
-		+ startWrite(RecordReceiver)
-	}
+ class Writer_Task {
+  + startWrite(RecordReceiver)
+ }
 
-	AbstractJobPlugin <|-- Reader_Job
-	AbstractJobPlugin <|-- Writer_Job
+ AbstractJobPlugin <|-- Reader_Job
+ AbstractJobPlugin <|-- Writer_Job
 
-	AbstractTaskPlugin <|-- Reader_Task
-	AbstractTaskPlugin <|-- Writer_Task
+ AbstractTaskPlugin <|-- Reader_Task
+ AbstractTaskPlugin <|-- Writer_Task
 
-	AbstractPlugin <|-- AbstractJobPlugin
-	AbstractPlugin <|-- AbstractTaskPlugin
+ AbstractPlugin <|-- AbstractJobPlugin
+ AbstractPlugin <|-- AbstractTaskPlugin
 
-	Pluginable <|-- AbstractPlugin
+ Pluginable <|-- AbstractPlugin
 ```
 
 ### 插件定义
@@ -253,7 +253,6 @@ mvn package assembly:single
 
 <<<@/public/assets/output/code-layout.txt
 
-
 - `${ADDAX_HOME}/bin`: 可执行程序目录
 - `${ADDAX_HOME}/conf`: 框架配置目录
 - `${ADDAX_HOME}/lib`: 框架依赖库目录
@@ -268,17 +267,16 @@ mvn package assembly:single
 
 尽管框架加载插件时，会把 `${PLUGIN_HOME}` 下所有的 jar 包添加到 `classpath` 环境变量中，但还是推荐依赖库的 jar 和插件本身的 jar 分开存放。
 
-!!! 特别提醒
+::: warning 特别提醒
 
-    插件的目录名字必须和 `plugin.json` 中定义的插件名称一致。
+插件的目录名字必须和 `plugin.json` 中定义的插件名称一致。
+:::
 
 ## 配置文件
 
 `Addax` 使用 `json` 作为配置文件的格式。一个典型的 `Addax` 任务配置如下：
 
-````json
---8<-- "jobs/pgwriter.json"
-
+<<<@/public/assets/jobs/pgwriter.json
 
 `Addax` 框架有 `core.json` 配置文件，指定了框架的默认行为。任务的配置里头可以指定框架中已经存在的配置项，而且具有更高的优先级，会覆盖 `core.json` 中的默认值。
 
@@ -298,7 +296,7 @@ mvn package assembly:single
   - 合理使用集合类型，比如，用数组替代有分隔符的字符串。
 - 类似通用：遵守同一类型的插件的习惯，比如关系型数据库的 `connection` 参数都是如下结构：
 
-
+```json
   {
     "connection": [
       {
@@ -317,7 +315,7 @@ mvn package assembly:single
       }
     ]
   }
-
+```
 
 ### 如何使用 `Configuration` 类
 
@@ -348,7 +346,7 @@ mvn package assembly:single
   },
   "x": 4
 }
-
+```
 
 比如调用 `configuration.get(path)` 方法，当 path 为如下值的时候得到的结果为：
 
@@ -370,7 +368,7 @@ mvn package assembly:single
 
 `Record` 有如下方法：
 
-java
+```java
 public interface Record
 {
     // 加入一个列，放在最后的位置
@@ -391,7 +389,7 @@ public interface Record
     // 计算整条记录在内存中占用的字节数
     int getByteSize();
 }
-
+```
 
 因为 `Record` 是一个接口，`Reader` 插件首先调用 `RecordSender.createRecord()` 创建一个 `Record` 实例，然后把 `Column` 一个个添加到 `Record` 中。
 
@@ -414,24 +412,24 @@ public interface Record
 
 `Column` 除了提供数据相关的方法外，还提供一系列以 `as` 开头的数据类型转换转换方法。
 
-mermaid
+```mermaid
 %%{init: {"theme": "neutral"}}%%
 classDiagram
 direction TB
 class Column {
-	<<interface>>
-	- rawData: Object
-	- type: Type
-	+ getRawData(): Object
-	+ getType(): Type
-	+ getByteSize(): init
-	+ asLong(): Long
-	+ asDouble(): Doule
-	+ asString(): String
-	+ asDate(): Date
-	+ asBytes(): Bytes
-	+ asBigDecimal(): BigDecimal
-	+ asBoolean(): Boolean
+ <<interface>>
+ - rawData: Object
+ - type: Type
+ + getRawData(): Object
+ + getType(): Type
+ + getByteSize(): init
+ + asLong(): Long
+ + asDouble(): Doule
+ + asString(): String
+ + asDate(): Date
+ + asBytes(): Bytes
+ + asBigDecimal(): BigDecimal
+ + asBoolean(): Boolean
 }
 Column <|-- Stringcolumn
 Column <|-- Doublecolumn
@@ -439,7 +437,7 @@ Column <|-- Longcolumn
 Column <|-- Datecolumn
 Column <|-- Boolcolumn
 Column <|-- Bytescolumn
-
+```
 
 Addax 的内部类型在实现上会选用不同的 java 类型：
 
@@ -449,7 +447,7 @@ Addax 的内部类型在实现上会选用不同的 java 类型：
 | Timestamp | java.sql.Timestamp   | 可以精确到纳秒                   |
 | Long      | java.math.BigInteger | 使用无限精度的大整数，保证不失真 |
 | Double    | java.lang.String     | 用 String 表示，保证不失真       |
-| Bytes     | byte[]               |                                  |
+| Bytes     | `byte[]`             |                                  |
 | String    | java.lang.String     |                                  |
 | Bool      | java.lang.Boolean    |                                  |
 
@@ -463,7 +461,6 @@ Addax 的内部类型在实现上会选用不同的 java 类型：
 | Bytes   | 不支持                  | 不支持                   | 不支持                       | -                            | 按utf-8编码转换为 `byte[]` | 不支持                                                     |
 | String  | 按配置的 格式解析       | `BigDecimal.longValue`   | `BigDecimal.doubleValue`[^1] | 按 utf-8 编码[^2]转换为 `byte[]` | -                          | "true"为`true`, "false"为`false`，不区分大小写。其他不支持 |
 | Bool    | 不支持                  | `true`为`1L`，否则`0L`   | 不支持                       | `true`为`1.0`，否则`0.0`     | 不支持                     | -                                                          |
-
 
 ## 脏数据处理
 
@@ -484,7 +481,7 @@ Addax 的内部类型在实现上会选用不同的 java 类型：
 
 ## 加载原理
 
-1. 框架扫描 `plugin/reader` 和 `plugin/writer `目录，加载每个插件的 `plugin.json` 文件。
+1. 框架扫描 `plugin/reader` 和 `plugin/writer`目录，加载每个插件的 `plugin.json` 文件。
 2. 以 `plugin.json` 文件中 `name` 为 key，索引所有的插件配置。如果发现重名的插件，框架会异常退出。
 3. 用户在插件中在 `reader`/`writer` 配置的 `name` 字段指定插件名字。框架根据插件的类型（`reader`/`writer`）和插件名称去插件的路径下扫描所有的 jar，加入 `classpath`。
 4. 根据插件配置中定义的入口类，框架通过反射实例化对应的 `Job` 和 `Task` 对象。
@@ -494,4 +491,3 @@ Addax 的内部类型在实现上会选用不同的 java 类型：
 
 [^1]: 处理 `NaN`, `Infinity`, `-Infinity` 等数值
 [^2]: 除非另有指定编码格式
-````

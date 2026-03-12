@@ -10,7 +10,7 @@ Addax 是一个异构数据源离线同步工具，最初来源于阿里的 [Dat
 
 ## 框架设计
 
-mermaid
+```mermaid
 graph LR
 MySQL
 subgraph Addax
@@ -26,6 +26,7 @@ mr --> Framework --> writer
 end
 
 MySQL ==> Addax ==> HDFS
+```
 
 Addax 本身作为离线数据同步框架，采用 Framework + plugin 架构构建。将数据源读取和写入抽象成为 Reader/Writer 插件，纳入到整个同步框架中。
 
@@ -139,7 +140,7 @@ task == Schedule ==> taskgroup
     "record": 10000
   }
 }
-
+```
 
 ### 强劲地同步性能
 
@@ -150,4 +151,3 @@ task == Schedule ==> taskgroup
 
 作业是极易受外部因素的干扰，网络闪断、数据源不稳定等因素很容易让同步到一半的作业报错停止。因此稳定性是 Addax 的基本要求，在 Addax 的设计中，重点完善了框架和插件的稳定性。
 目前 Addax 可以做到线程级别、作业级别多层次局部/全局的重试，保证用户的作业稳定运行。
-

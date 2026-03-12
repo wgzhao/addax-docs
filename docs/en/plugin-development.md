@@ -10,15 +10,15 @@ The general process for running a task in Addax is as follows:
 
 The startup steps are:
 
-1.  Parse configurations, including `job.json`, `core.json`, and `plugin.json`.
-2.  Set the `jobId` in the `configuration`.
-3.  Start the Engine via `Engine.start()` to enter the startup procedure.
-4.  Set the `RUNTIME_MODE` in the `configuration`.
-5.  Start via the `JobContainer`'s `start()` method.
-6.  Execute the job's `preHandler()`, `init()`, `prepare()`, `split()`, `schedule()`, `post()`, and `postHandle()` methods in sequence.
-7.  The `init()` method involves initializing the reader and writer plugins based on the configuration. This includes hot-loading JAR packages and calling the plugin's `init()` method, as well as setting the reader and writer's configuration.
-8.  The `prepare()` method involves initializing the reader and writer plugins by calling their respective `prepare()` methods. Each plugin has its own `jarLoader`, which inherits from `URLClassLoader`.
-9.  The `split()` method adjusts the number of channels via `adjustChannelNumber()` and performs the most granular splitting for the reader and writer. It's important to note that the writer's split result must reference the reader's split result to ensure an equal number of splits, satisfying the 1:1 channel model.
+1. Parse configurations, including `job.json`, `core.json`, and `plugin.json`.
+2. Set the `jobId` in the `configuration`.
+3. Start the Engine via `Engine.start()` to enter the startup procedure.
+4. Set the `RUNTIME_MODE` in the `configuration`.
+5. Start via the `JobContainer`'s `start()` method.
+6. Execute the job's `preHandler()`, `init()`, `prepare()`, `split()`, `schedule()`, `post()`, and `postHandle()` methods in seqence.
+7. The `init()` method involves initializing the reader and writer plugins based on the configuration. This includes hot-loading JARpackages and calling the plugin's `init()` method, as well as setting the reader and writer's configuration.
+8. The `prepare()` method involves initializing the reader and writer plugins by calling their respective `prepare()` methods. Each pluin has its own `jarLoader`, which inherits from `URLClassLoader`.
+9. The `split()` method adjusts the number of channels via `adjustChannelNumber()` and performs the most granular splitting for the reader and writer. It's important to note that the writer's split result must reference the reader's split result to ensure an equal number of splits, satisfying the 1:1 channel model.
 10. The channel count is mainly determined by byte and record rate limiting, which is calculated as the first step in the `split()` function.
 11. In the `split()` method, the reader plugin will split based on the channel value, but some reader plugins might not use this value. The writer plugin will always split 1:1 based on the reader's splits.
 12. The `mergeReaderAndWriterTaskConfigs()` method inside `split()` is responsible for merging the configurations of the reader, writer, and transformer to generate task configurations and override the `job.content` configuration.
@@ -35,8 +35,8 @@ To handle the differences between various data sources while providing consisten
 
 As a plugin developer, you need to focus on two issues:
 
-1.  The correctness of reading and writing data from the specific data source.
-2.  How to communicate with the framework and use it correctly.
+1. The correctness of reading and writing data from the specific data source.
+2. How to communicate with the framework and use it correctly.
 
 ## Framework from a Plugin's Perspective
 
@@ -155,8 +155,8 @@ Init:::job --> Prepare:::job
 Prepare --> Split:::job
 Split --> Schedule:::fw
 state Schedule {
-	direction LR
-	init\nprepare\nstartRead\npost\ndestroy1 --> init\nprepare\nstartRead\npost\ndestroy : Channel
+ direction LR
+ init\nprepare\nstartRead\npost\ndestroy1 --> init\nprepare\nstartRead\npost\ndestroy : Channel
 }
 Schedule --> Post:::job
 
@@ -172,51 +172,51 @@ The related class relationships are as follows:
 ```mermaid
 %%{init: {"theme": "neutral"}}%%
 classDiagram
-	class Pluginable {
-	+ init()
-	+ destroy()
-	+ others()
-	}
-	class AbstractPlugin {
-		+ prepare()
-		+ post()
-		+ others()
-	}
-	class AbstractJobPlugin {
-		+ getJobPluginCollector(): JobPluginCollector
-		+ setJobPluginCollector(JobPluginCollector)
-	}
+ class Pluginable {
+ + init()
+ + destroy()
+ + others()
+ }
+ class AbstractPlugin {
+  + prepare()
+  + post()
+  + others()
+ }
+ class AbstractJobPlugin {
+  + getJobPluginCollector(): JobPluginCollector
+  + setJobPluginCollector(JobPluginCollector)
+ }
 
-	class AbstractTaskPlugin {
-		+ getTaskPluginCollector(): TaskPluginCollector
-		+ setTaskPluginCollector(TaskPluginCollector)
-	}
-	class Reader_Job {
-		+ split(init): List<<Configuration>>
-	}
+ class AbstractTaskPlugin {
+  + getTaskPluginCollector(): TaskPluginCollector
+  + setTaskPluginCollector(TaskPluginCollector)
+ }
+ class Reader_Job {
+  + split(init): List<<Configuration>>
+ }
 
-	class Writer_Job {
-		+ split(init): List<<Configuration>>
-	}
+ class Writer_Job {
+  + split(init): List<<Configuration>>
+ }
 
-	class Reader_Task {
-		+ startRead(RecordSender)
-	}
+ class Reader_Task {
+  + startRead(RecordSender)
+ }
 
-	class Writer_Task {
-		+ startWrite(RecordReceiver)
-	}
+ class Writer_Task {
+  + startWrite(RecordReceiver)
+ }
 
-	AbstractJobPlugin <|-- Reader_Job
-	AbstractJobPlugin <|-- Writer_Job
+ AbstractJobPlugin <|-- Reader_Job
+ AbstractJobPlugin <|-- Writer_Job
 
-	AbstractTaskPlugin <|-- Reader_Task
-	AbstractTaskPlugin <|-- Writer_Task
+ AbstractTaskPlugin <|-- Reader_Task
+ AbstractTaskPlugin <|-- Writer_Task
 
-	AbstractPlugin <|-- AbstractJobPlugin
-	AbstractPlugin <|-- AbstractTaskPlugin
+ AbstractPlugin <|-- AbstractJobPlugin
+ AbstractPlugin <|-- AbstractTaskPlugin
 
-	Pluginable <|-- AbstractPlugin
+ Pluginable <|-- AbstractPlugin
 ```
 
 ### Plugin Definition
@@ -264,9 +264,10 @@ The plugin directory is divided into `reader` and `writer` subdirectories, where
 
 Although the framework adds all jar files under `${PLUGIN_HOME}` to the `classpath` when loading the plugin, it is recommended to keep dependency library jars and the plugin's own jar separate.
 
-!!! Special Reminder
+::: warning Special Reminder
 
     The plugin's directory name must be consistent with the plugin name defined in `plugin.json`.
+:::
 
 ## Configuration File
 
@@ -318,8 +319,8 @@ To simplify operations on `json`, `Addax` provides a simple DSL to be used with 
 
 `Configuration` provides common operations for reading and writing configuration items, such as `get`, `get with type`, `get with default value`, and `set`, as well as methods like `clone` and `toJSON`. Read and write operations require a `path` parameter.
 
-1.  A child map is represented by `.key`. The first dot in the `path` is omitted.
-2.  An array element is represented by `[index]`.
+1. A child map is represented by `.key`. The first dot in the `path` is omitted.
+2. An array element is represented by `[index]`.
 
 For example, to operate on the following json:
 
@@ -412,19 +413,19 @@ In addition to providing data-related methods, `Column` also provides a series o
 classDiagram
 direction TB
 class Column {
-	<<interface>>
-	- rawData: Object
-	- type: Type
-	+ getRawData(): Object
-	+ getType(): Type
-	+ getByteSize(): init
-	+ asLong(): Long
-	+ asDouble(): Doule
-	+ asString(): String
-	+ asDate(): Date
-	+ asBytes(): Bytes
-	+ asBigDecimal(): BigDecimal
-	+ asBoolean(): Boolean
+ <<interface>>
+ - rawData: Object
+ - type: Type
+ + getRawData(): Object
+ + getType(): Type
+ + getByteSize(): init
+ + asLong(): Long
+ + asDouble(): Doule
+ + asString(): String
+ + asDate(): Date
+ + asBytes(): Bytes
+ + asBigDecimal(): BigDecimal
+ + asBoolean(): Boolean
 }
 Column <|-- Stringcolumn
 Column <|-- Doublecolumn
@@ -463,9 +464,9 @@ The relationships for converting between types are as follows:
 
 Currently, there are three main types of dirty data:
 
-1.  The Reader reads an unsupported type or an illegal value.
-2.  Unsupported type conversion, for example, converting `Bytes` to `Date`.
-3.  Writing to the target fails, for example, an integer value exceeds the length limit when writing to MySQL.
+1. The Reader reads an unsupported type or an illegal value.
+2. Unsupported type conversion, for example, converting `Bytes` to `Date`.
+3. Writing to the target fails, for example, an integer value exceeds the length limit when writing to MySQL.
 
 ### How to Handle Dirty Data
 
@@ -475,10 +476,10 @@ Users can specify a limit on the number of dirty data records or a percentage li
 
 ## Loading Principle
 
-1.  The framework scans the `plugin/reader` and `plugin/writer` directories and loads each plugin's `plugin.json` file.
-2.  It indexes all plugin configurations using the `name` from the `plugin.json` file as the key. If duplicate plugin names are found, the framework will exit with an error.
-3.  The user specifies the plugin name in the `name` field of the `reader`/`writer` configuration. The framework then scans all jars in the plugin's path based on the plugin type (`reader`/`writer`) and name, and adds them to a custom `classloader`.
-4.  Based on the entry class defined in the plugin configuration, the framework instantiates the corresponding `Job` and `Task` objects via reflection.
+1. The framework scans the `plugin/reader` and `plugin/writer` directories and loads each plugin's `plugin.json` file.
+2. It indexes all plugin configurations using the `name` from the `plugin.json` file as the key. If duplicate plugin names are found, the framework will exit with an error.
+3. The user specifies the plugin name in the `name` field of the `reader`/`writer` configuration. The framework then scans all jars in the plugin's path based on the plugin type (`reader`/`writer`) and name, and adds them to a custom `classloader`.
+4. Based on the entry class defined in the plugin configuration, the framework instantiates the corresponding `Job` and `Task` objects via reflection.
 
 [1]: https://hadoop.apache.org/docs/stable/hadoop-yarn/hadoop-yarn-site/YARN.html
 [2]: https://github.com/wgzhao/Addax/blob/master/common/src/main/java/com/wgzhao/addax/common/util/Configuration.java

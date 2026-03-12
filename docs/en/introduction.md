@@ -1,11 +1,3 @@
----
-template: home.html
-title: Documentation for Addax
-social:
-  cards_layout_options:
-    title: Documentation for Addax
----
-
 # Addax Introduction
 
 ## Overview
@@ -18,7 +10,7 @@ To solve the problem of heterogeneous data source synchronization, Addax transfo
 
 ## Framework Design
 
-mermaid
+```mermaid
 graph LR
 MySQL
 subgraph Addax
@@ -34,6 +26,7 @@ mr --> Framework --> writer
 end
 
 MySQL ==> Addax ==> HDFS
+```
 
 Addax serves as an offline data synchronization framework, built with a Framework + plugin architecture. It abstracts data source reading and writing into Reader/Writer plugins, which are integrated into the entire synchronization framework.
 
@@ -47,7 +40,7 @@ Addax Framework provides simple interfaces for plugin interaction and a simple p
 
 This section uses a sequence diagram of an Addax job lifecycle to briefly explain the relationships between various modules from an overall architectural design perspective.
 
-mermaid
+```mermaid
 graph TB
 subgraph Job
 end
@@ -97,6 +90,7 @@ end
 
 Job == split ==> task
 task == Schedule ==> taskgroup
+```
 
 ### Core Module Introduction
 
@@ -146,7 +140,7 @@ Provides three flow control modes including channel (concurrency), record flow, 
     "record": 10000
   }
 }
-
+```
 
 ### Strong Synchronization Performance
 
@@ -157,4 +151,4 @@ When both source and destination performance are sufficient, a single job can de
 
 Jobs are extremely susceptible to interference from external factors, and factors such as network interruptions and unstable data sources can easily cause synchronization jobs to report errors and stop halfway. Therefore, stability is a basic requirement for Addax. In the design of Addax, the stability of both framework and plugins has been improved.
 Currently, Addax can achieve multi-level local/global retries at the thread level and job level, ensuring stable operation of user jobs.
-```
+
