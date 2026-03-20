@@ -176,6 +176,14 @@ export default defineConfig({
   mermaid:{
     //mermaidConfig !theme here works for light mode since dark theme is forced in dark mode
   },
+  sitemap: {
+    hostname: 'https://addax.wgzhao.com'
+  },
+  lastUpdated: true,
+  themeConfig: {
+    footer: {
+      message: 'Released under the <a href="https://github.com/wgzhao/Addax/blob/master/LICENSE">Apache License 2.0</a>.',
+      copyright: 'Copyright © 2018-present <a href="https://github.com/wgzhao">Steven Zhao</a>'
+    }
+  }
 })
-
-
