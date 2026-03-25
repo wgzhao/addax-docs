@@ -7,6 +7,7 @@ const readerPlugins = [
   { path: 'reader/databendreader', name: 'Databend Reader' },
   { path: 'reader/datareader', name: 'Data Reader' },
   { path: 'reader/dbfreader', name: 'DBF Reader' },
+  { path: 'reader/dorisreader', name: 'Doris Reader' },
   { path: 'reader/elasticsearchreader', name: 'Elasticsearch Reader' },
   { path: 'reader/excelreader', name: 'Excel Reader' },
   { path: 'reader/ftpreader', name: 'FTP Reader' },
