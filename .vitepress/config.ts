@@ -157,6 +157,7 @@ export default defineConfig({
         logo: {src: '/images/logo.svg', width: 160, height: 160},
         nav: zhNav,
         sidebar: zhSidebar,
+        search: { provider: 'local' },
         socialLinks: [
           { icon: 'github', link: 'https://github.com/wgzhao/addax' }
         ]
@@ -168,6 +169,7 @@ export default defineConfig({
       themeConfig: {
         nav: enNav,
         sidebar: enSiderbar,
+        search: { provider: 'local' },
         socialLinks: [
           { icon: 'github', link: 'https://github.com/wgzhao/addax' }
         ]
