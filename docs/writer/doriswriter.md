@@ -50,7 +50,7 @@ bin/addax.sh job/stream2doris.json
 | password         |    否    | string | 无     | 访问Doris数据库的密码                                              |
 | flushInterval    |    否    | int    | 3000   | 数据写入到目标表的间隔时间，单位为毫秒，即每隔多少毫秒写入一次数据 |
 | flushQueueLength |    否    | int    | 1      | 上传数据的队列长度                                                 |
-| table            |    是    | string | 无     | 所选取的需要同步的表名                                             |
+| table            |    是    | List   | 无     | 所选取的需要同步的表名                                             |
 | column           |    是    | list   | 无     | 所配置的表中需要同步的列名集合，详细描述见 [RBDMS Writer][1]       |
 | batchSize        |    否    | int    | 2048   | 每批次导入数据的最大行数                                           |
 | loadProps        |    否    | map    | `csv`  | streamLoad 的请求参数，详情参照[StreamLoad介绍页面][2]             |
