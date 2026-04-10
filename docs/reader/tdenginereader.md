@@ -46,7 +46,7 @@ bin/addax.sh job/tdengine2stream.json
 | username      |    是    | string | 无     | 数据源的用户名                                                                                           |
 | password      |    否    | string | 无     | 数据源指定用户名的密码                                                                                   |
 | table         |    是    | list   | 无     | 所选取的需要同步的表名,使用JSON数据格式，当配置为多张表时，用户自己需保证多张表是同一表结构              |
-| column        |    是    | list   | 无     | 所配置的表中需要同步的列名集合，详细描述[rdbmreader](rdbmsreader)                                     |
+| column        |    是    | list   | 无     | 所配置的表中需要同步的列名集合，详细描述[rdbmreader](rdbmsreader)                                        |
 | where         |    否    | string | 无     | 针对表的筛选条件                                                                                         |
 | querySql      |    否    | list   | 无     | 使用自定义的SQL而不是指定表来获取数据，当配置了这一项之后，Addax系统就会忽略 `table`，`column`这些配置项 |
 | beginDateTime |    是    | string | 无     | 数据的开始时间，Job迁移从 `begineDateTime` 到 `endDateTime` 的数据，格式为 `yyyy-MM-dd HH:mm:ss`         |

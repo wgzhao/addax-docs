@@ -201,14 +201,14 @@ The `setting` section controls job execution behavior:
 
 Addax uses a unified internal type system for data conversion:
 
-| Addax Type | Description | Java Type |
-|-----------|-------------|-----------|
-| long | Long integer | java.lang.Long |
-| double | Double precision float | java.lang.Double |
-| string | String | java.lang.String |
-| date | Date/time | java.util.Date |
-| bool | Boolean | java.lang.Boolean |
-| bytes | Byte array | byte[] |
+| Addax Type | Description            | Java Type         |
+| ---------- | ---------------------- | ----------------- |
+| long       | Long integer           | java.lang.Long    |
+| double     | Double precision float | java.lang.Double  |
+| string     | String                 | java.lang.String  |
+| date       | Date/time              | java.util.Date    |
+| bool       | Boolean                | java.lang.Boolean |
+| bytes      | Byte array             | byte[]            |
 
 ## Variable Substitution
 

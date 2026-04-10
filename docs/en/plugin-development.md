@@ -267,6 +267,7 @@ Although the framework adds all jar files under `${PLUGIN_HOME}` to the `classpa
 ::: warning Special Reminder
 
     The plugin's directory name must be consistent with the plugin name defined in `plugin.json`.
+
 :::
 
 ## Configuration File

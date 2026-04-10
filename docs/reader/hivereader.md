@@ -26,20 +26,20 @@ bin/addax.sh job/hive2stream.json
 
 ## 参数说明
 
-| 配置项                 | 是否必须 | 类型   | 默认值 | 描述                                                                   |
-| :--------------------- | :------: | ------ | ------ | ---------------------------------------------------------------------- |
-| jdbcUrl                |    是    | list   | 无     | 对端数据库的 JDBC 连接信息                                             |
-| driver                 |    否    | string | 无     | 自定义驱动类名，解决兼容性问题，详见下面描述                           |
-| username               |    是    | string | 无     | 数据源的用户名                                                         |
-| password               |    否    | string | 无     | 数据源指定用户名的密码，若无密码，可不指定                             |
-| table                  |    是    | list   | 无     | 所选取的需要同步的表名,使用 JSON 数据格式                              |
-| column                 |    是    | `list<map>`   | 无     | 所配置的表中需要同步的列名集合，详细描述见 [rdbmreader][1]             |
-| splitPk                |    否    | string | 无     | 使用 splitPk 代表的字段进行数据分片，详细描述见 [rdbmreader][1]        |
-| where                  |    否    | string | 无     | 针对表的筛选条件                                                       |
-| querySql               |    否    | list   | 无     | 使用 SQL 来获取数据，当配置了这一项之后， `table`，`column` 配置项无效 |
-| haveKerberos           |    否    | string | 无     | 是否启用 Kerberos 认证，如果启用，则需要同时配置下面两项               |
-| kerberosKeytabFilePath |    否    | string | 无     | Kerberos 认证的凭证文件路径, 比如 `/your/path/addax.service.keytab`    |
-| kerberosPrincipal      |    否    | string | 无     | Kerberos 认证的凭证主体, 比如 `addax/node1@EXAMPLE.COM`                |
+| 配置项                 | 是否必须 | 类型        | 默认值 | 描述                                                                   |
+| :--------------------- | :------: | ----------- | ------ | ---------------------------------------------------------------------- |
+| jdbcUrl                |    是    | list        | 无     | 对端数据库的 JDBC 连接信息                                             |
+| driver                 |    否    | string      | 无     | 自定义驱动类名，解决兼容性问题，详见下面描述                           |
+| username               |    是    | string      | 无     | 数据源的用户名                                                         |
+| password               |    否    | string      | 无     | 数据源指定用户名的密码，若无密码，可不指定                             |
+| table                  |    是    | list        | 无     | 所选取的需要同步的表名,使用 JSON 数据格式                              |
+| column                 |    是    | `list<map>` | 无     | 所配置的表中需要同步的列名集合，详细描述见 [rdbmreader][1]             |
+| splitPk                |    否    | string      | 无     | 使用 splitPk 代表的字段进行数据分片，详细描述见 [rdbmreader][1]        |
+| where                  |    否    | string      | 无     | 针对表的筛选条件                                                       |
+| querySql               |    否    | list        | 无     | 使用 SQL 来获取数据，当配置了这一项之后， `table`，`column` 配置项无效 |
+| haveKerberos           |    否    | string      | 无     | 是否启用 Kerberos 认证，如果启用，则需要同时配置下面两项               |
+| kerberosKeytabFilePath |    否    | string      | 无     | Kerberos 认证的凭证文件路径, 比如 `/your/path/addax.service.keytab`    |
+| kerberosPrincipal      |    否    | string      | 无     | Kerberos 认证的凭证主体, 比如 `addax/node1@EXAMPLE.COM`                |
 
 ### jdbcUrl
 

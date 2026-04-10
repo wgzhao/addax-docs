@@ -66,7 +66,7 @@ bin/addax.sh job/stream2doris.json
 
 ### column
 
-允许配置为 `["*"]` ， 如果是 "*" , 则尝试从 Doris 数据库中直接读取表字段，然后进行拼装。
+允许配置为 `["*"]` ， 如果是 "\*" , 则尝试从 Doris 数据库中直接读取表字段，然后进行拼装。
 
 ### loadProps
 
@@ -87,7 +87,7 @@ StreamLoad 的请求参数，详情参照StreamLoad介绍页面。[Stream load -
     "line_delimiter": "\\x02"
   }
 }
-````
+```
 
 如需更改导入格式为json， 则正确配置 loadProps 即可：
 
@@ -99,3 +99,4 @@ StreamLoad 的请求参数，详情参照StreamLoad介绍页面。[Stream load -
   }
 }
 ``
+```

@@ -33,7 +33,6 @@ HDFS Writer 提供向 HDFS 文件系统指定路径中写入 `TextFile` ， `ORC
 | bloomColumns           |    否    | list        | 无      | 需要创建 bloom filter 的列名列表，只有当 fileType 是 orc 时才生效                            |
 | bloomFpp               |    否    | double      | 0.05    | bloom filter 的误判率，只有当 fileType 是 orc 时才生效                                       |
 
-
 ### path
 
 存储到 Hadoop hdfs文件系统的路径信息，HdfsWriter 会根据并发配置在 `Path` 目录下写入多个文件。为与hive表关联，请填写hive表在hdfs上的存储路径。 例：Hive上设置的数据仓库的存储路径为：

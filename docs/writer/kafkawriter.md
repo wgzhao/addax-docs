@@ -16,9 +16,7 @@ Kafka Writer 插件实现了将数据以 json 格式写入 Kafka 的功能。
 
 执行 `bin/addax.sh stream2kafka.json` 命令，获得类似下面的输出：
 
-
 <<<@/public/assets/output/stream2kafka.txt
-
 
 我们使用 kafka 自带的 `kafka-console-consumer.sh` 尝试读取数据，输出如下：
 
@@ -51,4 +49,3 @@ $ bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-1
 
 1. 仅支持 Kafka `1.0` 及以上版本，低于该版本的无法确定是否能写入
 2. 当前不支持启用了 `kerberos` 认证的 kafka 服务
-

@@ -24,16 +24,16 @@ bin/addax.sh job/influx2stream.json
 
 ## 参数说明
 
-| 配置项   | 是否必须 | 数据类型 | 默认值 | 描述                                                                    |
-| :------- | :------: | -------- | ------ | ----------------------------------------------------------------------- |
-| endpoint |    是    | string   | 无     | InfluxDB 连接串 ｜                                                      |
-| token    |    是    | string   | 无     | 访问数据库的 token                                                      |
-| table    |    否    | list     | 无     | 所选取的需要同步的表名(即指标)                                         |
-| org      |    是    | string   | 无     | 指定 InfluxDB 的 org 名称                                               |
-| bucket   |    是    | string   | 无     | 指定 InfluxDB 的 bucket 名称                                            |
+| 配置项   | 是否必须 | 数据类型 | 默认值 | 描述                                                       |
+| :------- | :------: | -------- | ------ | ---------------------------------------------------------- |
+| endpoint |    是    | string   | 无     | InfluxDB 连接串 ｜                                         |
+| token    |    是    | string   | 无     | 访问数据库的 token                                         |
+| table    |    否    | list     | 无     | 所选取的需要同步的表名(即指标)                             |
+| org      |    是    | string   | 无     | 指定 InfluxDB 的 org 名称                                  |
+| bucket   |    是    | string   | 无     | 指定 InfluxDB 的 bucket 名称                               |
 | column   |    否    | list     | 无     | 所配置的表中需要同步的列名集合，详细描述见 [rdbmreader][1] |
-| range    |    是    | list     | 无     | 读取数据的时间范围                                                      |
-| limit    |    否    | int      | 无     | 限制获取记录数                                                          |
+| range    |    是    | list     | 无     | 读取数据的时间范围                                         |
+| limit    |    否    | int      | 无     | 限制获取记录数                                             |
 
 ### column
 

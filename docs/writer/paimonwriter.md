@@ -29,6 +29,7 @@ Paimon Writer 提供向 已有的paimon表写入数据的能力。
 本地目录创建paimon表
 
 ::: details
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 

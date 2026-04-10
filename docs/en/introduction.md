@@ -151,4 +151,3 @@ When both source and destination performance are sufficient, a single job can de
 
 Jobs are extremely susceptible to interference from external factors, and factors such as network interruptions and unstable data sources can easily cause synchronization jobs to report errors and stop halfway. Therefore, stability is a basic requirement for Addax. In the design of Addax, the stability of both framework and plugins has been improved.
 Currently, Addax can achieve multi-level local/global retries at the thread level and job level, ensuring stable operation of user jobs.
-

@@ -348,7 +348,6 @@ public class CreateHiveTable {
 }
 ```
 
-
 Spark 或者 flink 环境创建表
 
 ```sql
@@ -383,14 +382,10 @@ s3 或者 minio hadoop catalog例子
           "parameter": {
             "username": "root",
             "password": "root",
-            "column": [
-              "*"
-            ],
+            "column": ["*"],
             "connection": [
               {
-                "querySql": [
-                  "select 1+0 id  ,now() ts1,'test1' as name"
-                ],
+                "querySql": ["select 1+0 id  ,now() ts1,'test1' as name"],
                 "jdbcUrl": [
                   "jdbc:mysql://localhost:3306/ruoyi_vue_camunda?allowPublicKeyRetrieval=true"
                 ]
@@ -404,7 +399,7 @@ s3 或者 minio hadoop catalog例子
           "parameter": {
             "tableName": "test.test1",
             "writeMode": "truncate",
-            "catalogType":"hadoop",
+            "catalogType": "hadoop",
             "warehouse": "s3a://pvc-91d1e2cd-4d25-45c9-8613-6c4f7bf0a4cc/iceberg",
             "hadoopConfig": {
               "fs.s3a.endpoint": "http://localhost:9000",
@@ -418,7 +413,7 @@ s3 或者 minio hadoop catalog例子
         }
       }
     ]
-}
+  }
 }
 ```
 
@@ -443,9 +438,7 @@ hdfs hadoop catalog例子
           "parameter": {
             "username": "root",
             "password": "root",
-            "column": [
-              "*"
-            ],
+            "column": ["*"],
             "connection": [
               {
                 "querySql": [
@@ -466,8 +459,8 @@ hdfs hadoop catalog例子
             "writeMode": "truncate",
             "catalogType": "hadoop",
             "warehouse": "hdfs://nameservice1/user/hive/iceberg",
-            "kerberosKeytabFilePath":"/tmp/hive@XXX.COM.keytab",
-            "kerberosPrincipal":"hive@XXX.COM",
+            "kerberosKeytabFilePath": "/tmp/hive@XXX.COM.keytab",
+            "kerberosPrincipal": "hive@XXX.COM",
             "hadoopConfig": {
               "fs.defaultFS": "hdfs://nameservice1",
               "hadoop.security.authentication": "kerberos",

@@ -38,4 +38,3 @@ bin/addax.sh job/doris2stream.json
 
 - 改插件从 `6.0.10` 版本开始支持，使用前请确保 Addax 版本满足要求。
 - Arrow Flight SQL 与 MySQL 协议的参数不完全一致，请根据 [Doris 官方文档](https://doris.apache.org/zh-CN/docs/2.1/db-connect/arrow-flight-sql-connect) 进行配置。
-
