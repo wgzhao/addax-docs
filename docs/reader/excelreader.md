@@ -44,7 +44,6 @@
 
 创建如下 json 文件
 
-
 <<<@/public/assets/jobs/excelreader.json
 
 将输出内容存保为到 `job/excel2stream.json` 文件中，执行采集命令：

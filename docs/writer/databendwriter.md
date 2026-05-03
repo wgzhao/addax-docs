@@ -23,7 +23,6 @@ CREATE TABLE `example_db`.`table1`
 
 <<<@/public/assets/jobs/databendwriter.json
 
-
 将上述配置文件保存为 `job/stream2databend.json`
 
 执行下面的命令
@@ -50,8 +49,6 @@ bin/addax.sh job/stream2Databend.json
 ```json
 {
   "writeMode": "replace",
-  "onConflictColumn": [
-    "id"
-  ]
+  "onConflictColumn": ["id"]
 }
 ```

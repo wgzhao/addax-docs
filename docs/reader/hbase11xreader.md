@@ -107,7 +107,7 @@ ROW               COLUMN+CELL
 
 ## 参数说明
 
-| 配置项        | 是否必须 | 数据类型        | 默认值 | 描述                                                                                         |
+| 配置项        | 是否必须 | 数据类型    | 默认值 | 描述                                                                                         |
 | :------------ | :------: | ----------- | ------ | -------------------------------------------------------------------------------------------- |
 | hbaseConfig   |    是    | map         | 无     | 连接 HBase 集群需要的配置信息, `hbase.zookeeper.quorum` 为必填项，其他 client 的配置为可选项 |
 | mode          |    是    | string      | 无     | 读取 HBase 的模式，可填写 `normal` 或 `multiVersionFixedColumn`                              |
@@ -116,8 +116,8 @@ ROW               COLUMN+CELL
 | column        |    是    | `list<map>` | 无     | 要读取的 hbase 字段，normal 模式与 multiVersionFixedColumn 模式下必填项, 详细说明见下文      |
 | maxVersion    |    是    | string      | 无     | 指定在多版本模式下读取的版本数，`-1` 表示读取所有版本, `multiVersionFixedColumn` 模式下必填  |
 | range         |    否    | string      | 无     | 指定读取的`rowkey` 范围, 详见下文                                                            |
-| scanCacheSize |    否    | int         | 256    | 每次从服务器端读取的行数                                                        |
-| scanBatchSize |    否    | int         | 100    | 每次从服务器端读取的列数                                                        |
+| scanCacheSize |    否    | int         | 256    | 每次从服务器端读取的行数                                                                     |
+| scanBatchSize |    否    | int         | 100    | 每次从服务器端读取的列数                                                                     |
 
 ### column
 
@@ -141,7 +141,7 @@ ROW               COLUMN+CELL
     }
   ]
 }
-````
+```
 
 normal 模式下，对于用户指定 Column 信息，type 必须填写，name/value 必须选择其一。
 

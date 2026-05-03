@@ -2,7 +2,7 @@
 
 InfluxDB2 Reader plugin implements reading data from [InfluxDB](https://www.influxdata.com) version 2.0 and above.
 
-Note: If your InfluxDB is version 1.8 and below, you should use the [InfluxDBReader](influxdbreader/) plugin.
+Note: If your InfluxDB is version 1.8 and below, you should use the [InfluxDBReader](influxdbreader) plugin.
 
 ## Example
 
@@ -74,5 +74,5 @@ Current implementation treats all fields as strings.
 
 1. Current plugin only supports version 2.0 and above
 
-[1]: ../rdbmsreader
+[1]: ./rdbmsreader
 [2]: https://docs.influxdata.com/influxdb/v2.0/query-data/flux/

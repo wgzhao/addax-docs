@@ -27,7 +27,7 @@ The following sample configuration is used to read two files from S3 storage and
 | writeMode              |    No    | string    | `nonConflict` |                                                                                           |
 | pathStyleAccessEnabled |    No    | boolean   | false         | Whether to enable path-style access mode                                                  |
 
-[1]: ../rdbmsreader
+[1]: rdbmsreader
 
 ### object
 

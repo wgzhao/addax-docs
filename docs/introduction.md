@@ -4,13 +4,13 @@
 
 Addax 是一个异构数据源离线同步工具，最初来源于阿里的 [DataX](https://github.com/alibaba/datax) ，致力于实现包括关系型数据库(MySQL、Oracle 等)、HDFS、Hive、HBase、FTP 等各种异构数据源之间稳定高效的数据同步功能。
 
-![addax why new](images/addax_why_new.png)
+![addax why new](/images/addax_why_new.png)
 
 为了解决异构数据源同步问题，Addax 将复杂的网状的同步链路变成了星型数据链路，Addax 作为中间传输载体负责连接各种数据源。当需要接入一个新的数据源的时候，只需要将此数据源对接到 Addax，便能跟已有的数据源做到无缝数据同步。
 
 ## 框架设计
 
-mermaid
+```mermaid
 graph LR
 MySQL
 subgraph Addax
@@ -26,6 +26,7 @@ mr --> Framework --> writer
 end
 
 MySQL ==> Addax ==> HDFS
+```
 
 Addax 本身作为离线数据同步框架，采用 Framework + plugin 架构构建。将数据源读取和写入抽象成为 Reader/Writer 插件，纳入到整个同步框架中。
 
@@ -39,7 +40,7 @@ Addax Framework 提供了简单的接口与插件交互，提供简单的插件�
 
 本小节按一个 Addax 作业生命周期的时序图，从整体架构设计非常简要说明各个模块相互关系。
 
-mermaid
+```mermaid
 graph TB
 subgraph Job
 end
@@ -89,6 +90,7 @@ end
 
 Job == split ==> task
 task == Schedule ==> taskgroup
+```
 
 ### 核心模块介绍
 
@@ -138,7 +140,7 @@ task == Schedule ==> taskgroup
     "record": 10000
   }
 }
-
+```
 
 ### 强劲地同步性能
 
@@ -149,4 +151,3 @@ task == Schedule ==> taskgroup
 
 作业是极易受外部因素的干扰，网络闪断、数据源不稳定等因素很容易让同步到一半的作业报错停止。因此稳定性是 Addax 的基本要求，在 Addax 的设计中，重点完善了框架和插件的稳定性。
 目前 Addax 可以做到线程级别、作业级别多层次局部/全局的重试，保证用户的作业稳定运行。
-```

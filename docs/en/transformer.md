@@ -192,7 +192,6 @@ In this example, four UDFs are configured.
 
 <<<@/public/assets/jobs/udfdemo.json
 
-
 ## Custom Functions
 
 If the built-in functions do not meet your data transformation requirements, you can write code that conforms to Groovy specifications within the `transformer`. Here is a complete example:
@@ -241,4 +240,3 @@ Transformer filter  records:                   0
 ```
 
 Note: This mainly records the input and output of the transformation, which requires monitoring changes in the number of data records.
-

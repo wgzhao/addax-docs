@@ -95,7 +95,7 @@ bin/addax.sh job.json
 
 If successful, you should see output similar to:
 
-```
+```bash
 2023-12-07 10:30:01.234 [main] INFO  JobContainer - Job ID: 202312071030, Total records: 3, Speed: 3rec/s (30B/s), Error records: 0
 ```
 
@@ -110,7 +110,7 @@ Here's a more practical example - synchronizing data from MySQL to PostgreSQL.
 - MySQL database with test data
 - PostgreSQL database for destination
 
-### Create Job Configuration
+### Job Configuration
 
 ````json
 {
@@ -155,7 +155,7 @@ Here's a more practical example - synchronizing data from MySQL to PostgreSQL.
     }
   }
 }
-`
+```
 
 ### Execute Job
 
@@ -165,7 +165,7 @@ bin/addax.sh mysql_to_postgresql.json
 
 ## Next Steps
 
-- Learn more about [job configuration](setupJob.md)
-- Explore available [reader plugins](reader/)
-- Explore available [writer plugins](writer/)
-- Learn about [performance tuning](debug.md)
+- Learn more about [job configuration](job-setup)
+- Explore available reader plugins
+- Explore available writer plugins
+- Learn about [performance tuning](howto-debug)

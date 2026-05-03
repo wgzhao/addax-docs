@@ -121,7 +121,7 @@ int escapeMode = 1;
 boolean safetySwitch = true;//单列长度是否限制100000字符
 boolean skipEmptyRecords = true;//是否跳过空行
 boolean captureRawRecord = true;
-````
+```
 
 ## 类型转换
 

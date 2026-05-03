@@ -7,6 +7,7 @@ const readerPlugins = [
   { path: 'reader/databendreader', name: 'Databend Reader' },
   { path: 'reader/datareader', name: 'Data Reader' },
   { path: 'reader/dbfreader', name: 'DBF Reader' },
+  { path: 'reader/dorisreader', name: 'Doris Reader' },
   { path: 'reader/elasticsearchreader', name: 'Elasticsearch Reader' },
   { path: 'reader/excelreader', name: 'Excel Reader' },
   { path: 'reader/ftpreader', name: 'FTP Reader' },
@@ -97,17 +98,18 @@ const zhWriterNavItems = writerPlugins.map(plugin => ({
 }))
 
 const enNav = [
-  { text: 'Home', link: '/en/introduce' },
-  { text: 'Quickstart', link: '/en/quickstart'}
+  { text: 'Home', link: '/en/' },
+  { text: 'Quickstart', link: '/en/quick-start'}
 ]
 const enSiderbar = [
-  { text: 'Job Setup', link: '/en/setupJob' },
+  { text: 'Introduction', link: '/en/introduction' },
+  { text: 'Job Setup', link: '/en/job-setup' },
   { text: 'Command Line', link: '/en/commandline' },
-  { text: 'Debug', link: '/en/debug' },
-  { text: 'Encrypt Password', link: '/en/encrypt_password' },
-  { text: 'Stats Report', link: '/en/statsreport' },
+  { text: 'Debug', link: '/en/howto-debug' },
+  { text: 'Encrypt Password', link: '/en/encrypt-password' },
+  { text: 'Stats Report', link: '/en/statistic-report' },
   { text: 'Transformer', link: '/en/transformer' },
-  { text: 'Plugin Development', link: '/en/plugin_development' },
+  { text: 'Plugin Development', link: '/en/plugin-development' },
   { text: 'Server', link: '/en/server' },
   { text: 'Plugins', 
     items: [
@@ -123,6 +125,7 @@ const zhNav = [
 ]
 
 const zhSidebar = [
+  { text: '简介', link: '/introduction' },
   { text: '作业配置', link: '/job-setup' },
   { text: '命令行', link: '/commandline' },
   { text: '调试', link: '/debug' },
@@ -154,6 +157,7 @@ export default defineConfig({
         logo: {src: '/images/logo.svg', width: 160, height: 160},
         nav: zhNav,
         sidebar: zhSidebar,
+        search: { provider: 'local' },
         socialLinks: [
           { icon: 'github', link: 'https://github.com/wgzhao/addax' }
         ]
@@ -165,6 +169,7 @@ export default defineConfig({
       themeConfig: {
         nav: enNav,
         sidebar: enSiderbar,
+        search: { provider: 'local' },
         socialLinks: [
           { icon: 'github', link: 'https://github.com/wgzhao/addax' }
         ]
@@ -174,6 +179,14 @@ export default defineConfig({
   mermaid:{
     //mermaidConfig !theme here works for light mode since dark theme is forced in dark mode
   },
+  sitemap: {
+    hostname: 'https://addax.wgzhao.com'
+  },
+  lastUpdated: true,
+  themeConfig: {
+    footer: {
+      message: 'Released under the <a href="https://github.com/wgzhao/Addax/blob/master/LICENSE">Apache License 2.0</a>.',
+      copyright: 'Copyright © 2018-present <a href="https://github.com/wgzhao">Steven Zhao</a>'
+    }
+  }
 })
-
-

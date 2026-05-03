@@ -4,7 +4,7 @@ DorisWriter 插件用于向 [Doris](http://doris.incubator.apache.org/master/zh-
 Doris http 连接(8030)，然后通过 [stream load](http://doris.incubator.apache.org/master/zh-CN/administrator-guide/load-data/stream-load-manual.html)
 加载数据到数据中，相比 `insert into` 方式效率要高不少，也是官方推荐的生产环境下的数据加载方式。
 
-Doris 是一个兼容 MySQL 协议的数据库后端，因此 Doris 读取可以使用 [MySQL Reader](mysqlreader) 进行访问。
+Doris 是一个兼容 MySQL 协议的数据库后端，因此 Doris 读取可以使用 [MySQL Reader](../reader/mysqlreader) 进行访问。
 
 ## 示例
 
@@ -26,6 +26,7 @@ PROPERTIES("replication_num" = "1");
 下面配置一个从内存读取数据，然后写入到 doris 表的配置文件
 
 <<<@/public/assets/jobs/doriswriter.json
+
 将上述配置文件保存为 `job/stream2doris.json`
 
 执行下面的命令
@@ -49,7 +50,7 @@ bin/addax.sh job/stream2doris.json
 | password         |    否    | string | 无     | 访问Doris数据库的密码                                              |
 | flushInterval    |    否    | int    | 3000   | 数据写入到目标表的间隔时间，单位为毫秒，即每隔多少毫秒写入一次数据 |
 | flushQueueLength |    否    | int    | 1      | 上传数据的队列长度                                                 |
-| table            |    是    | string | 无     | 所选取的需要同步的表名                                             |
+| table            |    是    | List   | 无     | 所选取的需要同步的表名                                             |
 | column           |    是    | list   | 无     | 所配置的表中需要同步的列名集合，详细描述见 [RBDMS Writer][1]       |
 | batchSize        |    否    | int    | 2048   | 每批次导入数据的最大行数                                           |
 | loadProps        |    否    | map    | `csv`  | streamLoad 的请求参数，详情参照[StreamLoad介绍页面][2]             |
@@ -65,7 +66,7 @@ bin/addax.sh job/stream2doris.json
 
 ### column
 
-允许配置为 `["*"]` ， 如果是 "*" , 则尝试从 Doris 数据库中直接读取表字段，然后进行拼装。
+允许配置为 `["*"]` ， 如果是 "\*" , 则尝试从 Doris 数据库中直接读取表字段，然后进行拼装。
 
 ### loadProps
 
@@ -75,9 +76,9 @@ StreamLoad 的请求参数，详情参照StreamLoad介绍页面。[Stream load -
 
 ## 类型转换
 
-默认传入的数据均会被转为字符串，并以\t作为列分隔符，\n作为行分隔符，组成csv文件进行StreamLoad导入操作。
+默认传入的数据均会被转为字符串，并以 `\t` 作为列分隔符，`\n` 作为行分隔符，组成 csv 文件进行 StreamLoad 导入操作。
 
-默认是csv格式导入，如需更改列分隔符， 则正确配置 loadProps 即可
+默认是 csv 格式导入，如需更改列分隔符， 则正确配置 loadProps 即可
 
 ```json
 {
@@ -86,7 +87,7 @@ StreamLoad 的请求参数，详情参照StreamLoad介绍页面。[Stream load -
     "line_delimiter": "\\x02"
   }
 }
-````
+```
 
 如需更改导入格式为json， 则正确配置 loadProps 即可：
 
@@ -98,3 +99,4 @@ StreamLoad 的请求参数，详情参照StreamLoad介绍页面。[Stream load -
   }
 }
 ``
+```

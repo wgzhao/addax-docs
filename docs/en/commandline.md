@@ -254,4 +254,4 @@ bin/addax.sh -j "-Daddax.log.file=/var/log/addax/job.log" job.json
 - Use speed limits to prevent overwhelming source/target systems
 - Monitor system resources during execution
 
-For more detailed information about specific plugins and configuration options, please refer to the [job configuration guide](setupJob.md) and individual plugin documentation.
+For more detailed information about specific plugins and configuration options, please refer to the [job configuration guide](job-setup) and individual plugin documentation.

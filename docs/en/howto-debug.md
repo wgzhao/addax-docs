@@ -93,22 +93,28 @@ bin/addax.sh -j "-Dlogback.configurationFile=conf/logback-debug.xml" job.json
 
 ### SQL Execution Debug
 
+```sh
 DEBUG [Reader-0] - Executing SQL: SELECT id, name, age FROM users WHERE id BETWEEN ? AND ?
 DEBUG [Reader-0] - SQL Parameters: [1, 1000]
 DEBUG [Reader-0] - Fetched 856 records in 1.23 seconds
+```
 
 ### Data Sample Debug
 
+```sh
 DEBUG [Channel-0] - Sample record: {"id": 1, "name": "John Doe", "age": 30}
 DEBUG [Channel-0] - Sample record: {"id": 2, "name": "Jane Smith", "age": 25}
+```
 
 ### Performance Debug
 
+```sh
 DEBUG [Job] - Channel statistics:
 
 - Channel 0: 1000 records/s, 128KB/s
 - Channel 1: 950 records/s, 122KB/s
 - Channel 2: 1050 records/s, 135KB/s
+```
 
 ## Troubleshooting Tips
 

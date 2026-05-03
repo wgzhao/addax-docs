@@ -30,6 +30,8 @@ HDFS Writer 提供向 HDFS 文件系统指定路径中写入 `TextFile` ， `ORC
 | ignoreError            |    否    | boolean     | false   | 是否忽略`preShell`, `postShell` 命令的错误                                                   |
 | hdfsSitePath           |    否    | string      | 无      | `hdfs-site.xml` 的路径，详细解释见下                                                         |
 | createPath             |    否    | boolean     | 否      | 默认不存在时，是否创建，默认不创建而给出报错提示                                             |
+| bloomColumns           |    否    | list        | 无      | 需要创建 bloom filter 的列名列表，只有当 fileType 是 orc 时才生效                            |
+| bloomFpp               |    否    | double      | 0.05    | bloom filter 的误判率，只有当 fileType 是 orc 时才生效                                       |
 
 ### path
 
@@ -153,6 +155,45 @@ Hadoop hdfs 文件系统 namenode 节点地址。格式：`hdfs://ip:port` ；�
 如果配置了 `hdfsSitePath` , 则插件会从该文件中获得访问 HDFS 文件系统必要的配置，从而在大部分情况下不在需要配置 `hadoopConfig`，减少配置量。
 
 对于把 Addax 部署在 Hadoop 集群上的场景，推荐使用这种方式。
+
+## bloom filter
+
+`bloomColumns` 和 `bloomFpp` 这两个参数是 `6.0.10` 引入的，只有当 `fileType` 是 `orc` 时才生效, 用于在写入 ORC 文件时创建 bloom filter，提升查询性能。
+`bloomColumns` 用于指定需要创建 bloom filter 的列名列表， `bloomFpp` 用于指定 bloom filter 的误判率，默认为 0.05。
+比如:
+
+```json
+{
+  "fileType": "orc",
+  "bloomColumns": ["userName", "age"],
+  "bloomFpp": 0.01
+}
+```
+
+## short-circuit 问题
+
+如果你在执行任务时，有类似如下的告警:
+
+```shell
+WARN shortcircuit.DomainSocketFactory: The short-circuit local reads feature cannot be used because libhadoop cannot be loaded.
+```
+
+这是因为缺少 Hadoop 的本地库，导致无法使用 short-circuit local reads 功能。这个功能可以提升本地读取 HDFS 文件的性能，但并不是必须的。
+如果你想要解决这个问题，可以使用下面的两种方式：
+一是增加环境变量 `LD_LIBRARY_PATH`，指向 Hadoop 的本地库路径，比如：
+
+```shell
+## for HDP distribution
+export LD_LIBRARY_PATH=/usr/hdp/current/hadoop-client/lib/native:$LD_LIBRARY_PATH
+## for CDH distribution
+export LD_LIBRARY_PATH=/opt/cloudera/parcels/CDH/lib/hadoop/lib/native:$LD_LIBRARY_PATH
+```
+
+或者在 `addax.sh` 脚本中传递 `-Djava.library.path` 参数，比如：
+
+```shell
+bin/addax.sh -j  "-Djava.library.path=/usr/hdp/current/hadoop-client/lib/native" <your_job.json>
+```
 
 ## 类型转换
 

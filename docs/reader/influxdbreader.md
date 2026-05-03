@@ -23,7 +23,6 @@ influx -import -path=NOAA_data.txt -precision=s -database=NOAA_water_database
 
 创建 `job/influxdb2stream.json` 文件，内容如下：
 
-
 <<<@/public/assets/jobs/influxdbreader.json
 
 ### 运行

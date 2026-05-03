@@ -36,7 +36,7 @@
 }
 ```
 
-这里的 <http://localhost:9090/api/v1/addax/jobReport> 接口服务需要自行开发，我们可以使用 Python 的 `flask` 快速开发这样的一个接口服务：
+这里的 `http://localhost:9090/api/v1/addax/jobReport` 接口服务需要自行开发，我们可以使用 Python 的 `flask` 快速开发这样的一个接口服务：
 
 ```python
 #!/bin/env python3
@@ -150,4 +150,3 @@ bin/addax.sh -p "-DjobName=test" job/job.json
 ```
 
 那么先取出 `/ods/odstl/tbl/logdate=${logdate}`，然后按照 `/` 切分，获取第二项 `odstl`，第三项 `tbl`，然后拼接成 `odstl.tbl` 这个值就是 `jobName` 值
-

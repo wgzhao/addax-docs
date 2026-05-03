@@ -46,7 +46,7 @@
             "pv"
           ],
           "connection": {
-            "table": "table1",
+            "table": ["table1"],
             "database": "example_db",
             "jdbcUrl": "jdbc:mysql://localhost:9030/example_db"
           },

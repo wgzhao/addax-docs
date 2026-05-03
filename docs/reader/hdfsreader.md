@@ -222,4 +222,3 @@ A: 需要在 json 的 reader 里增加如下配置
 ```
 
 `safetySwitch = false` 表示单列长度不限制 100000 字符
-
