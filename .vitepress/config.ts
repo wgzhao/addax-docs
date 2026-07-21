@@ -99,48 +99,68 @@ const zhWriterNavItems = writerPlugins.map(plugin => ({
 
 const enNav = [
   { text: 'Home', link: '/en/' },
-  { text: 'Quickstart', link: '/en/quick-start'}
+  { text: 'Quickstart', link: '/en/quick-start' },
+  { text: 'Docs', link: '/en/introduction' },
+  { text: 'Plugins', items: [
+    { text: 'Reader Plugins', items: enReaderNavItems },
+    { text: 'Writer Plugins', items: enWriterNavItems },
+  ]},
 ]
-const enSiderbar = [
-  { text: 'Introduction', link: '/en/introduction' },
-  { text: 'Job Setup', link: '/en/job-setup' },
-  { text: 'Command Line', link: '/en/commandline' },
-  { text: 'Debug', link: '/en/howto-debug' },
-  { text: 'Encrypt Password', link: '/en/encrypt-password' },
-  { text: 'Stats Report', link: '/en/statistic-report' },
-  { text: 'Transformer', link: '/en/transformer' },
-  { text: 'Plugin Development', link: '/en/plugin-development' },
-  { text: 'Server', link: '/en/server' },
-  { text: 'Plugins', 
-    items: [
-      { text: 'Reader Plugins', collapsed: true, items: enReaderNavItems },
-      { text: 'Writer Plugins', collapsed: true, items: enWriterNavItems },
-    ]
-  }
+
+const enSidebar = [
+  { text: 'Getting Started', items: [
+    { text: 'Introduction', link: '/en/introduction' },
+    { text: 'Quick Start', link: '/en/quick-start' },
+    { text: 'Job Setup', link: '/en/job-setup' },
+  ]},
+  { text: 'Guides', items: [
+    { text: 'Command Line', link: '/en/commandline' },
+    { text: 'Debug', link: '/en/howto-debug' },
+    { text: 'Encrypt Password', link: '/en/encrypt-password' },
+    { text: 'Stats Report', link: '/en/statistic-report' },
+    { text: 'Transformer', link: '/en/transformer' },
+    { text: 'Server', link: '/en/server' },
+  ]},
+  { text: 'Developer', items: [
+    { text: 'Plugin Development', link: '/en/plugin-development' },
+  ]},
+  { text: 'Plugins', items: [
+    { text: 'Reader Plugins', collapsed: true, items: enReaderNavItems },
+    { text: 'Writer Plugins', collapsed: true, items: enWriterNavItems },
+  ]}
 ]
 
 const zhNav = [
   { text: '首页', link: '/' },
-  { text: '快速开始', link: '/quick-start' }
+  { text: '快速开始', link: '/quick-start' },
+  { text: '文档', link: '/introduction' },
+  { text: '插件', items: [
+    { text: '读取插件', items: zhReaderNavItems },
+    { text: '写入插件', items: zhWriterNavItems },
+  ]},
 ]
 
 const zhSidebar = [
-  { text: '简介', link: '/introduction' },
-  { text: '作业配置', link: '/job-setup' },
-  { text: '命令行', link: '/commandline' },
-  { text: '调试', link: '/debug' },
-  { text: '密码加密', link: '/encrypt-password' },
-  { text: '统计报告', link: '/statistic-report' },
-  { text: '数据转换', link: '/transformer' },
-  { text: '插件开发', link: '/plugin-development' },
-  { text: '服务端', link: '/server' },
-  {
-    text: '插件',
-    items: [
-      { text: '读取插件', collapsed: true, items: zhReaderNavItems },
-      { text: '写入插件', collapsed: true, items: zhWriterNavItems }
-    ]
-  }
+  { text: '入门', items: [
+    { text: '简介', link: '/introduction' },
+    { text: '快速开始', link: '/quick-start' },
+    { text: '作业配置', link: '/job-setup' },
+  ]},
+  { text: '使用指南', items: [
+    { text: '命令行', link: '/commandline' },
+    { text: '调试', link: '/debug' },
+    { text: '密码加密', link: '/encrypt-password' },
+    { text: '统计报告', link: '/statistic-report' },
+    { text: '数据转换', link: '/transformer' },
+    { text: '服务端', link: '/server' },
+  ]},
+  { text: '开发者', items: [
+    { text: '插件开发', link: '/plugin-development' },
+  ]},
+  { text: '插件列表', items: [
+    { text: '读取插件', collapsed: true, items: zhReaderNavItems },
+    { text: '写入插件', collapsed: true, items: zhWriterNavItems },
+  ]}
 ]
 
 // https://vitepress.dev/reference/site-config
@@ -154,7 +174,7 @@ export default defineConfig({
       lang: 'zh',
       themeConfig: {
         // https://vitepress.dev/reference/default-theme-config
-        logo: {src: '/images/logo.svg', width: 160, height: 160},
+        logo: {src: '/images/logo.svg', width: 32, height: 32},
         nav: zhNav,
         sidebar: zhSidebar,
         search: { provider: 'local' },
@@ -167,8 +187,9 @@ export default defineConfig({
       label: 'English',
       lang: 'en',
       themeConfig: {
+        logo: {src: '/images/logo.svg', width: 32, height: 32},
         nav: enNav,
-        sidebar: enSiderbar,
+        sidebar: enSidebar,
         search: { provider: 'local' },
         socialLinks: [
           { icon: 'github', link: 'https://github.com/wgzhao/addax' }
@@ -184,6 +205,17 @@ export default defineConfig({
   },
   lastUpdated: true,
   themeConfig: {
+    outline: {
+      level: [2, 3],
+      label: '本页目录'
+    },
+    docFooter: {
+      prev: '上一页',
+      next: '下一页'
+    },
+    returnToTopLabel: '回到顶部',
+    sidebarMenuLabel: '菜单',
+    darkModeSwitchLabel: '主题',
     footer: {
       message: 'Released under the <a href="https://github.com/wgzhao/Addax/blob/master/LICENSE">Apache License 2.0</a>.',
       copyright: 'Copyright © 2018-present <a href="https://github.com/wgzhao">Steven Zhao</a>'
