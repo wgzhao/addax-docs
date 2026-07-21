@@ -76,6 +76,18 @@ RDBMS Reader 插件支持从传统 RDBMS 读取数据。这是一个通用关系
 | Presto | socks    | socksProxy                    | `socksProxy=192.168.1.101:1081`                    |
 | Presto | http     | httpProxy                     | `httpProxy=192.168.1.101:3128`                     |
 
+### table
+
+所选取的需要同步的表名，当配置为多张表时，用户自己需保证多张表是同一表结构,多个表可以使用正则表达式来配置，比如 `["t1", "t2", "t3"]` 或者 `["t[1-3]"]` 都表示选择 `t1`, `t2`, `t3` 三张表。也可以两者混合配置，比如:
+
+```json
+{
+  "table": ["t1", "tbl[2-3]"]
+}
+```
+
+上述配置会选择 `t1`, `tbl2`, `tbl3` 三张表进行同步。
+
 ### driver
 
 大部分情况下，一个数据库的JDBC驱动是固定的，但有些因为版本的不同，所建议的驱动类名不同，比如 MySQL。 新的 MySQL JDBC 驱动类型推荐使用 `com.mysql.cj.jdbc.Driver` 而不是以前的 `com.mysql.jdbc.Drver`

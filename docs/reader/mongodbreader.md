@@ -16,14 +16,21 @@ MongoDBReader 插件利用 MongoDB 的java客户端MongoClient进行MongoDB的�
 | username   |    否    | string | 无     | MongoDB 用户名                              |
 | password   |    否    | string | 无     | MongoDB 密码                                |
 | database   |    是    | string | 无     | MongoDB 数据库                              |
-| collection |    是    | string | 无     | MongoDB 的集合名                            |
+| collection |    是    | string | 无     | MongoDB 的集合名，支持单值或范围通配符      |
 | column     |    是    | list   | 无     | MongoDB 的文档列名, 配置 `["*"]` 获取所有列 |
 | query      |    否    | string | 无     | 自定义查询条件                              |
 | fetchSize  |    否    | int    | 2048   | 批量获取的记录数                            |
 
 ### collection
 
-这里的 `collection` 目前只支持单一 collection，因此设置类型为字符串，而不是其他插件常见的数组类型，这一点尤为注意。
+`collection` 仅支持字符串类型，支持以下两种写法：
+
+- 单个集合：`collection`
+- 范围通配符：`collection[0-9]`（展开为 `collection0` 到 `collection9`）
+
+不支持混合模式（如 `collection[0-3],collection9`）。
+
+当使用范围通配符时，如果部分集合不存在，会打印告警并跳过，不会中断整个任务。
 
 ### column
 
