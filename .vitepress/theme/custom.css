@@ -1,6 +1,8 @@
 /* ============================================================
  * Addax Docs — Custom Theme Styles
  * Design language: clean, technical, Apache-project-inspired
+ * 优化版：强化留白、Hero 渐变、排版层次、步骤编号、
+ *        新增统计条 / CTA / 连接器分组 / 语法高亮 / 资源图标
  * ============================================================ */
 
 /* ---- Brand Colors (from logo gradient) ---- */
@@ -10,35 +12,57 @@
   --vp-c-brand-3: #00d4ff;
   --vp-c-brand-soft: rgba(69, 115, 251, 0.14);
 
+  /* 新增：紫色中段，丰富渐变层次 */
+  --vp-c-brand-accent: #7c5cff;
+
   --vp-home-hero-name-background: linear-gradient(
     135deg,
     #4573fb 0%,
+    #7c5cff 45%,
     #00d4ff 100%
   );
   --vp-home-hero-name-color: transparent;
   --vp-home-hero-image-background-image: linear-gradient(
     -45deg,
-    rgba(69, 115, 251, 0.12) 50%,
-    rgba(0, 212, 255, 0.08) 50%
+    rgba(69, 115, 251, 0.16) 50%,
+    rgba(0, 212, 255, 0.12) 50%
   );
   --vp-home-hero-image-filter: blur(44px);
 
-  /* Section spacing */
-  --landing-section-padding: 48px 24px;
+  /* Section spacing — 加大留白，提升营销落地页气质 */
+  --landing-section-padding: 80px 24px;
+  --landing-section-padding-sm: 56px 24px;
   --landing-max-width: 1152px;
+
+  /* Type scale — 建立完整层级 */
+  --ts-display: 40px;
+  --ts-h2: 32px;
+  --ts-h3: 20px;
+  --ts-body: 16px;
+  --ts-code: 14px;
 }
 
 .dark {
   --vp-c-brand-1: #5b8aff;
   --vp-c-brand-2: #4a7de8;
   --vp-c-brand-3: #22e0ff;
+  --vp-c-brand-accent: #9277ff;
   --vp-c-brand-soft: rgba(91, 138, 255, 0.16);
 }
 
-/* ---- Hero Section Polish ---- */
+@media (max-width: 768px) {
+  :root {
+    --landing-section-padding: 56px 20px;
+    --ts-display: 30px;
+    --ts-h2: 26px;
+  }
+}
+
+/* ---- Hero Section Polish — 强化背景渐变 ---- */
 .VPHome .VPHero {
   position: relative;
   overflow: clip;
+  padding-top: 20px;
 }
 
 .VPHome .VPHero::before {
@@ -47,8 +71,26 @@
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(900px 320px at 15% 20%, rgba(69, 115, 251, 0.10), transparent 60%),
-    radial-gradient(820px 300px at 85% 30%, rgba(0, 212, 255, 0.08), transparent 55%);
+    radial-gradient(900px 360px at 15% 18%, rgba(69, 115, 251, 0.22), transparent 60%),
+    radial-gradient(820px 340px at 85% 28%, rgba(0, 212, 255, 0.18), transparent 55%),
+    radial-gradient(700px 300px at 60% 80%, rgba(124, 92, 255, 0.10), transparent 60%);
+}
+
+/* Hero 底部到首区块的过渡带 */
+.VPHome .VPHero::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--vp-c-divider), transparent);
+}
+
+/* Hero 主按钮强化 */
+.VPHome .VPHero .VPButton.brand {
+  box-shadow: 0 4px 14px 0 rgba(69, 115, 251, 0.35);
+}
+.VPHome .VPHero .VPButton.brand:hover {
+  box-shadow: 0 6px 20px 0 rgba(69, 115, 251, 0.5);
 }
 
 /* ---- Feature Card Icons ---- */
@@ -59,22 +101,21 @@
 }
 
 /* ---- Override .vp-doc a underline on landing page ---- */
-/* VitePress wraps home content in .vp-doc, which underlines all <a> tags. */
-/* These rules restore clean, card-style links without underlines. */
 .vp-doc .VPFeature,
 .vp-doc .landing-section a,
 .vp-doc .resource-card,
-.vp-doc .connectors-cta a {
+.vp-doc .connectors-cta a,
+.vp-doc .cta-actions a {
   text-decoration: none;
   color: inherit;
 }
 
 .vp-doc .resource-card:hover,
-.vp-doc .connectors-cta a:hover {
+.vp-doc .connectors-cta a:hover,
+.vp-doc .cta-actions a:hover {
   color: inherit;
 }
 
-/* Preserve brand color only on intentional text links */
 .vp-doc .VPFeature .link-text-value {
   color: var(--vp-c-brand-1);
 }
@@ -93,33 +134,84 @@
 
 .section-header {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 48px;
+}
+
+.section-header .eyebrow {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--vp-c-brand-1);
+  margin-bottom: 10px;
 }
 
 .section-header h2 {
   margin: 0;
-  font-size: 28px;
+  font-size: var(--ts-h2);
   font-weight: 700;
   letter-spacing: -0.5px;
-  background: linear-gradient(135deg, var(--vp-c-brand-1), var(--vp-c-brand-3));
+  background: linear-gradient(135deg, var(--vp-c-brand-1), var(--vp-c-brand-accent), var(--vp-c-brand-3));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .section-header p {
-  margin: 12px auto 0;
-  max-width: 600px;
-  font-size: 15px;
+  margin: 14px auto 0;
+  max-width: 620px;
+  font-size: var(--ts-body);
   line-height: 1.7;
   color: var(--vp-c-text-2);
+}
+
+/* ============================================================
+ * Stats Bar — 新增数据统计条
+ * ============================================================ */
+.stats-section {
+  max-width: var(--landing-max-width);
+  margin: 0 auto;
+  padding: 40px 24px;
+  border-top: 1px solid var(--vp-c-divider);
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  text-align: center;
+}
+
+.stat-item .stat-num {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--vp-c-brand-1), var(--vp-c-brand-3));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.stat-item .stat-label {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--vp-c-text-2);
+}
+
+@media (max-width: 640px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+  }
 }
 
 /* ============================================================
  * Code Example Block
  * ============================================================ */
 .code-block-wrapper {
-  max-width: 780px;
+  max-width: 920px;
   margin: 0 auto;
   border-radius: 16px;
   overflow: hidden;
@@ -159,9 +251,9 @@
 
 .code-block {
   margin: 0;
-  padding: 20px 24px;
-  font-size: 13px;
-  line-height: 1.65;
+  padding: 22px 26px;
+  font-size: var(--ts-code);
+  line-height: 1.7;
   overflow-x: auto;
   background: var(--vp-code-block-bg);
 }
@@ -170,21 +262,48 @@
   font-family: var(--vp-font-family-mono);
 }
 
+/* 语法高亮 token 色（Material 风格） */
+.code-block .tok-key { color: #c792ea; }
+.code-block .tok-str { color: #c3e88d; }
+.code-block .tok-num { color: #f78c6c; }
+.code-block .tok-punc { color: #89ddff; }
+.code-block .tok-bool { color: #ff9cac; }
+
 /* ============================================================
  * Connectors Showcase
  * ============================================================ */
 .connectors-section {
   background: var(--vp-c-bg-soft);
   margin-top: 16px;
-  padding: 56px 24px;
+  padding: 80px 24px;
   max-width: 100%;
 }
 
-.connectors-grid {
+.connectors-grid-wrap {
   max-width: var(--landing-max-width);
   margin: 0 auto;
+}
+
+.connector-group {
+  margin-bottom: 40px;
+}
+.connector-group:last-child {
+  margin-bottom: 0;
+}
+
+.connector-group-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-2);
+  margin-bottom: 16px;
+  padding-left: 4px;
+}
+
+.connectors-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(116px, 1fr));
   gap: 14px;
 }
 
@@ -206,7 +325,7 @@
   box-shadow: 0 8px 24px rgba(69, 115, 251, 0.12);
 }
 
-/* Logo container — provides consistent size + contrast in both themes */
+/* Logo container */
 .connector-logo-bg {
   width: 56px;
   height: 56px;
@@ -220,8 +339,8 @@
 }
 
 .dark .connector-logo-bg {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 255, 255, 0.10);
 }
 
 .connector-logo-bg img {
@@ -236,29 +355,43 @@
   color: var(--vp-c-text-2);
 }
 
-/* Text-only badges for connectors without icon logos */
+/* Text-only badges — 与 logo 卡片视觉权重对齐 */
 .connectors-text-row {
-  max-width: var(--landing-max-width);
-  margin: 20px auto 0;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .connector-text-badge {
-  padding: 6px 14px;
-  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 12px;
   font-size: 13px;
   font-weight: 500;
   color: var(--vp-c-text-2);
   background: var(--vp-c-bg);
   border: 1px solid var(--vp-c-divider);
+  transition: transform 200ms ease, border-color 200ms ease;
+}
+
+.connector-text-badge:hover {
+  transform: translateY(-2px);
+  border-color: var(--vp-c-brand-1);
+}
+
+.connector-text-badge .badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--vp-c-brand-1);
+  opacity: 0.6;
 }
 
 .connectors-cta {
   text-align: center;
-  margin-top: 32px;
+  margin-top: 40px;
 }
 
 /* ============================================================
@@ -280,49 +413,55 @@
 
 .workflow-step {
   position: relative;
-  padding: 28px 24px;
+  padding: 32px 28px;
   border-radius: 18px;
   background: var(--vp-c-bg-soft);
   border: 1px solid var(--vp-c-divider);
-  transition: transform 200ms ease, border-color 200ms ease;
+  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
 }
 
 .workflow-step:hover {
   transform: translateY(-2px);
   border-color: color-mix(in srgb, var(--vp-c-brand-1) 40%, var(--vp-c-divider));
+  box-shadow: 0 12px 32px rgba(69, 115, 251, 0.08);
 }
 
+/* 步骤编号 — 显色，从隐形改为渐变实色 */
 .step-number {
   position: absolute;
   top: 16px;
-  right: 20px;
-  font-size: 36px;
+  right: 22px;
+  font-size: 40px;
   font-weight: 800;
-  color: var(--vp-c-brand-soft);
   line-height: 1;
   letter-spacing: -2px;
+  background: linear-gradient(135deg, var(--vp-c-brand-1), var(--vp-c-brand-3));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0.85;
 }
 
 .step-icon {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 12px;
   background: var(--vp-c-brand-soft);
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 .step-icon svg {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   color: var(--vp-c-brand-1);
 }
 
 .workflow-step h3 {
   margin: 0 0 8px;
-  font-size: 17px;
+  font-size: var(--ts-h3);
   font-weight: 600;
   color: var(--vp-c-text-1);
 }
@@ -337,7 +476,7 @@
 .workflow-arrow {
   display: none;
   color: var(--vp-c-brand-1);
-  opacity: 0.5;
+  opacity: 0.7;
 }
 
 @media (min-width: 768px) {
@@ -352,11 +491,26 @@
   }
 }
 
+/* 移动端步骤竖向连接线 */
+@media (max-width: 767px) {
+  .workflow-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -14px;
+    width: 1px;
+    height: 8px;
+    background: var(--vp-c-brand-1);
+    opacity: 0.4;
+    transform: translateX(-50%);
+  }
+}
+
 /* ============================================================
  * Resources / Quick Links
  * ============================================================ */
 .resources-section {
-  padding-top: 56px;
+  padding-top: 64px;
   padding-bottom: 80px;
 }
 
@@ -375,7 +529,7 @@
 .resource-card {
   position: relative;
   display: block;
-  padding: 24px;
+  padding: 28px;
   border-radius: 16px;
   background: var(--vp-c-bg-soft);
   border: 1px solid var(--vp-c-divider);
@@ -385,6 +539,19 @@
   overflow: hidden;
 }
 
+/* 常驻左侧渐变指示条（替代仅 hover 显示的顶部线） */
+.resource-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--vp-c-brand-1), var(--vp-c-brand-3));
+  opacity: 0.35;
+  transition: opacity 200ms ease;
+}
+
 .resource-card::before {
   content: '';
   position: absolute;
@@ -392,7 +559,7 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--vp-c-brand-1), var(--vp-c-brand-3));
+  background: linear-gradient(90deg, var(--vp-c-brand-1), var(--vp-c-brand-accent), var(--vp-c-brand-3));
   opacity: 0;
   transition: opacity 200ms ease;
 }
@@ -406,10 +573,37 @@
 .resource-card:hover::before {
   opacity: 1;
 }
+.resource-card:hover::after {
+  opacity: 0;
+}
+
+.resource-card .resource-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.resource-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--vp-c-brand-soft);
+  color: var(--vp-c-brand-1);
+}
+
+.resource-icon svg {
+  width: 20px;
+  height: 20px;
+}
 
 .resource-card h3 {
-  margin: 0 0 8px;
-  font-size: 17px;
+  margin: 0;
+  font-size: var(--ts-h3);
   font-weight: 600;
   color: var(--vp-c-text-1);
 }
@@ -438,18 +632,130 @@
 }
 
 /* ============================================================
+ * Final CTA — 新增结尾行动召唤区
+ * ============================================================ */
+.cta-section {
+  position: relative;
+  overflow: hidden;
+  background: #0a2540;
+  padding: 88px 24px;
+  text-align: center;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(50% 70% at 30% 30%, rgba(69, 115, 251, 0.4), transparent 60%),
+    radial-gradient(50% 70% at 75% 60%, rgba(0, 212, 255, 0.3), transparent 60%),
+    radial-gradient(60% 80% at 50% 50%, rgba(124, 92, 255, 0.35), transparent 65%);
+}
+
+.cta-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.cta-section h2 {
+  margin: 0 0 16px;
+  font-size: var(--ts-display);
+  font-weight: 700;
+  letter-spacing: -1px;
+  line-height: 1.15;
+  color: #fff;
+}
+
+.cta-section p {
+  margin: 0 auto 32px;
+  font-size: 18px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.cta-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cta-actions .VPButton {
+  font-weight: 600;
+}
+
+.cta-actions .VPButton.brand {
+  background: var(--vp-c-brand-1);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(69, 115, 251, 0.5);
+}
+.cta-actions .VPButton.brand:hover {
+  background: var(--vp-c-brand-2);
+}
+
+.cta-actions .VPButton.alt {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+.cta-actions .VPButton.alt:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+@media (max-width: 768px) {
+  .cta-section {
+    padding: 64px 20px;
+  }
+  .cta-section h2 {
+    font-size: 28px;
+  }
+}
+
+/* ============================================================
  * Accessibility & Motion Preferences
  * ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   .connector-item,
+  .connector-text-badge,
   .workflow-step,
   .resource-card {
     transition: none;
   }
 
   .connector-item:hover,
+  .connector-text-badge:hover,
   .workflow-step:hover,
   .resource-card:hover {
     transform: none;
   }
+}
+
+/* ============================================================
+ * LandingPage — 让 Stripe 风格首页撑满，去除 .vp-doc 限制
+ * ============================================================ */
+.vp-doc .landing-page,
+.vp-doc .landing-page > section {
+  max-width: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.vp-doc .landing-page {
+  margin: 0 !important;
+}
+
+/* 重置 .vp-doc 对 landing-page 内部元素的默认样式干扰 */
+.vp-doc .landing-page p,
+.vp-doc .landing-page h2,
+.vp-doc .landing-page h3 {
+  margin: revert;
+  line-height: inherit;
+}
+
+.vp-doc .landing-page ul {
+  margin: revert;
+  padding: revert;
 }

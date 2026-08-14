@@ -5,44 +5,72 @@ import { useData } from 'vitepress'
 const { lang } = useData()
 const isZh = computed(() => lang.value.startsWith('zh'))
 
-// Connectors with icon-style logos (square, colorful, recognizable at small sizes)
-// Text-only wordmarks like Oracle/SAP are excluded — they become illegible when scaled down
-const connectorsWithLogo = [
-  { name: 'MySQL', logo: 'mysql' },
-  { name: 'PostgreSQL', logo: 'postgresql' },
-  { name: 'SQL Server', logo: 'sqlserver' },
-  { name: 'ClickHouse', logo: 'clickhouse' },
-  { name: 'Doris', logo: 'doris' },
-  { name: 'StarRocks', logo: 'starrocks' },
-  { name: 'Databend', logo: 'databend' },
-  { name: 'MongoDB', logo: 'mongodb' },
-  { name: 'Redis', logo: 'redis' },
-  { name: 'Elasticsearch', logo: 'elasticsearch' },
-  { name: 'Kafka', logo: 'kafka' },
-  { name: 'Cassandra', logo: 'cassandra' },
-  { name: 'HBase', logo: 'hbase' },
-  { name: 'Kudu', logo: 'kudu' },
-  { name: 'Iceberg', logo: 'iceberg' },
-  { name: 'Paimon', logo: 'paimon' },
-  { name: 'MinIO', logo: 'minio' },
-  { name: 'Amazon S3', logo: 's3' },
-  { name: 'TDengine', logo: 'tdengine' },
-  { name: 'InfluxDB', logo: 'influxdata' },
-  { name: 'SQLite', logo: 'sqlite' },
-  { name: 'DB2', logo: 'db2' },
-  { name: 'Greenplum', logo: 'greenplum' },
-  { name: 'Hive', logo: 'hive' },
-]
-
-// Additional connectors shown as text-only badges (no logo or wordmark-only logo)
-const connectorsTextOnly = [
-  'Oracle', 'Sybase', 'Excel', 'FTP', 'HDFS',
-  'HTTP', 'JSON', 'Stream', 'Access', 'DBF',
-]
+// Connectors grouped by category for faster scannability
+const connectorGroups = computed(() => [
+  {
+    label: isZh.value ? '关系型数据库' : 'Relational databases',
+    logos: [
+      { name: 'MySQL', logo: 'mysql' },
+      { name: 'PostgreSQL', logo: 'postgresql' },
+      { name: 'SQL Server', logo: 'sqlserver' },
+      { name: 'DB2', logo: 'db2' },
+      { name: 'Greenplum', logo: 'greenplum' },
+      { name: 'SQLite', logo: 'sqlite' },
+    ],
+    texts: ['Oracle', 'Sybase', 'Access', 'DBF'],
+  },
+  {
+    label: isZh.value ? '分析型数据库' : 'Analytical databases',
+    logos: [
+      { name: 'ClickHouse', logo: 'clickhouse' },
+      { name: 'Doris', logo: 'doris' },
+      { name: 'StarRocks', logo: 'starrocks' },
+      { name: 'Databend', logo: 'databend' },
+    ],
+    texts: [],
+  },
+  {
+    label: isZh.value ? 'NoSQL 与缓存' : 'NoSQL & cache',
+    logos: [
+      { name: 'MongoDB', logo: 'mongodb' },
+      { name: 'Redis', logo: 'redis' },
+      { name: 'Cassandra', logo: 'cassandra' },
+      { name: 'HBase', logo: 'hbase' },
+    ],
+    texts: [],
+  },
+  {
+    label: isZh.value ? '数据湖与文件存储' : 'Data lake & file storage',
+    logos: [
+      { name: 'Iceberg', logo: 'iceberg' },
+      { name: 'Paimon', logo: 'paimon' },
+      { name: 'Kudu', logo: 'kudu' },
+      { name: 'Hive', logo: 'hive' },
+      { name: 'MinIO', logo: 'minio' },
+      { name: 'Amazon S3', logo: 's3' },
+    ],
+    texts: ['HDFS', 'FTP', 'Excel', 'JSON', 'HTTP'],
+  },
+  {
+    label: isZh.value ? '时序与消息流' : 'Time-series & streaming',
+    logos: [
+      { name: 'TDengine', logo: 'tdengine' },
+      { name: 'InfluxDB', logo: 'influxdata' },
+      { name: 'Kafka', logo: 'kafka' },
+    ],
+    texts: ['Stream'],
+  },
+])
 
 const copy = computed(() => {
   if (isZh.value) {
     return {
+      stats: [
+        { num: '70+', label: '读写插件' },
+        { num: '30+', label: '数据源类型' },
+        { num: 'Apache 2.0', label: '开源协议' },
+        { num: '强类型', label: '数据传输' },
+      ],
       codeTitle: '一份 JSON，搞定数据同步',
       codeDesc: '声明式配置 reader 和 writer，无需编写代码即可完成异构数据源之间的数据同步。',
       connectorsTitle: '覆盖主流数据源',
@@ -57,14 +85,25 @@ const copy = computed(() => {
       workflowStep3Desc: '通过 CLI 运行作业，查看统计报告，按需调试。',
       resourcesTitle: '深入了解 Addax',
       resources: [
-        { title: '项目简介', desc: '了解 Addax 的设计理念和核心架构', link: '/introduction' },
-        { title: '快速开始', desc: '几分钟内完成安装并运行第一个同步任务', link: '/quick-start' },
-        { title: '作业配置', desc: '学习 JSON 作业文件的编写规范和最佳实践', link: '/job-setup' },
-        { title: '插件开发', desc: '为 Addax 开发自定义 reader 或 writer 插件', link: '/plugin-development' },
+        { title: '项目简介', desc: '了解 Addax 的设计理念和核心架构', link: '/introduction', icon: 'book' },
+        { title: '快速开始', desc: '几分钟内完成安装并运行第一个同步任务', link: '/quick-start', icon: 'rocket' },
+        { title: '作业配置', desc: '学习 JSON 作业文件的编写规范和最佳实践', link: '/job-setup', icon: 'code' },
+        { title: '插件开发', desc: '为 Addax 开发自定义 reader 或 writer 插件', link: '/plugin-development', icon: 'puzzle' },
       ],
+      ctaTitle: '开始构建你的数据同步管道',
+      ctaDesc: '几分钟内安装 Addax，用一份 JSON 配置跑通第一个同步作业。',
+      ctaPrimary: '快速开始',
+      ctaSecondary: 'GitHub',
+      quickStartLink: '/quick-start',
     }
   }
   return {
+    stats: [
+      { num: '70+', label: 'Reader/writer plugins' },
+      { num: '30+', label: 'Data source types' },
+      { num: 'Apache 2.0', label: 'Open source license' },
+      { num: 'Strong-typed', label: 'Data transport' },
+    ],
     codeTitle: 'One JSON file. That\'s all it takes.',
     codeDesc: 'Declare reader and writer plugins in JSON — no code needed to sync data between heterogeneous sources.',
     connectorsTitle: 'Connect to your stack',
@@ -79,44 +118,50 @@ const copy = computed(() => {
     workflowStep3Desc: 'Run via CLI, check stats reports, and debug as needed.',
     resourcesTitle: 'Dive deeper into Addax',
     resources: [
-      { title: 'Introduction', desc: 'Learn about Addax design philosophy and core architecture', link: '/en/introduction' },
-      { title: 'Quick Start', desc: 'Install and run your first sync job in minutes', link: '/en/quick-start' },
-      { title: 'Job Setup', desc: 'Learn JSON job file conventions and best practices', link: '/en/job-setup' },
-      { title: 'Plugin Development', desc: 'Build custom reader or writer plugins for Addax', link: '/en/plugin-development' },
+      { title: 'Introduction', desc: 'Learn about Addax design philosophy and core architecture', link: '/en/introduction', icon: 'book' },
+      { title: 'Quick Start', desc: 'Install and run your first sync job in minutes', link: '/en/quick-start', icon: 'rocket' },
+      { title: 'Job Setup', desc: 'Learn JSON job file conventions and best practices', link: '/en/job-setup', icon: 'code' },
+      { title: 'Plugin Development', desc: 'Build custom reader or writer plugins for Addax', link: '/en/plugin-development', icon: 'puzzle' },
     ],
+    ctaTitle: 'Start building your data pipeline',
+    ctaDesc: 'Install Addax in minutes and run your first sync job with a single JSON file.',
+    ctaPrimary: 'Quick Start',
+    ctaSecondary: 'GitHub',
+    quickStartLink: '/en/quick-start',
   }
 })
 
-const jobJson = `{
-  "job": {
-    "content": [{
-      "reader": {
-        "name": "mysqlreader",
-        "parameter": {
-          "username": "root",
-          "password": "******",
-          "column": ["*"],
-          "connection": [{
-            "jdbcUrl": ["jdbc:mysql://host:3306/db"],
-            "table": ["source_table"]
-          }]
-        }
-      },
-      "writer": {
-        "name": "clickhousewriter",
-        "parameter": {
-          "username": "default",
-          "password": "******",
-          "column": ["*"],
-          "connection": [{
-            "jdbcUrl": "jdbc:clickhouse://host:8123/db",
-            "table": ["target_table"]
-          }]
-        }
-      }
-    }]
-  }
-}`
+// JSON with syntax-highlight markup (Material theme token colors via custom.css)
+const jobJsonHighlighted = `<span class="tok-punc">{</span>
+  <span class="tok-key">"job"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span>
+    <span class="tok-key">"content"</span><span class="tok-punc">:</span> <span class="tok-punc">[{</span>
+      <span class="tok-key">"reader"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span>
+        <span class="tok-key">"name"</span><span class="tok-punc">:</span> <span class="tok-str">"mysqlreader"</span><span class="tok-punc">,</span>
+        <span class="tok-key">"parameter"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span>
+          <span class="tok-key">"username"</span><span class="tok-punc">:</span> <span class="tok-str">"root"</span><span class="tok-punc">,</span>
+          <span class="tok-key">"password"</span><span class="tok-punc">:</span> <span class="tok-str">"******"</span><span class="tok-punc">,</span>
+          <span class="tok-key">"column"</span><span class="tok-punc">:</span> <span class="tok-punc">[</span><span class="tok-str">"*"</span><span class="tok-punc">],</span>
+          <span class="tok-key">"connection"</span><span class="tok-punc">:</span> <span class="tok-punc">[{</span>
+            <span class="tok-key">"jdbcUrl"</span><span class="tok-punc">:</span> <span class="tok-punc">[</span><span class="tok-str">"jdbc:mysql://host:3306/db"</span><span class="tok-punc">],</span>
+            <span class="tok-key">"table"</span><span class="tok-punc">:</span> <span class="tok-punc">[</span><span class="tok-str">"source_table"</span><span class="tok-punc">]</span>
+          <span class="tok-punc">}]</span>
+        <span class="tok-punc">}</span>
+      <span class="tok-punc">},</span>
+      <span class="tok-key">"writer"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span>
+        <span class="tok-key">"name"</span><span class="tok-punc">:</span> <span class="tok-str">"clickhousewriter"</span><span class="tok-punc">,</span>
+        <span class="tok-key">"parameter"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span>
+          <span class="tok-key">"username"</span><span class="tok-punc">:</span> <span class="tok-str">"default"</span><span class="tok-punc">,</span>
+          <span class="tok-key">"password"</span><span class="tok-punc">:</span> <span class="tok-str">"******"</span><span class="tok-punc">,</span>
+          <span class="tok-key">"column"</span><span class="tok-punc">:</span> <span class="tok-punc">[</span><span class="tok-str">"*"</span><span class="tok-punc">],</span>
+          <span class="tok-key">"connection"</span><span class="tok-punc">:</span> <span class="tok-punc">[{</span>
+            <span class="tok-key">"jdbcUrl"</span><span class="tok-punc">:</span> <span class="tok-str">"jdbc:clickhouse://host:8123/db"</span><span class="tok-punc">,</span>
+            <span class="tok-key">"table"</span><span class="tok-punc">:</span> <span class="tok-punc">[</span><span class="tok-str">"target_table"</span><span class="tok-punc">]</span>
+          <span class="tok-punc">}]</span>
+        <span class="tok-punc">}</span>
+      <span class="tok-punc">}</span>
+    <span class="tok-punc">}]</span>
+  <span class="tok-punc">}</span>
+<span class="tok-punc">}</span>`
 
 const stepIcons = [
   // install
@@ -126,9 +171,28 @@ const stepIcons = [
   // run
   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>`,
 ]
+
+const resourceIcons: Record<string, string> = {
+  book: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
+  rocket: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>`,
+  code: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>`,
+  puzzle: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.439 7.85c-.049.322.059.648.289.878l1.568 1.568c.47.47.706 1.087.706 1.704s-.235 1.233-.706 1.704l-1.611 1.611a.98.98 0 0 1-.837.276c-.47-.07-.802-.48-.968-.925a2.501 2.501 0 1 0-3.214 3.214c.446.166.855.497.925.968a.979.979 0 0 1-.276.837l-1.61 1.61a2.404 2.404 0 0 1-1.705.707 2.402 2.402 0 0 1-1.704-.706l-1.568-1.568a1.026 1.026 0 0 0-.877-.29c-.493.074-.84.504-1.02.968a2.5 2.5 0 1 1-3.237-3.237c.464-.18.894-.527.967-1.02a1.026 1.026 0 0 0-.289-.877l-1.568-1.568A2.402 2.402 0 0 1 1.998 12c0-.617.236-1.234.706-1.704L4.23 8.77c.24-.24.581-.353.917-.303.515.077.877.528 1.073 1.01a2.5 2.5 0 1 0 3.259-3.259c-.482-.196-.933-.558-1.01-1.073-.05-.336.062-.676.303-.917l1.525-1.525A2.402 2.402 0 0 1 12 1.998c.617 0 1.234.236 1.704.706l1.568 1.568c.23.23.556.338.877.29.493-.074.84-.504 1.02-.968a2.5 2.5 0 1 1 3.237 3.237c-.464.18-.894.527-.967 1.02z"/></svg>`,
+}
+
+const githubLink = 'https://github.com/wgzhao/addax'
 </script>
 
 <template>
+  <!-- Stats Bar -->
+  <section class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-item" v-for="item in copy.stats" :key="item.label">
+        <div class="stat-num">{{ item.num }}</div>
+        <div class="stat-label">{{ item.label }}</div>
+      </div>
+    </div>
+  </section>
+
   <!-- Code Example Section -->
   <section class="landing-section">
     <div class="section-header">
@@ -142,7 +206,7 @@ const stepIcons = [
         <span class="code-dot green"></span>
         <span class="code-filename">job.json</span>
       </div>
-      <pre class="code-block"><code>{{ jobJson }}</code></pre>
+      <pre class="code-block"><code v-html="jobJsonHighlighted"></code></pre>
     </div>
   </section>
 
@@ -152,31 +216,40 @@ const stepIcons = [
       <h2>{{ copy.connectorsTitle }}</h2>
       <p>{{ copy.connectorsDesc }}</p>
     </div>
-    <div class="connectors-grid">
+    <div class="connectors-grid-wrap">
       <div
-        v-for="item in connectorsWithLogo"
-        :key="item.name"
-        class="connector-item"
-        :title="item.name"
+        v-for="group in connectorGroups"
+        :key="group.label"
+        class="connector-group"
       >
-        <div class="connector-logo-bg">
-          <img
-            :src="`/images/logos/${item.logo}.svg`"
-            :alt="item.name"
-            loading="lazy"
-            width="48"
-            height="48"
-          />
+        <h3 class="connector-group-title">{{ group.label }}</h3>
+        <div v-if="group.logos.length" class="connectors-grid">
+          <div
+            v-for="item in group.logos"
+            :key="item.name"
+            class="connector-item"
+            :title="item.name"
+          >
+            <div class="connector-logo-bg">
+              <img
+                :src="`/images/logos/${item.logo}.svg`"
+                :alt="item.name"
+                loading="lazy"
+                width="48"
+                height="48"
+              />
+            </div>
+            <span class="connector-name">{{ item.name }}</span>
+          </div>
         </div>
-        <span class="connector-name">{{ item.name }}</span>
+        <div v-if="group.texts.length" class="connectors-text-row">
+          <span
+            v-for="name in group.texts"
+            :key="name"
+            class="connector-text-badge"
+          ><span class="badge-dot"></span>{{ name }}</span>
+        </div>
       </div>
-    </div>
-    <div class="connectors-text-row">
-      <span
-        v-for="name in connectorsTextOnly"
-        :key="name"
-        class="connector-text-badge"
-      >{{ name }}</span>
     </div>
     <div class="connectors-cta">
       <a class="VPButton medium brand" :href="isZh ? '/introduction' : '/en/introduction'">
@@ -230,10 +303,29 @@ const stepIcons = [
         class="resource-card"
         :href="item.link"
       >
-        <h3>{{ item.title }}</h3>
+        <div class="resource-head">
+          <span class="resource-icon" v-html="resourceIcons[item.icon]" />
+          <h3>{{ item.title }}</h3>
+        </div>
         <p>{{ item.desc }}</p>
         <span class="resource-arrow">→</span>
       </a>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="cta-section">
+    <div class="cta-inner">
+      <h2>{{ copy.ctaTitle }}</h2>
+      <p>{{ copy.ctaDesc }}</p>
+      <div class="cta-actions">
+        <a class="VPButton medium brand" :href="copy.quickStartLink">
+          {{ copy.ctaPrimary }} →
+        </a>
+        <a class="VPButton medium alt" :href="githubLink">
+          {{ copy.ctaSecondary }}
+        </a>
+      </div>
     </div>
   </section>
 </template>

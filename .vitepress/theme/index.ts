@@ -4,6 +4,7 @@ import DefaultTheme from "vitepress/theme";
 import { useData } from "vitepress";
 import { createMermaidRenderer } from "vitepress-mermaid-renderer";
 import LandingExtras from "./components/LandingExtras.vue";
+import LandingPage from "./components/LandingPage.vue";
 import "./custom.css";
 
 export default {
@@ -11,6 +12,7 @@ export default {
   enhanceApp(ctx) {
     DefaultTheme.enhanceApp?.(ctx);
     ctx.app.component("LandingExtras", LandingExtras);
+    ctx.app.component("LandingPage", LandingPage);
   },
   Layout: () => {
     const { isDark } = useData();
