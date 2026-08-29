@@ -11,6 +11,16 @@ addax gen mysql://user:pass@host:3306/ods --table users \
           [--password-env SRC_PASS] [--output job.json] [--no-probe]
 ```
 
+也支持**混合场景**（一端是 JDBC 连接串、另一端是非 JDBC 插件名）：
+
+```bash
+# 数据库导出到文本文件
+addax gen mysql://user:pass@host:3306/ods --table users --to txtfilewriter
+
+# 文本文件导入数据库（列配置按目标表自动生成）
+addax gen txtfilereader --to postgresql://user:pass@host:5432/ods --table users
+```
+
 | 参数 | 缺省 | 说明 |
 |---|---|---|
 | `<源连接串>`（位置参数） | 必填 | 源数据源连接串，见下方格式 |
@@ -60,9 +70,19 @@ scheme://user:password@host:port/database
 6. **写模式**：默认 `insert`，v1 不支持 update 模式
 7. **输出**：完整的 `job` JSON（`setting.speed.channel` + `content.reader/writer`），输出到 stdout 或文件（文件权限 600）
 
+## 非 JDBC 插件（混合模式）
+
+源或目标一侧可以是**裸插件名**（如 `txtfilewriter`、`txtfilereader`、`excelwriter` 等非 JDBC 插件），此时：
+
+- JDBC 一侧正常连接探测
+- 非 JDBC 一侧的模板默认值（`path`、`fileName` 等）保持不变，生成时输出提示要求人工检查
+- 非 JDBC 一侧的 `column` 配置（若模板声明了）会自动填充：
+  - JDBC 风格的列名列表 → 填充探测到的列名
+  - 位置式列配置（如 txtfilereader 的 `index` + `type`）→ 按探测结果自动生成，类型按 JDBC 类型名映射（int→long、varchar→string、bool→boolean、double 系→double、日期时间→date，未映射类型回退 string 并告警）
+
 ## 限制与降级
 
-- 支持 JDBC 系插件（上表所列数据库）；MongoDB、HDFS、Kafka、Redis、FTP 等非 JDBC 插件不支持探测，会降级为模板骨架拼接并给出提示
+- 至少一侧必须是 JDBC 连接串（否则没有探测信息可填，请使用原有的 `gen -r/-w` 模板拼接）
 - v1 仅支持单表同步；多表、transformer、自定义 where 等复杂场景请手动编辑生成的配置
 - `--no-probe` 时与原有 `addax.sh gen -r/-w` 行为一致
 

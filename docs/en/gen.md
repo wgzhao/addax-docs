@@ -11,6 +11,16 @@ addax gen mysql://user:pass@host:3306/ods --table users \
           [--password-env SRC_PASS] [--output job.json] [--no-probe]
 ```
 
+**Mixed endpoints** (JDBC connection string on one side, non-JDBC plugin name on the other) are also supported:
+
+```bash
+# database to text file
+addax gen mysql://user:pass@host:3306/ods --table users --to txtfilewriter
+
+# text file to database (reader column config generated from the target table)
+addax gen txtfilereader --to postgresql://user:pass@host:5432/ods --table users
+```
+
 | Option | Default | Description |
 |---|---|---|
 | `<source connection string>` | required | Source datasource, see format below |
@@ -60,9 +70,19 @@ scheme://user:password@host:port/database
 6. **Write mode**: `insert` by default; update mode is not supported in v1
 7. **Output**: full `job` JSON (`setting.speed.channel` + `content.reader/writer`), to stdout or a file (file mode 600)
 
+## Non-JDBC plugins (mixed endpoints)
+
+Either side may be a **bare plugin name** (e.g. `txtfilewriter`, `txtfilereader`, `excelwriter`) instead of a connection string:
+
+- The JDBC side is probed as usual
+- The non-JDBC side keeps its template defaults (`path`, `fileName`, ...) and a notice asks the user to review them
+- The non-JDBC side's `column` config (when the template declares one) is auto-filled:
+  - JDBC-style name list → filled with the probed column names
+  - Positional config (e.g. txtfilereader's `index` + `type`) → generated from the probe, with JDBC type names mapped to Addax types (int→long, varchar→string, bool→boolean, double family→double, date/time→date; unmapped types fall back to string with a warning)
+
 ## Limitations & fallback
 
-- JDBC-based plugins only (databases listed above); non-JDBC plugins such as MongoDB, HDFS, Kafka, Redis, FTP fall back to a template skeleton with a notice
+- At least one side must be a JDBC connection string (otherwise there is nothing to probe — use the legacy `gen -r/-w` stitching)
 - v1 supports single-table sync only; multi-table, transformer and custom where clauses must be edited manually
 - With `--no-probe`, behavior is identical to the legacy `addax.sh gen -r/-w`
 
