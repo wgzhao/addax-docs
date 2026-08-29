@@ -76,7 +76,7 @@ const heroLogos = ['mysql', 'postgresql', 'clickhouse', 'kafka', 'redis', 'mongo
 const copy = computed(() => {
   if (isZh.value) {
     return {
-      badge: '开源 · Apache 2.0 协议',
+      badge: '开源 · 持续维护 · Apache 2.0 协议',
       heroTitle1: '异构数据源，',
       heroTitle2: '一份 JSON 搞定同步',
       heroSub: '用一份 JSON 配置，把"读取 → 转换 → 写入"变成可复用、可运维的同步作业。内置 70+ 读写插件，覆盖主流数据源，开箱即用。',
@@ -125,7 +125,7 @@ const copy = computed(() => {
     }
   }
   return {
-    badge: 'Open source · Apache 2.0',
+    badge: 'Open source · Actively maintained · Apache 2.0',
     heroTitle1: 'Heterogeneous sources,',
     heroTitle2: 'one JSON to sync them all',
     heroSub: 'Turn read → transform → write into reusable, operable sync jobs with a single JSON config. 70+ built-in plugins cover the mainstream data sources, ready out of the box.',
