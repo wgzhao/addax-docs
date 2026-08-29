@@ -72,7 +72,7 @@ scheme://user:password@host:port/database
 `--to` takes an `hdfs://host:port/path` form (or a nameservice for HA, e.g. `hdfs://cluster/path`) and generates the hdfswriter config:
 
 - `defaultFS` and `path` are parsed from the connection string; `fileName` defaults to the source table name
-- `column` is generated from the source probe as a typed list (int→long, varchar→string, bool→boolean, double family→double, date/time→date; unmapped types fall back to string with a warning)
+- `column` is generated from the source probe as a typed list using **Hive type names** (tinyint/smallint/int/bigint by width, varchar/text→string, bool→boolean, double family→double, decimal/numeric→decimal, timestamp→timestamp, date→date; Hive has no `time` type, mapped to string with a warning; unmapped types fall back to string with a warning)
 - The template's sample HA `hadoopConfig`, bloom filter and Kerberos entries are removed unless explicitly requested
 
 | Option | Default | Description |

@@ -72,7 +72,7 @@ scheme://user:password@host:port/database
 `--to` 使用 `hdfs://host:port/path` 形式（HA 场景可写 nameservice，如 `hdfs://cluster/path`），生成 hdfswriter 配置：
 
 - `defaultFS`、`path` 从连接串解析；`fileName` 缺省为源表名
-- `column` 按源表探测结果自动生成带类型的列清单（int→long、varchar→string、bool→boolean、double 系→double、日期时间→date，未映射类型回退 string 并告警）
+- `column` 按源表探测结果自动生成带类型的列清单，类型使用 **Hive 规范类型名**（tinyint/smallint/int/bigint 按位宽映射、varchar/text→string、bool→boolean、double 系→double、decimal/numeric→decimal、timestamp→timestamp、date→date；Hive 无 `time` 类型，映射为 string 并告警；未映射类型回退 string 并告警）
 - 模板示例中的 HA `hadoopConfig`、bloom filter、Kerberos 条目默认移除，按需用下列选项显式添加
 
 | 选项 | 缺省 | 说明 |
