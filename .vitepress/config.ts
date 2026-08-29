@@ -115,6 +115,7 @@ const enSidebar = [
   ]},
   { text: 'Guides', items: [
     { text: 'Command Line', link: '/en/commandline' },
+    { text: 'Job Config Generation', link: '/en/gen' },
     { text: 'Debug', link: '/en/howto-debug' },
     { text: 'Encrypt Password', link: '/en/encrypt-password' },
     { text: 'Stats Report', link: '/en/statistic-report' },
@@ -148,6 +149,7 @@ const zhSidebar = [
   ]},
   { text: '使用指南', items: [
     { text: '命令行', link: '/commandline' },
+    { text: '作业配置生成', link: '/gen' },
     { text: '调试', link: '/debug' },
     { text: '密码加密', link: '/encrypt-password' },
     { text: '统计报告', link: '/statistic-report' },
