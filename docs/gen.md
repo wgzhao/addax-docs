@@ -86,6 +86,7 @@ scheme://user:password@host:port/database
 | `--have-kerberos true|false` | false | 启用 Kerberos |
 | `--kerberos-principal <p>` / `--kerberos-keytab <path>` | — | Kerberos 凭据（配合 `--have-kerberos true`） |
 | `--hadoop-config k=v`（可重复） | — | 额外 hadoop 配置（HA nameservices 等） |
+| `--hdfs-site-path <path>` | — | `hdfs-site.xml` 路径（替代手工 `--hadoop-config`，如 `/etc/hadoop/conf/hdfs-site.xml`） |
 
 ## 限制与降级
 

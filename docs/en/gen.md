@@ -86,6 +86,7 @@ scheme://user:password@host:port/database
 | `--have-kerberos true|false` | false | enable Kerberos |
 | `--kerberos-principal <p>` / `--kerberos-keytab <path>` | — | Kerberos credentials (with `--have-kerberos true`) |
 | `--hadoop-config k=v` (repeatable) | — | extra hadoop config entries (HA nameservices etc.) |
+| `--hdfs-site-path <path>` | — | path to `hdfs-site.xml` (alternative to `--hadoop-config`, e.g. `/etc/hadoop/conf/hdfs-site.xml`) |
 
 ## Limitations & fallback
 
