@@ -11,14 +11,11 @@ addax gen mysql://user:pass@host:3306/ods --table users \
           [--password-env SRC_PASS] [--output job.json] [--no-probe]
 ```
 
-**Mixed endpoints** (JDBC connection string on one side, non-JDBC plugin name on the other) are also supported:
+**RDBMS to HDFS** (high-frequency scenario) is also supported:
 
 ```bash
-# database to text file
-addax gen mysql://user:pass@host:3306/ods --table users --to txtfilewriter
-
-# text file to database (reader column config generated from the target table)
-addax gen txtfilereader --to postgresql://user:pass@host:5432/ods --table users
+addax gen mysql://user:pass@host:3306/ods --table users \
+          --to hdfs://namenode:8020/user/hive/warehouse/ods
 ```
 
 | Option | Default | Description |
@@ -70,19 +67,29 @@ scheme://user:password@host:port/database
 6. **Write mode**: `insert` by default; update mode is not supported in v1
 7. **Output**: full `job` JSON (`setting.speed.channel` + `content.reader/writer`), to stdout or a file (file mode 600)
 
-## Non-JDBC plugins (mixed endpoints)
+## Writing to HDFS
 
-Either side may be a **bare plugin name** (e.g. `txtfilewriter`, `txtfilereader`, `excelwriter`) instead of a connection string:
+`--to` takes an `hdfs://host:port/path` form (or a nameservice for HA, e.g. `hdfs://cluster/path`) and generates the hdfswriter config:
 
-- The JDBC side is probed as usual
-- The non-JDBC side keeps its template defaults (`path`, `fileName`, ...) and a notice asks the user to review them
-- The non-JDBC side's `column` config (when the template declares one) is auto-filled:
-  - JDBC-style name list → filled with the probed column names
-  - Positional config (e.g. txtfilereader's `index` + `type`) → generated from the probe, with JDBC type names mapped to Addax types (int→long, varchar→string, bool→boolean, double family→double, date/time→date; unmapped types fall back to string with a warning)
+- `defaultFS` and `path` are parsed from the connection string; `fileName` defaults to the source table name
+- `column` is generated from the source probe as a typed list (int→long, varchar→string, bool→boolean, double family→double, date/time→date; unmapped types fall back to string with a warning)
+- The template's sample HA `hadoopConfig`, bloom filter and Kerberos entries are removed unless explicitly requested
+
+| Option | Default | Description |
+|---|---|---|
+| `--file-type orc|parquet|text` | orc | output file type |
+| `--write-mode append|overwrite|nonConflict` | overwrite | write mode |
+| `--compress NONE|GZIP|SNAPPY|LZO|BZIP2` | SNAPPY | compression |
+| `--field-delimiter <char>` | template default | text file delimiter |
+| `--encoding <charset>` | — | text file encoding |
+| `--file-name <name>` | source table | output file name |
+| `--have-kerberos true|false` | false | enable Kerberos |
+| `--kerberos-principal <p>` / `--kerberos-keytab <path>` | — | Kerberos credentials (with `--have-kerberos true`) |
+| `--hadoop-config k=v` (repeatable) | — | extra hadoop config entries (HA nameservices etc.) |
 
 ## Limitations & fallback
 
-- At least one side must be a JDBC connection string (otherwise there is nothing to probe — use the legacy `gen -r/-w` stitching)
+- **Only two scenarios are supported**: RDBMS ↔ RDBMS and RDBMS → HDFS. Other plugins (txtfile, Excel, MongoDB, ...) should use the legacy `gen -r/-w` stitching
 - v1 supports single-table sync only; multi-table, transformer and custom where clauses must be edited manually
 - With `--no-probe`, behavior is identical to the legacy `addax.sh gen -r/-w`
 
