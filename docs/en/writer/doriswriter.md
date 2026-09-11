@@ -39,25 +39,23 @@ The output looks like:
 
 ## Parameters
 
-| Item                     | Required | Type   | Default  | Description                                                                                   |
-| :----------------------- | :------: | ------ | -------- | --------------------------------------------------------------------------------------------- |
-| loadUrl                  |   yes    | string | none     | Stream Load connection target                                                                 |
-| username                 |   yes    | string | none     | User name used to access the Doris database                                                   |
-| password                 |    no    | string | none     | Password used to access the Doris database                                                    |
-| flushInterval            |    no    | int    | 3000     | How often buffered data is written to the target table, in milliseconds                       |
-| flushQueueLength         |    no    | int    | 1        | Length of the queue holding the batches waiting to be uploaded                                |
-| table                    |   yes    | List   | none     | The tables to be synchronized                                                                 |
-| column                   |   yes    | list   | none     | Columns to synchronize, see [RBDMS Writer][1] for details                                     |
-| maxBatchRows             |    no    | int    | 100000   | Max rows of one batch; a batch is written as soon as either this or `maxBatchSize` is reached |
-| maxBatchSize             |    no    | long   | 52428800 | Max bytes of one batch, 50MB by default                                                       |
-| batchSize                |    no    | int    | none     | Deprecated, same meaning as `maxBatchRows`, kept only for existing jobs                       |
-| connectTimeout           |    no    | int    | 5000     | Connection timeout in milliseconds                                                            |
-| socketTimeout            |    no    | int    | 600000   | Response timeout in milliseconds; must cover the time a full sized batch takes to load        |
-| connectionRequestTimeout |    no    | int    | 5000     | Timeout for leasing a connection from the pool, in milliseconds                               |
-| hostCooldownMs           |    no    | int    | 30000    | How long a `loadUrl` is skipped after a failed load, in milliseconds                          |
-| loadProps                |    no    | map    | `csv`    | Stream Load request parameters, see the [StreamLoad page][2]                                  |
-| preSql                   |    no    | list   |          | SQL statements to execute before writing data into the target table                           |
-| postSql                  |    no    | list   |          | SQL statements to execute after all data has been written                                     |
+| Item                     | Required | Type   | Default | Description                                                                            |
+| :----------------------- | :------: | ------ | ------- | -------------------------------------------------------------------------------------- |
+| loadUrl                  |   yes    | string | none    | Stream Load connection target                                                          |
+| username                 |   yes    | string | none    | User name used to access the Doris database                                            |
+| password                 |    no    | string | none    | Password used to access the Doris database                                             |
+| flushInterval            |    no    | int    | 3000    | How often buffered data is written to the target table, in milliseconds                |
+| flushQueueLength         |    no    | int    | 1       | Length of the queue holding the batches waiting to be uploaded                         |
+| table                    |   yes    | List   | none    | The tables to be synchronized                                                          |
+| column                   |   yes    | list   | none    | Columns to synchronize, see [RBDMS Writer][1] for details                              |
+| batchSize                |    no    | int    | 2048    | Max rows of one batch; the batch is written as soon as this many rows are buffered     |
+| connectTimeout           |    no    | int    | 5000    | Connection timeout in milliseconds                                                     |
+| socketTimeout            |    no    | int    | 600000  | Response timeout in milliseconds; must cover the time a full sized batch takes to load |
+| connectionRequestTimeout |    no    | int    | 5000    | Timeout for leasing a connection from the pool, in milliseconds                        |
+| hostCooldownMs           |    no    | int    | 30000   | How long a `loadUrl` is skipped after a failed load, in milliseconds                   |
+| loadProps                |    no    | map    | `csv`   | Stream Load request parameters, see the [StreamLoad page][2]                           |
+| preSql                   |    no    | list   |         | SQL statements to execute before writing data into the target table                    |
+| postSql                  |    no    | list   |         | SQL statements to execute after all data has been written                              |
 
 [1]: ./rdbmswriter
 [2]: https://github.com/apache/doris-streamloader/tree/master
@@ -106,12 +104,13 @@ Note: in CSV mode the plugin does not escape the field content, so a field conta
 
 ## Performance tuning
 
-Every Stream Load request creates one import transaction in Doris, so small batches produce a large number of small transactions, which adds version and compaction pressure. Batch size is therefore the most important factor for write throughput. Batches are cut as soon as either `maxBatchRows` or `maxBatchSize` is reached, 100000 rows / 50MB by default, which usually needs no tuning.
+Every Stream Load request creates one import transaction in Doris, so small batches produce a large number of small transactions, which adds version and compaction pressure. `batchSize` defaults to 2048 rows (the same default as the other writers in this project); raise it for jobs that write a lot of data.
 
 Recommendations:
 
-- For wide tables or large rows, raise `maxBatchSize` first (100MB to 200MB for example); for narrow tables, raise `maxBatchRows`.
-- `flushInterval` is the longest time a record waits to be batched. Lower it when the write rate is low and latency matters; when the write rate is high the batch limits trigger first, so it can be raised to allow bigger batches.
+- Raising `batchSize` (50000 to 200000 rows for example) cuts the number of import transactions substantially. Keep in mind that it counts **rows**: for wide tables with large rows, work out what that means in bytes so a single batch does not take up too much memory.
+- `flushInterval` is the longest time a record waits to be batched. Lower it when the write rate is low and latency matters; when the write rate is high the row limit triggers first, so raise `batchSize` instead to get bigger batches.
 - `flushQueueLength` is the number of batches waiting to be uploaded and therefore also bounds the memory usage (roughly (queue length + 1) × bytes per batch). Keep the default of 1 when memory is tight.
 - Every task reuses one HTTP connection pool, connections are no longer re-established per batch. On a low latency network `connectTimeout` can be lowered, while `socketTimeout` has to cover the load time of the largest batch or a big batch will be reported as timed out.
 - While a job runs, the `rows[]` and `bytes[]` values in the log show the actual batch sizes.
+- Note that measured end to end, the batch size only shifts the wall clock time as far as the Doris cluster and the network allow; on a slow load path the difference is small. The main benefit of a larger `batchSize` is fewer transactions and less compaction pressure.

@@ -43,25 +43,23 @@ bin/addax.sh job/stream2doris.json
 
 ## 参数说明
 
-| 配置项                   | 是否必须 | 类型   | 默认值   | 描述                                                               |
-| :----------------------- | :------: | ------ | -------- | ------------------------------------------------------------------ |
-| loadUrl                  |    是    | string | 无       | Stream Load 的连接目标 ｜                                          |
-| username                 |    是    | string | 无       | 访问Doris数据库的用户名                                            |
-| password                 |    否    | string | 无       | 访问Doris数据库的密码                                              |
-| flushInterval            |    否    | int    | 3000     | 数据写入到目标表的间隔时间，单位为毫秒，即每隔多少毫秒写入一次数据 |
-| flushQueueLength         |    否    | int    | 1        | 上传数据的队列长度                                                 |
-| table                    |    是    | List   | 无       | 所选取的需要同步的表名                                             |
-| column                   |    是    | list   | 无       | 所配置的表中需要同步的列名集合，详细描述见 [RBDMS Writer][1]       |
-| maxBatchRows             |    否    | int    | 100000   | 每批次导入数据的最大行数，与 `maxBatchSize` 满足其一即触发写入     |
-| maxBatchSize             |    否    | long   | 52428800 | 每批次导入数据的最大字节数，默认 50MB                              |
-| batchSize                |    否    | int    | 无       | 已废弃，含义等同于 `maxBatchRows`，仅为兼容旧作业保留              |
-| connectTimeout           |    否    | int    | 5000     | 建立连接的超时时间，单位为毫秒                                     |
-| socketTimeout            |    否    | int    | 600000   | 等待响应的超时时间，单位为毫秒，应能覆盖一个最大批次的写入耗时     |
-| connectionRequestTimeout |    否    | int    | 5000     | 从连接池获取连接的超时时间，单位为毫秒                             |
-| hostCooldownMs           |    否    | int    | 30000    | 某 `loadUrl` 写入失败后被跳过的时长，单位为毫秒                    |
-| loadProps                |    否    | map    | `csv`    | streamLoad 的请求参数，详情参照[StreamLoad介绍页面][2]             |
-| preSql                   |    否    | list   |          | 写入数据到目标表前要执行的 SQL 语句                                |
-| postSql                  |    否    | list   |          | 数据写完后要执行的 SQL 语句                                        |
+| 配置项                   | 是否必须 | 类型   | 默认值 | 描述                                                               |
+| :----------------------- | :------: | ------ | ------ | ------------------------------------------------------------------ |
+| loadUrl                  |    是    | string | 无     | Stream Load 的连接目标 ｜                                          |
+| username                 |    是    | string | 无     | 访问Doris数据库的用户名                                            |
+| password                 |    否    | string | 无     | 访问Doris数据库的密码                                              |
+| flushInterval            |    否    | int    | 3000   | 数据写入到目标表的间隔时间，单位为毫秒，即每隔多少毫秒写入一次数据 |
+| flushQueueLength         |    否    | int    | 1      | 上传数据的队列长度                                                 |
+| table                    |    是    | List   | 无     | 所选取的需要同步的表名                                             |
+| column                   |    是    | list   | 无     | 所配置的表中需要同步的列名集合，详细描述见 [RBDMS Writer][1]       |
+| batchSize                |    否    | int    | 2048   | 每批次导入数据的最大行数，达到该行数即写入                         |
+| connectTimeout           |    否    | int    | 5000   | 建立连接的超时时间，单位为毫秒                                     |
+| socketTimeout            |    否    | int    | 600000 | 等待响应的超时时间，单位为毫秒，应能覆盖一个最大批次的写入耗时     |
+| connectionRequestTimeout |    否    | int    | 5000   | 从连接池获取连接的超时时间，单位为毫秒                             |
+| hostCooldownMs           |    否    | int    | 30000  | 某 `loadUrl` 写入失败后被跳过的时长，单位为毫秒                    |
+| loadProps                |    否    | map    | `csv`  | streamLoad 的请求参数，详情参照[StreamLoad介绍页面][2]             |
+| preSql                   |    否    | list   |        | 写入数据到目标表前要执行的 SQL 语句                                |
+| postSql                  |    否    | list   |        | 数据写完后要执行的 SQL 语句                                        |
 
 [1]: ./rdbmswriter
 [2]: https://github.com/apache/doris-streamloader/tree/master
@@ -112,12 +110,13 @@ StreamLoad 的请求参数，详情参照StreamLoad介绍页面。[Stream load -
 
 ## 性能调优
 
-Stream Load 每提交一次就会在 Doris 中产生一个导入事务，批次过小会产生大量小事务，带来额外的版本数和 Compaction 压力，因此批次大小是写入效率最关键的因素。插件按 `maxBatchRows` 和 `maxBatchSize` 中先满足的条件切分批次，默认 10 万行 / 50MB，通常无需调整。
+Stream Load 每提交一次就会在 Doris 中产生一个导入事务，批次过小会产生大量小事务，带来额外的版本数和 Compaction 压力。`batchSize` 默认 2048 行（沿用其他 Writer 的默认值），对写入量较大的作业可以按需调大。
 
 调优建议：
 
-- 宽表或单行较大的场景优先调大 `maxBatchSize`（例如 100MB~200MB），窄表优先调大 `maxBatchRows`；
-- `flushInterval` 决定攒批的最长时间。写入速率低、又要求低延迟时调小；写入速率高时批次大小会先触发，可以适当调大以让每批更大；
+- 增大 `batchSize`（例如 5 万 ~ 20 万行）可以显著减少导入事务数。注意它按**行数**计算，单行较大的宽表需要按行大小折算，避免单个批次占用过多内存；
+- `flushInterval` 决定攒批的最长时间。写入速率低、又要求低延迟时调小；写入速率高时行数条件会先触发，可以适当调大 `batchSize` 让每批更大；
 - `flushQueueLength` 决定等待上传的批次队列长度，同时也决定内存占用（大致为（队列长度 + 1）× 每批字节数），内存紧张时保持默认值 1；
 - 每个 Task 复用同一个 HTTP 连接池，不会为每个批次重新建连；内网环境可以将 `connectTimeout` 调小，`socketTimeout` 需要覆盖最大批次的写入耗时，否则大批次可能被误判为超时；
-- 写入过程中可以观察日志里的 `rows[]`、`bytes[]`，确认实际批次大小是否符合预期。
+- 写入过程中可以观察日志里的 `rows[]`、`bytes[]`，确认实际批次大小是否符合预期；
+- 需要说明的是，实测中批次大小对端到端耗时的影响取决于 Doris 集群和网络环境，在写入速率较低的链路上差异不明显；调大 `batchSize` 的主要收益是减少事务数和 Compaction 压力。
