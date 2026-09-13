@@ -1,0 +1,136 @@
+$ bin/addax.sh job/streamreader-rules.json
+
+  ___      _     _            
+ / _ \    | |   | |           
+/ /_\ \ __| | __| | __ ___  __
+|  _  |/ _` |/ _` |/ _` \ \/ /
+| | | | (_| | (_| | (_| |>  < 
+\_| |_/\__,_|\__,_|\__,_/_/\_\
+:: Addax version ::    (v6.0.14-SNAPSHOT)
+2026-09-13 14:17:39.640 [        main] INFO  Engine               - 
+{
+	"setting":{
+		"speed":{
+			"byte":-1,
+			"channel":1
+		},
+		"errorLimit":{
+			"record":0,
+			"percentage":0.02
+		}
+	},
+	"content":{
+		"reader":{
+			"name":"streamreader",
+			"parameter":{
+				"column":[
+					{
+						"value":"1,100,2",
+						"rule":"random",
+						"type":"double"
+					},
+					{
+						"value":"Addax",
+						"type":"string"
+					},
+					{
+						"value":"1",
+						"rule":"incr",
+						"type":"long"
+					},
+					{
+						"value":"1989/06/04 00:00:01,-1",
+						"rule":"incr",
+						"type":"date",
+						"dateFormat":"yyyy/MM/dd HH:mm:ss"
+					},
+					{
+						"value":"test",
+						"type":"bytes"
+					},
+					{
+						"rule":"address"
+					},
+					{
+						"rule":"bank"
+					},
+					{
+						"rule":"company"
+					},
+					{
+						"rule":"creditCard"
+					},
+					{
+						"rule":"debitCard"
+					},
+					{
+						"rule":"idCard"
+					},
+					{
+						"rule":"lat"
+					},
+					{
+						"rule":"lng"
+					},
+					{
+						"rule":"name"
+					},
+					{
+						"rule":"job"
+					},
+					{
+						"rule":"phone"
+					},
+					{
+						"rule":"stockCode"
+					},
+					{
+						"rule":"stockAccount"
+					}
+				],
+				"sliceRecordCount":10
+			}
+		},
+		"writer":{
+			"name":"streamwriter",
+			"parameter":{
+				"print":true,
+				"encoding":"UTF-8"
+			}
+		}
+	}
+}
+
+2026-09-13 14:17:39.650 [        main] INFO  JobContainer         - The jobContainer begins to process the job.
+2026-09-13 14:17:39.657 [       job-0] INFO  JobContainer         - The Reader.Job [streamreader] perform prepare work .
+2026-09-13 14:17:39.657 [       job-0] INFO  JobContainer         - The Writer.Job [streamwriter] perform prepare work .
+2026-09-13 14:17:39.657 [       job-0] INFO  JobContainer         - Job set Channel-Number to 1 channel(s).
+2026-09-13 14:17:39.657 [       job-0] INFO  JobContainer         - The Reader.Job [streamreader] is divided into [1] task(s).
+2026-09-13 14:17:39.657 [       job-0] INFO  JobContainer         - The Writer.Job [streamwriter] is divided into [1] task(s).
+2026-09-13 14:17:39.666 [       job-0] INFO  JobContainer         - The Scheduler launches [1] taskGroup(s).
+2026-09-13 14:17:39.668 [ taskGroup-0] INFO  TaskGroupContainer   - The taskGroupId=[0] started [1] channels for [1] tasks.
+2026-09-13 14:17:39.670 [ taskGroup-0] INFO  Channel              - The Channel set byte_speed_limit to -1, No bps activated.
+2026-09-13 14:17:39.670 [ taskGroup-0] INFO  Channel              - The Channel set record_speed_limit to -1, No tps activated.
+98.27	Addax	1	1989-06-04 00:00:01	0x74657374	宁夏回族自治区邯郸市龙潭区新华路249号	阳泉商行	九方房地产集团有限公司	4096678316310982	6217252221144286715	421126196801114274	-3.3966765	-151.6848752	狄红	安防主管	13538523906	008224	8680205898
+81.33	Addax	2	1989-06-03 00:00:01	0x74657374	西藏自治区昆明县山亭区韶山街102号	盛京银行	联软办公有限合伙企业	6223473408795921	6213428525497728769	420117193803291935	45.4005918	126.2302139	芦萍	西点师	13420192359	836128	3569253894
+28.62	Addax	3	1989-06-02 00:00:01	0x74657374	河南省兴安盟市海港区永联街265号	乌海银行	兰金电子餐饮有限公司	6227593032063763	6212939436209713059	320115200704155336	-37.3717424	83.8123369	孙林	列车/地铁车长	13077891026	883280	5750169522
+7.38	Addax	4	1989-06-01 00:00:01	0x74657374	北京市淮安县六枝特区白山路5号	张家口商行	昊嘉文化有限合伙企业	6283121239374080	6235866437693714523	530802196306243564	-81.0485543	-176.9651246	勾玉	锅炉工程师/技师	15088018035	164106	2892469333
+27.8	Addax	5	1989-05-31 00:00:01	0x74657374	香港特别行政区太原县平山区黄河街214号	承德银行	精芯机械中外合作有限公司	6259058913047415	6235868387408215337	320305197301266078	-30.3777802	73.0269088	巫凯	印刷排版/制版	19140432084	400570	1119544796
+71.41	Addax	6	1989-05-30 00:00:01	0x74657374	河北省辛集市怀柔区碧海路50号	晋城商行	恩悌网络股份有限公司	6259075791345102	6213330694668956477	350582200507135392	54.4136463	62.497184	沙海燕	化验员	15899573264	405982	1551956384
+42.79	Addax	7	1989-05-29 00:00:01	0x74657374	湖北省拉萨市梁平区白云街80号	中国建设银行	兰金电子餐饮集团	3568353959366817	6230407263361590072	520121193407021739	-36.5783856	-23.1595399	唐磊	CNC工程师	15762242326	031212	4222388439
+89.21	Addax	8	1989-05-28 00:00:01	0x74657374	山东省长春县华龙区解放路239号	民生银行	MBP软件物流股份有限公司	6227539162714957	6213423889811345807	450107193805289620	59.4473891	126.722241	荆秀芳	瘦身顾问	14533489851	685121	2386678456
+77.44	Addax	9	1989-05-27 00:00:01	0x74657374	广西壮族自治区合肥市普陀区光明路137号	天津银行	天开信息中外合作有限公司	6259068931268261	6200618145417973849	441600199110099977	70.7287609	143.8947897	滕雪梅	公共卫生/疾病控制	15030051423	682375	4332730599
+1.67	Addax	10	1989-05-26 00:00:01	0x74657374	江西省惠州市双滦区七星路155号	中国银行	襄樊地球村信息技术有限公司	5477660282898100	6212939142939212015	130522195402117955	-12.8224904	175.018515	强杨	财务分析经理/主管	13046686503	029874	5578465632
+2026-09-13 14:17:42.674 [       job-0] INFO  AbstractScheduler    - The scheduler has completed all tasks.
+2026-09-13 14:17:42.676 [       job-0] INFO  JobContainer         - The Writer.Job [streamwriter] perform post work.
+2026-09-13 14:17:42.677 [       job-0] INFO  JobContainer         - The Reader.Job [streamreader] perform post work.
+2026-09-13 14:17:42.689 [       job-0] INFO  StandAloneJobContainerCommunicator - Total 10 records, 1715 bytes | Speed 571B/s, 3 records/s | Error 0 records, 0 bytes |  All Task WaitWriterTime 0.000s |  All Task WaitReaderTime 0.010s | Percentage 100.00%
+2026-09-13 14:17:42.690 [       job-0] INFO  JobContainer         - 
+Job start  at             : 2026-09-13 14:17:39
+Job end    at             : 2026-09-13 14:17:42
+Job took secs             :                  3s
+Total   bytes             :                1715
+Average   bps             :              571B/s
+Average   rps             :              3rec/s
+Number of rec             :                  10
+Failed record             :                   0
