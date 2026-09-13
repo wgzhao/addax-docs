@@ -12,16 +12,16 @@
     },
     "content": {
       "reader": {
-        "name": "datareader",
+        "name": "streamreader",
         "parameter": {
           "column": [
             {
-              "value": "1,100,",
+              "value": "1,100,2",
               "rule": "random",
               "type": "double"
             },
             {
-              "value": "DataX",
+              "value": "Addax",
               "type": "string"
             },
             {
@@ -33,7 +33,7 @@
               "value": "1989/06/04 00:00:01,-1",
               "rule": "incr",
               "type": "date",
-              "dateFormat": "yyyy/MM/dd hh:mm:ss"
+              "dateFormat": "yyyy/MM/dd HH:mm:ss"
             },
             {
               "value": "test",

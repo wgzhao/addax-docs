@@ -5,7 +5,6 @@ const readerPlugins = [
   { path: 'reader/cassandrareader', name: 'Cassandra Reader' },
   { path: 'reader/clickhousereader', name: 'ClickHouse Reader' },
   { path: 'reader/databendreader', name: 'Databend Reader' },
-  { path: 'reader/datareader', name: 'Data Reader' },
   { path: 'reader/dbfreader', name: 'DBF Reader' },
   { path: 'reader/dorisreader', name: 'Doris Reader' },
   { path: 'reader/elasticsearchreader', name: 'Elasticsearch Reader' },
