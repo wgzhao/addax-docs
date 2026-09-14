@@ -35,7 +35,15 @@ Data cleanup processing mode before writing:
 
 ### fileFormat
 
-Format of file output, including csv, text, and sql (introduced in version `4.1.3`). CSV is strict csv format, if data to be written includes column delimiter, it will be escaped according to csv escape syntax, with escape symbol being double quotes `"`; text format simply separates data to be written with column delimiter, no escaping for data including column delimiter. SQL format means writing data to file in SQL statement (`INSERT INTO ... VALUES`) format.
+Format of file output, including csv, text, and sql (introduced in version `4.1.3`).
+
+`csv` and `text` are handled by the same CSV writer, so both escape a field that contains the column delimiter, a double quote or a line break, using double quotes `"` as the escape symbol. When `fieldDelimiter` is set to `\n` or `\r` (the historical "one field per line" form), fields are joined with that delimiter unescaped instead.
+
+SQL format means writing data to file in SQL statement (`INSERT INTO ... VALUES`) format.
+
+### Binary columns
+
+A `Bytes` column (Oracle `BLOB`/`RAW`/`LONG RAW`, MySQL `BLOB`/`VARBINARY`, and so on) is written as a base64 string rather than decoded with `encoding`: decoding it as text replaces every byte above `0x7F` with `U+FFFD` and writes `0x0A` through untouched, which breaks the record line. A SQL NULL still renders as `nullFormat` (default `\N`). The `sql` file format emits the same base64 string literal.
 
 ### table
 
@@ -62,3 +70,4 @@ Batch size for batch insert syntax. If extendedInsert is true, every batchSize d
 | string              | string               |
 | Boolean             | Boolean              |
 | Date                | Date                 |
+| Bytes               | Base64 string        |

@@ -126,3 +126,32 @@
 
 注意，上述参数在 `conf/core.json` 配置文件均有默认配置，用来控制全局的设置。
 
+## `core` 配置项
+
+`core` 是任务配置文件里与 `job` 平级的一段，用来覆盖 `conf/core.json` 中的全局配置，例如：
+
+```json
+{
+  "core": {
+    "transport": {
+      "channel": {
+        "speed": {
+          "byte": 1048576,
+          "record": -1
+        },
+        "flowControlInterval": 20,
+        "capacity": 512,
+        "byteCapacity": 67108864
+      }
+    }
+  }
+}
+```
+
+- `speed.byte`：每秒字节数上限，`-1` 表示不限制
+- `speed.record`：每秒记录数上限，`-1` 表示不限制
+- `flowControlInterval`：流控检查间隔，单位毫秒
+- `capacity`：通道可缓存的记录条数
+- `byteCapacity`：通道可缓存的字节数
+
+单条记录（含二进制列）超过 `byteCapacity` 时无法进入通道，任务会以 `OVER_LIMIT_ERROR` 失败并提示该配置项，而不是丢弃这条记录。调大它可以容纳更大的记录，但要注意这部分内存是按每条排队记录占用的。

@@ -57,3 +57,9 @@ FTP文件本身不提供数据类型，该类型是 Addax FtpWriter 定义：
 | String         | String -> 字符串序列化表示  |
 | Boolean        | Boolean -> 字符串序列化表示 |
 | Date           | Date -> 字符串序列化表示    |
+| Bytes          | Base64 字符串               |
+
+## 二进制列
+
+与 [TxtFile Writer](txtfilewriter) 相同，`Bytes` 类型（Oracle 的 `BLOB`/`RAW`、MySQL 的 `BLOB`/`VARBINARY` 等）写出的是 Base64
+字符串，不会按 `encoding` 解码成文本；SQL NULL 仍然由 `nullFormat` 表示。

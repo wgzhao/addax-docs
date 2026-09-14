@@ -35,11 +35,18 @@ TxtFile Writer 提供了向本地文件写入类 CSV 格式的一个或者多个
 
 ### fileFormat
 
-文件写出的格式，包括 csv 和 text 和 `4.1.3` 版本引入的 sql 三种，csv 是严格的 csv 格式，如果待写数据包括列分隔符，则会按照
-csv
-的转义语法转义，转义符号为双引号 `"`；
-text 格式是用列分隔符简单分割待写数据，对于待写数据包括列分隔符情况下不做转义。
+文件写出的格式，包括 csv 和 text 和 `4.1.3` 版本引入的 sql 三种。
+
+`csv` 和 `text` 目前由同一套 CSV 写出逻辑处理，因此两者都会对包含列分隔符、双引号或换行的字段按 CSV 语法转义，转义符号为双引号 `"`；当
+`fieldDelimiter` 配置为 `\n` 或 `\r` 时（历史遗留的“一个字段一行”写法），字段之间不再转义，直接按分隔符拼接。
+
 sql 格式表示将数据以 SQL 语句 (`INSERT INTO ... VALUES`) 的方式写入到文件
+
+### 二进制列
+
+`Bytes` 类型（Oracle 的 `BLOB`/`RAW`/`LONG RAW`、MySQL 的 `BLOB`/`VARBINARY` 等）写出的是 Base64 字符串，不会按 `encoding` 解码：按文本解码会把所有大于
+`0x7F` 的字节替换成 `U+FFFD`，并把 `0x0A` 原样写进文件而破坏记录行。SQL NULL 仍然由 `nullFormat` 表示（默认 `\N`）。`fileFormat` 为 `sql`
+时同样输出 Base64 字符串字面量。
 
 ### table
 
@@ -70,3 +77,4 @@ sql 格式表示将数据以 SQL 语句 (`INSERT INTO ... VALUES`) 的方式写�
 | string         | string            |
 | Boolean        | Boolean           |
 | Date           | Date              |
+| Bytes          | Base64 字符串     |

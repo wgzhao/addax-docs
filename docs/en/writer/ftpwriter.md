@@ -24,3 +24,8 @@ FTP Writer provides the ability to write files to remote FTP/SFTP servers, curre
 | fileName       |   Yes    | string    | None            | Name of file to write, this filename will have random suffix added as actual filename for each thread |
 | writeMode      |   Yes    | string    | None            | Data cleanup processing mode before writing, see below                                                |
 | fieldDelimiter |   Yes    | string    | `,`             | Field delimiter for reading                                                                           |
+
+## Binary columns
+
+As in [TxtFile Writer](txtfilewriter), a `Bytes` column (Oracle `BLOB`/`RAW`, MySQL `BLOB`/`VARBINARY`, and so on) is written as a
+base64 string instead of being decoded with `encoding`; a SQL NULL still renders as `nullFormat`.
