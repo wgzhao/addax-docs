@@ -69,7 +69,7 @@ The `core` section contains system-level configuration:
 - `speed.record`: Record-level speed limit (records per second), -1 means no limit
 - `flowControlInterval`: Flow control check interval (milliseconds)
 - `capacity`: Channel capacity (number of records)
-- `byteCapacity`: Channel byte capacity
+- `byteCapacity`: Byte capacity of the channel. A record larger than this value can never be queued, so the task fails with `OVER_LIMIT_ERROR` and names this option rather than dropping the record. The memory is held per queued record, so raise it deliberately.
 
 ## Job Configuration
 
