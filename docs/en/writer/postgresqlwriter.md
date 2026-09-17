@@ -57,14 +57,33 @@ Currently PostgresqlWriter supports most PostgreSQL types, but there are also so
 
 The following lists PostgresqlWriter's type conversion list for PostgreSQL:
 
-| Addax Internal Type | PostgreSQL Data Type                                      |
-| ------------------- | --------------------------------------------------------- |
-| Long                | bigint, bigserial, integer, smallint, serial              |
-| Double              | double precision, money, numeric, real                    |
-| String              | varchar, char, text, bit, inet,cidr,macaddr,uuid,xml,json |
-| Date                | date, time, timestamp                                     |
-| Boolean             | bool                                                      |
-| Bytes               | bytea                                                     |
+| Addax Internal Type | PostgreSQL Data Type                                 |
+| ------------------- | ---------------------------------------------------- |
+| Long                | bigint, bigserial, integer, smallint, serial         |
+| Double              | double precision, money, numeric, real               |
+| String              | varchar, char, text, inet,cidr,macaddr,uuid,xml,json |
+| Date                | date, time, timestamp                                |
+| Boolean             | bool, bit(1)                                         |
+| Bytes               | bytea, bit(n)                                        |
+
+## Writing a bit Column
+
+A `bit(n)` column (n > 1) accepts the following forms, and the value is stored in exactly the width
+the target column declares:
+
+| Source Column Type | Meaning                                                                                                                    | Example         |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| Bytes              | the value packed, 8 bits per byte, most significant byte first, which is the form an RDBMS reader gives for a `bit` column | `0x05` → `101`  |
+| String             | a bit string, only the characters `0` and `1` are accepted                                                                 | `"101"` → `101` |
+| Long/Double        | the number itself, the bit pattern being its binary form, whole numbers only                                               | `5` → `101`     |
+| Boolean            | a single bit, the path a `bit(1)` column takes                                                                             | `true` → `1`    |
+
+- A value narrower than the column is padded with leading zeros; `bit varying` declares no width,
+  so the value is written in the width it has.
+- These are collected as dirty records (governed by `errorLimit`): a bit string holding any other
+  character, a number with a fractional part, and a value that needs more bits than the column has.
+- A decimal number delivered as a string is not read as a decimal: `"255"` is not 255 but an invalid
+  bit string, so declare the source column as long or double instead.
 
 ## Known Limitations
 

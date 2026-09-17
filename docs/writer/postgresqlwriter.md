@@ -60,14 +60,29 @@ bin/addax.sh job/pg2pg.json
 
 下面列出 PostgresqlWriter 针对 PostgreSQL 类型转换列表:
 
-| Addax 内部类型 | PostgreSQL 数据类型                                       |
-| -------------- | --------------------------------------------------------- |
-| Long           | bigint, bigserial, integer, smallint, serial              |
-| Double         | double precision, money, numeric, real                    |
-| String         | varchar, char, text, bit, inet,cidr,macaddr,uuid,xml,json |
-| Date           | date, time, timestamp                                     |
-| Boolean        | bool                                                      |
-| Bytes          | bytea                                                     |
+| Addax 内部类型 | PostgreSQL 数据类型                                  |
+| -------------- | ---------------------------------------------------- |
+| Long           | bigint, bigserial, integer, smallint, serial         |
+| Double         | double precision, money, numeric, real               |
+| String         | varchar, char, text, inet,cidr,macaddr,uuid,xml,json |
+| Date           | date, time, timestamp                                |
+| Boolean        | bool, bit(1)                                         |
+| Bytes          | bytea, bit(n)                                        |
+
+## bit 类型写入
+
+`bit(n)`（n > 1）列接受以下几种来源形式，按目标列声明的宽度精确存放：
+
+| 来源列类型  | 含义                                                                           | 示例            |
+| ----------- | ------------------------------------------------------------------------------ | --------------- |
+| Bytes       | 打包的位值，每 8 位一个字节，高位在前，即 RDBMS reader 读 `bit` 列时给出的形式 | `0x05` → `101`  |
+| String      | 逐字符的位串，只接受 `0` 和 `1`                                                | `"101"` → `101` |
+| Long/Double | 数值本身，位模式即该数的二进制，且必须是整数                                   | `5` → `101`     |
+| Boolean     | 单个位，`bit(1)` 列走这条路径                                                  | `true` → `1`    |
+
+- 位数不足时左侧补零；`bit varying` 没有声明宽度，按值本身的位数写入。
+- 以下情况会被记为脏数据（受 `errorLimit` 控制）：位串中出现 `0`/`1` 以外的字符、数值带小数部分、位数超过目标列宽度。
+- 十进制数值写成字符串不会被按十进制解析，例如 `"255"` 不是 255 而是非法位串，请把源列声明为 long 或 double。
 
 ## 已知限制
 
