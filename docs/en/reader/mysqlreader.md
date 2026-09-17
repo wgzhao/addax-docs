@@ -114,15 +114,16 @@ In your JSON file, configure `"driver": "com.mysql.jdbc.Driver"`
 
 ## Data Type Mapping
 
-| MySQL Type                        | Addax Type | Notes |
-| --------------------------------- | ---------- | ----- |
-| TINYINT, SMALLINT, MEDIUMINT, INT | long       |       |
-| BIGINT                            | long       |       |
-| FLOAT, DOUBLE, DECIMAL            | double     |       |
-| VARCHAR, CHAR, TEXT               | string     |       |
-| DATE, TIME, DATETIME, TIMESTAMP   | date       |       |
-| BIT                               | bool       |       |
-| BINARY, VARBINARY, BLOB           | bytes      |       |
+| MySQL Type                        | Addax Type | Notes                                                |
+| --------------------------------- | ---------- | ---------------------------------------------------- |
+| TINYINT, SMALLINT, MEDIUMINT, INT | long       |                                                      |
+| BIGINT                            | long       |                                                      |
+| FLOAT, DOUBLE, DECIMAL            | double     |                                                      |
+| VARCHAR, CHAR, TEXT               | string     |                                                      |
+| DATE, TIME, DATETIME, TIMESTAMP   | date       |                                                      |
+| BIT(1)                            | bool       |                                                      |
+| BIT(n)                            | bytes      | packed, 8 bits per byte, most significant byte first |
+| BINARY, VARBINARY, BLOB           | bytes      |                                                      |
 
 ## Performance Tuning
 

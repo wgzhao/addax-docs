@@ -56,3 +56,24 @@ If you need to collect from MySQL server below `5.6` and need to use `Connector/
 - `insert` means using `insert into`
 - `replace` means using `replace into` method
 - `update` means using `ON DUPLICATE KEY UPDATE` statement
+
+## Writing a bit Column
+
+A `bit(n)` column (n > 1) accepts the following forms, and the value is stored in exactly the width
+the target column declares:
+
+| Source Column Type | Meaning                                                                                                                    | Example         |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| Bytes              | the value packed, 8 bits per byte, most significant byte first, which is the form an RDBMS reader gives for a `bit` column | `0x05` → `101`  |
+| String             | a bit string, only the characters `0` and `1` are accepted                                                                 | `"101"` → `101` |
+| Long/Double        | the number itself, the bit pattern being its binary form, whole numbers only                                               | `5` → `101`     |
+| Boolean            | a single bit, the path a `bit(1)` column takes                                                                             | `true` → `1`    |
+
+- These are collected as dirty records (governed by `errorLimit`): a bit string holding any other
+  character, and a number with a fractional part. A value that needs more bits than the column has
+  is left to MySQL's own conversion rules (an error in strict mode, truncation in non-strict mode).
+- A decimal number delivered as a string is not read as a decimal: `"255"` is not 255 but an invalid
+  bit string, so declare the source column as long or double instead.
+- A `bit(1)` column is written from a boolean; a `tinyint(1)` column (including `boolean`) is written
+  as an integer, because Addax appends `tinyInt1isBit=false` to the JDBC URL and the driver therefore
+  never reports it as `bit`.

@@ -85,14 +85,17 @@ This plugin is based on the [RDBMS Reader](rdbmsreader.md) implementation.
 
 ## Data Type Mapping
 
-| PostgreSQL Type                 | Addax Type | Notes |
-| ------------------------------- | ---------- | ----- |
-| SMALLINT, INTEGER, BIGINT       | long       |       |
-| REAL, DOUBLE PRECISION, NUMERIC | double     |       |
-| VARCHAR, CHAR, TEXT             | string     |       |
-| DATE, TIME, TIMESTAMP           | date       |       |
-| BOOLEAN                         | bool       |       |
-| BYTEA                           | bytes      |       |
+| PostgreSQL Type                 | Addax Type | Notes                                                |
+| ------------------------------- | ---------- | ---------------------------------------------------- |
+| SMALLINT, INTEGER, BIGINT       | long       |                                                      |
+| REAL, DOUBLE PRECISION, NUMERIC | double     |                                                      |
+| VARCHAR, CHAR, TEXT             | string     |                                                      |
+| DATE, TIME, TIMESTAMP           | date       |                                                      |
+| BOOLEAN                         | bool       |                                                      |
+| BIT(1)                          | bool       |                                                      |
+| BIT(n)                          | bytes      | packed, 8 bits per byte, most significant byte first |
+| BIT VARYING                     | string     | the bit string itself, leading zeros preserved       |
+| BYTEA                           | bytes      |                                                      |
 
 ## Performance Tips
 
