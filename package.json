@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vitepress dev docs",
-    "build": "vitepress build docs",
-    "preview": "vitepress preview docs",
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview",
     "format": "prettier --write docs/src/**/*.md",
     "prepare": "node ./scripts/install-git-hooks.cjs",
     "postinstall": "node ./scripts/install-git-hooks.cjs"

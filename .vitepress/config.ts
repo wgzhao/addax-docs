@@ -181,6 +181,11 @@ const socialMeta: HeadConfig[] = [
 
 // https://vitepress.dev/reference/site-config
 export default defineVersionedConfig({
+  // @viteplus/versions folds this into its own root, so sources/archive below
+  // resolve to docs/src and docs/archive. Keeping .vitepress at the repo root
+  // also keeps `vitepress build` and .vitepress/dist, which is what the
+  // Cloudflare Pages VitePress preset expects.
+  srcDir: 'docs',
   versionsConfig: {
     current: '6.1.0',
     sources: 'src',
