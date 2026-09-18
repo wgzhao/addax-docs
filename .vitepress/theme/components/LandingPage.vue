@@ -29,6 +29,7 @@ const connectorGroups = computed(() => [
       { name: 'Doris', logo: 'doris' },
       { name: 'StarRocks', logo: 'starrocks' },
       { name: 'Databend', logo: 'databend' },
+      { name: 'DuckDB', logo: 'duckdb' },
     ],
     texts: [],
   },
