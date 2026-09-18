@@ -1,0 +1,35 @@
+{
+  "job": {
+    "setting": {
+      "speed": {
+        "channel": 1
+      },
+      "errorLimit": {
+        "record": 0,
+        "percentage": 0.02
+      }
+    },
+    "content": {
+      "reader": {
+        "name": "duckdbreader",
+        "parameter": {
+          "column": [
+            "*"
+          ],
+          "connection": {
+            "jdbcUrl": "jdbc:duckdb:/tmp/test.duckdb",
+            "table": [
+              "test"
+            ]
+          }
+        }
+      },
+      "writer": {
+        "name": "streamwriter",
+        "parameter": {
+          "print": true
+        }
+      }
+    }
+  }
+}
