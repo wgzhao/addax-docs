@@ -85,7 +85,7 @@ const copy = computed(() => {
       heroNote: '几分钟完成安装 · 无需编写代码',
       trustLabel: '覆盖主流数据源，开箱即用',
       features: [
-        { icon: 'plugin', title: '丰富的连接器生态', desc: '内置 70+ 读写插件，覆盖 MySQL、Oracle、ClickHouse、HDFS、Kafka、HBase、MongoDB 等主流数据源，开箱即用。', link: '/introduction', linkText: '查看支持的数据源' },
+        { icon: 'plugin', title: '丰富的连接器生态', desc: '内置 60+ 读写插件，覆盖 MySQL、Oracle、ClickHouse、HDFS、Kafka、HBase、MongoDB 等主流数据源，开箱即用。', link: '/introduction', linkText: '查看支持的数据源' },
         { icon: 'transform', title: '强大的数据转换能力', desc: '内置脱敏、补全、过滤与类型转换，并支持 Groovy 自定义逻辑，适配真实世界的脏数据场景。', link: '/transformer', linkText: '了解数据转换' },
         { icon: 'observe', title: '可观测的运行质量', desc: '强类型数据传输配合统计报告，让你更快定位"是数据问题还是配置问题"。', link: '/statistic-report', linkText: '查看统计报告' },
       ],
@@ -98,7 +98,7 @@ const copy = computed(() => {
         { strong: '可视化报告', text: '每次运行产出读取/写入/耗时统计' },
       ],
       connectorsTitle: '覆盖主流数据源',
-      connectorsDesc: '内置 70+ 读写插件，从关系型数据库到 NoSQL，从文件系统到消息队列，满足绝大多数数据同步场景。',
+      connectorsDesc: '内置 60+ 读写插件，从关系型数据库到 NoSQL，从文件系统到消息队列，满足绝大多数数据同步场景。',
       connectorsCta: '查看全部插件',
       workflowTitle: '三步开始数据同步',
       workflowSteps: [
@@ -107,7 +107,7 @@ const copy = computed(() => {
         { num: '03', title: '运行并监控', desc: '通过 CLI 运行作业，查看统计报告，按需调试。' },
       ],
       stats: [
-        { num: '70+', label: '读写插件' },
+        { num: '60+', label: '读写插件' },
         { num: '30+', label: '数据源类型' },
         { num: 'Apache 2.0', label: '开源协议' },
         { num: '强类型', label: '数据传输' },
@@ -134,7 +134,7 @@ const copy = computed(() => {
     heroNote: 'Install in minutes · No code required',
     trustLabel: 'Covers mainstream data sources, out of the box',
     features: [
-      { icon: 'plugin', title: 'Rich connector ecosystem', desc: '70+ built-in reader/writer plugins covering MySQL, Oracle, ClickHouse, HDFS, Kafka, HBase, MongoDB and more — ready to use.', link: '/en/introduction', linkText: 'View supported sources' },
+      { icon: 'plugin', title: 'Rich connector ecosystem', desc: '60+ built-in reader/writer plugins covering MySQL, Oracle, ClickHouse, HDFS, Kafka, HBase, MongoDB and more — ready to use.', link: '/en/introduction', linkText: 'View supported sources' },
       { icon: 'transform', title: 'Powerful data transformation', desc: 'Built-in masking, padding, filtering and type conversion, plus Groovy custom logic for real-world dirty data.', link: '/en/transformer', linkText: 'Learn about transforms' },
       { icon: 'observe', title: 'Observable run quality', desc: 'Strong-typed transport with statistical reports helps you quickly tell data issues from config issues.', link: '/en/statistic-report', linkText: 'View stats report' },
     ],
@@ -147,7 +147,7 @@ const copy = computed(() => {
       { strong: 'Visual reports', text: 'Every run produces read/write/timing stats' },
     ],
     connectorsTitle: 'Connect to your stack',
-    connectorsDesc: '70+ built-in plugins covering RDBMS, NoSQL, file systems, and message queues for virtually any sync scenario.',
+    connectorsDesc: '60+ built-in plugins covering RDBMS, NoSQL, file systems, and message queues for virtually any sync scenario.',
     connectorsCta: 'View all plugins',
     workflowTitle: 'Get started in 3 steps',
     workflowSteps: [
@@ -156,7 +156,7 @@ const copy = computed(() => {
       { num: '03', title: 'Run and monitor', desc: 'Run via CLI, check stats reports, and debug as needed.' },
     ],
     stats: [
-      { num: '70+', label: 'Reader/writer plugins' },
+      { num: '60+', label: 'Reader/writer plugins' },
       { num: '30+', label: 'Data source types' },
       { num: 'Apache 2.0', label: 'Open source license' },
       { num: 'Strong-typed', label: 'Data transport' },

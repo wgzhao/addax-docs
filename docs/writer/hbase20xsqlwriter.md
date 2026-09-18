@@ -2,7 +2,7 @@
 
 HBase20x SQL Writer 插件利用 Phoenix 向 HBase 2.x 写入数据。
 
-如果 HBase 是 1.X 版本，则可以使用 [HBase11xsqlWriter](hbase11xsqlwriter) 或[HBase11xWriter](hbase11xwriter) 插件
+HBase 1.x 的支持已在 6.0.11 版本移除，本插件仅支持 HBase 2.x。
 
 ## 配置样例
 

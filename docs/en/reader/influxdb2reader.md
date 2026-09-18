@@ -2,7 +2,7 @@
 
 InfluxDB2 Reader plugin implements reading data from [InfluxDB](https://www.influxdata.com) version 2.0 and above.
 
-Note: If your InfluxDB is version 1.8 and below, you should use the [InfluxDBReader](influxdbreader) plugin.
+Note: support for InfluxDB 1.8 and below was removed in 6.0.11; this plugin requires InfluxDB 2.0 or later.
 
 ## Example
 

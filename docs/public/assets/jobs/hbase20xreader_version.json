@@ -8,7 +8,7 @@
     },
     "content": {
       "reader": {
-        "name": "hbase11xreader",
+        "name": "hbase20xreader",
         "parameter": {
           "hbaseConfig": {
             "hbase.zookeeper.quorum": "xxx"
@@ -57,7 +57,7 @@
       "writer": {
         "name": "txtfilewriter",
         "parameter": {
-          "path": "/Users/shf/workplace/addax_test/hbase11xreader/result",
+          "path": "/tmp/addax/result",
           "fileName": "qiran",
           "writeMode": "truncate"
         }
