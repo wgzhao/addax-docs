@@ -1,0 +1,53 @@
+name: Archive documentation
+
+# Run this after cutting an Addax release. It freezes the current documentation
+# under docs/archive/<version>, which is what the version switcher reads.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Addax version to archive, e.g. 6.1.1'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Freeze the current docs as the new version
+        run: |
+          set -euo pipefail
+          target="docs/archive/${{ inputs.version }}"
+          if [ -e "$target" ]; then
+            echo "::error::$target already exists; pick another version or delete it first."
+            exit 1
+          fi
+          cp -r docs/src "$target"
+          echo "Archived $(find "$target" -name '*.md' | wc -l) pages as ${{ inputs.version }}"
+
+      # Archives share docs/public, so a missing asset fails here rather than
+      # shipping a broken page. The pre-commit hook builds again before committing.
+      - name: Verify the build
+        run: npm run build
+
+      - name: Commit and push
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/archive
+          git commit -m "docs: archive the ${{ inputs.version }} documentation"
+          git push
