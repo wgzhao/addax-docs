@@ -187,6 +187,9 @@ export default defineConfig({
   srcDir: 'docs',
   title: SITE_TITLE,
   description: 'Actively maintained successor to Alibaba DataX — a fast, versatile, open-source ETL tool for 30+ RDBMS and NoSQL data sources',
+  // Vercel already 308-redirects /page.html to /page, so without this the sitemap
+  // and every og:url would point at a redirect instead of the served URL.
+  cleanUrls: true,
   head: socialMeta,
   locales: {
     root: {
@@ -225,8 +228,8 @@ export default defineConfig({
   },
   transformHead({ pageData, title, description }) {
     // Match the URLs VitePress puts in the sitemap: index.md collapses to the
-    // directory, every other page keeps an .html suffix.
-    const path = pageData.relativePath.replace(/index\.md$/, '').replace(/\.md$/, '.html')
+    // directory, every other page drops its extension.
+    const path = pageData.relativePath.replace(/(^|\/)index\.md$/, '$1').replace(/\.md$/, '')
     const url = `${SITE_URL}/${path}`
     // VitePress appends the site title; a share card reads better without it.
     const suffix = ` | ${SITE_TITLE}`
