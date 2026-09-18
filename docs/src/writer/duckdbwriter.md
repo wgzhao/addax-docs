@@ -87,14 +87,16 @@ Can't open a connection to same database file with a different configuration tha
 
 ## 类型转换
 
-| Addax 内部类型 | DuckDB 数据类型                                     |
-| -------------- | --------------------------------------------------- |
-| Long           | TINYINT / SMALLINT / INTEGER / BIGINT               |
-| Double         | FLOAT / DOUBLE                                      |
-| String         | VARCHAR / 以及能被 DuckDB 隐式转换的其它类型         |
-| Decimal        | DECIMAL                                             |
-| Date           | DATE / TIME / TIMESTAMP                             |
-| Boolean        | BOOLEAN                                             |
-| Bytes          | BLOB                                                |
+| Addax 内部类型         | DuckDB 数据类型                              |
+| ---------------------- | -------------------------------------------- |
+| Long                   | TINYINT / SMALLINT / INTEGER / BIGINT        |
+| Double                 | FLOAT / DOUBLE                               |
+| String                 | VARCHAR / 以及能被 DuckDB 隐式转换的其它类型 |
+| String / Double / Long | DECIMAL                                      |
+| Date                   | DATE / TIME / TIMESTAMP                      |
+| Boolean                | BOOLEAN                                      |
+| Bytes                  | BLOB                                         |
+
+Appender 按**目标列的 DuckDB 类型**分派取值：整数列走 `asLong()`、浮点列走 `asDouble()`、DECIMAL 列走 `asBigDecimal()`、文本列走 `asString()`，因此 DECIMAL 目标列不管来源是文本还是数值都能精确落库。
 
 `LIST`、`STRUCT`、`MAP`、`UNION` 等嵌套类型以及 `GEOMETRY` 暂不支持作为写入目标列，遇到时会报错。
