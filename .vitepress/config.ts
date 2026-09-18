@@ -187,12 +187,16 @@ export default defineVersionedConfig({
   // Cloudflare Pages VitePress preset expects.
   srcDir: 'docs',
   versionsConfig: {
-    // @viteplus/versions builds its version list from the archive subfolders only,
-    // and the switcher renders currentVersion separately whenever you are not on
-    // it. Labelling the root with a released version would therefore list that
-    // version twice on every archived page, so the root stays a plain label and
-    // every release gets an archive of its own.
-    current: 'latest',
+    // The root serves docs/src, which tracks the Addax master branch, so it is
+    // labelled after that branch rather than "latest" — the old mkdocs site sent
+    // / to the newest release and kept master at /develop/, and reusing "latest"
+    // here would imply the root is a released version when it is not.
+    //
+    // It also cannot be a released version number: @viteplus/versions builds its
+    // version list from the archive subfolders only, and the switcher renders
+    // currentVersion separately whenever you are not on it, so a version number
+    // that also exists in the archive would be listed twice on every archived page.
+    current: 'master',
     sources: 'src',
     archive: 'archive',
     versionSwitcher: {

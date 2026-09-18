@@ -43,11 +43,18 @@ git push
 
 ## 版本模型
 
-- 站点根路径永远服务 `docs/src`，在切换器里显示为 `latest`
+- **根路径服务 `docs/src`，对应 addax 项目的 master 分支**，在切换器里显示为 `master`
 - 每个已发布版本在 `docs/archive/<版本>/` 下有一份冻结副本
 - 中英双语各自的路径是 `/<版本>/...` 与 `/en/<版本>/...`
 
-**为什么根路径叫 `latest` 而不是版本号**：`@viteplus/versions` 的版本列表只来自 `archive` 的子目录名，而切换器组件在非当前版本时会额外渲染一次 `currentVersion`。如果把 `current` 写成某个已归档的版本号，那么在所有归档页面上该版本会重复出现两次。用 `latest` 这个纯标签可以避开，也让每个发布版本都能被完整归档。
+文档开发和 addax master 同步进行：改动直接提交到 `docs/src`，用户打开站点根路径看到的就是 master 的文档。
+
+> **与旧站（mkdocs + mike）的差异**：旧站 `/Addax/` 会跳转到 `latest` 别名，指向**最新发布版**，master 文档单独放在 `/Addax/develop/`。现在根路径给的是 master 文档，这是一个行为变化。
+
+**为什么 `current` 既不是 `latest` 也不是版本号**：
+
+- **不能是版本号**：`@viteplus/versions` 的版本列表只来自 `archive` 的子目录名，而切换器组件在非当前版本时会额外渲染一次 `currentVersion`。一个同时存在于 archive 中的版本号，会在所有归档页面上重复出现两次。
+- **不宜叫 `latest`**：文档站语境里 `latest` 通常指最新发布版，而根路径实际是 master 文档，用这个词会让用户以为自己在读已发布版本。
 
 ## 部署
 
