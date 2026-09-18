@@ -1,0 +1,13 @@
+# InfluxDB2 Writer
+
+InfluxDB2 Writer plugin implements writing data to InfluxDB 2.0 and above versions.
+
+## Configuration Example
+
+This plugin is used to write data to InfluxDB 2.0+ database. For detailed configuration and parameters, please refer to the original InfluxDB2 Writer documentation.
+
+<<<@/public/assets/jobs/stream2influx2.json
+
+## Parameters
+
+This plugin supports writing time series data to InfluxDB 2.0+ with token-based authentication and organization/bucket structure.
