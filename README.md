@@ -58,7 +58,7 @@ git push
 
 ## 部署
 
-站点由 **Cloudflare Pages** 服务（不是 Vercel）。Cloudflare 的 VitePress 预设固定使用：
+站点由 **Cloudflare Pages** 服务。Cloudflare 的 VitePress 预设固定使用：
 
 ```
 Build command:   npx vitepress build
@@ -67,7 +67,9 @@ Build directory: .vitepress/dist
 
 仓库根保留 `.vitepress/` 并在配置里写 `srcDir: 'docs'`，就是为了让这两个值保持默认——`@viteplus/versions` 会把 `srcDir` 折进自己的根路径计算，于是 `sources` / `archive` 正确解析到 `docs/src` 与 `docs/archive`，构建产物也仍然落在 `.vitepress/dist`。**调整目录结构前请先确认不会破坏这两项**，否则部署会静默失败（线上继续跑上一次成功的版本）。
 
-`vercel.json` 也指向同一套命令与产物目录，仅用于另一个同样连着本仓库的 Vercel 项目。
+> Vercel 上也连着一个同名项目，但已经不再使用，仅尚未解绑。它的构建结果不影响线上内容，提交上出现的 Vercel 状态检查可以忽略。仓库里不再保留 `vercel.json`——即使那个项目继续构建，`.vitepress` 位于仓库根也让它能按预设默认值正常完成。
+
+站点的规范 URL 不带 `.html` 后缀（`/reader/mysqlreader`）。Cloudflare Pages 会把 `/reader/mysqlreader.html` 308 重定向到前者，两种写法都能访问到同一份内容。
 
 ## 注意事项
 
