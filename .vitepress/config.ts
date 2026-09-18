@@ -187,7 +187,12 @@ export default defineVersionedConfig({
   // Cloudflare Pages VitePress preset expects.
   srcDir: 'docs',
   versionsConfig: {
-    current: '6.1.0',
+    // @viteplus/versions builds its version list from the archive subfolders only,
+    // and the switcher renders currentVersion separately whenever you are not on
+    // it. Labelling the root with a released version would therefore list that
+    // version twice on every archived page, so the root stays a plain label and
+    // every release gets an archive of its own.
+    current: 'latest',
     sources: 'src',
     archive: 'archive',
     versionSwitcher: {
