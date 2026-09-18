@@ -4,6 +4,7 @@ import DefaultTheme from "vitepress/theme";
 import { useData } from "vitepress";
 import { createMermaidRenderer } from "vitepress-mermaid-renderer";
 import LandingPage from "./components/LandingPage.vue";
+import VersionSwitcher from "@viteplus/versions/components/version-switcher.component.vue";
 import "./custom.css";
 
 export default {
@@ -11,6 +12,7 @@ export default {
   enhanceApp(ctx) {
     DefaultTheme.enhanceApp?.(ctx);
     ctx.app.component("LandingPage", LandingPage);
+    ctx.app.component("VersionSwitcher", VersionSwitcher);
   },
   Layout: () => {
     const { isDark } = useData();

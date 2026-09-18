@@ -1,4 +1,5 @@
-import { defineConfig, type HeadConfig } from 'vitepress'
+import type { HeadConfig } from 'vitepress'
+import { defineVersionedConfig } from '@viteplus/versions'
 
 const readerPlugins = [
   { path: 'reader/accessreader', name: 'Access Reader' },
@@ -98,6 +99,7 @@ const enNav = [
     { text: 'Reader Plugins', items: enReaderNavItems },
     { text: 'Writer Plugins', items: enWriterNavItems },
   ]},
+  { component: 'VersionSwitcher' },
 ]
 
 const enSidebar = [
@@ -132,6 +134,7 @@ const zhNav = [
     { text: '读取插件', items: zhReaderNavItems },
     { text: '写入插件', items: zhWriterNavItems },
   ]},
+  { component: 'VersionSwitcher' },
 ]
 
 const zhSidebar = [
@@ -177,8 +180,16 @@ const socialMeta: HeadConfig[] = [
 ]
 
 // https://vitepress.dev/reference/site-config
-export default defineConfig({
-  srcDir: 'docs',
+export default defineVersionedConfig({
+  versionsConfig: {
+    current: '6.1.0',
+    sources: 'src',
+    archive: 'archive',
+    versionSwitcher: {
+      text: '版本',
+      includeCurrentVersion: true
+    }
+  },
   title: SITE_TITLE,
   description: 'Actively maintained successor to Alibaba DataX — a fast, versatile, open-source ETL tool for 30+ RDBMS and NoSQL data sources',
   // Vercel already 308-redirects /page.html to /page, so without this the sitemap
