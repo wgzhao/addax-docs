@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitepress'
+import { defineConfig, type HeadConfig } from 'vitepress'
 
 const readerPlugins = [
   { path: 'reader/accessreader', name: 'Access Reader' },
@@ -164,11 +164,30 @@ const zhSidebar = [
   ]}
 ]
 
+const SITE_URL = 'https://addax.wgzhao.com'
+const SITE_TITLE = 'Addax Documentation'
+const SOCIAL_IMAGE = `${SITE_URL}/images/social-preview.png`
+
+// Chat clients and search engines read these before any page content, so this is
+// the first thing a shared link says about Addax. The image is the same card the
+// GitHub repo uses, so a link to either surface looks identical.
+const socialMeta: HeadConfig[] = [
+  ['meta', { property: 'og:type', content: 'website' }],
+  ['meta', { property: 'og:site_name', content: 'Addax' }],
+  ['meta', { property: 'og:image', content: SOCIAL_IMAGE }],
+  ['meta', { property: 'og:image:width', content: '1280' }],
+  ['meta', { property: 'og:image:height', content: '640' }],
+  ['meta', { property: 'og:image:alt', content: 'Addax — Any source. Any target. Fast.' }],
+  ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+  ['meta', { name: 'twitter:image', content: SOCIAL_IMAGE }],
+]
+
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   srcDir: 'docs',
-  title: 'Addax Documentation',
-  description: 'A fast and versatile ETL tool that can transfer data between RDBMS and NoSQL seamlessly',
+  title: SITE_TITLE,
+  description: 'Actively maintained successor to Alibaba DataX — a fast, versatile, open-source ETL tool for 30+ RDBMS and NoSQL data sources',
+  head: socialMeta,
   locales: {
     root: {
       label: ' 中文',
@@ -202,7 +221,24 @@ export default defineConfig({
     //mermaidConfig !theme here works for light mode since dark theme is forced in dark mode
   },
   sitemap: {
-    hostname: 'https://addax.wgzhao.com'
+    hostname: SITE_URL
+  },
+  transformHead({ pageData, title, description }) {
+    // Match the URLs VitePress puts in the sitemap: index.md collapses to the
+    // directory, every other page keeps an .html suffix.
+    const path = pageData.relativePath.replace(/index\.md$/, '').replace(/\.md$/, '.html')
+    const url = `${SITE_URL}/${path}`
+    // VitePress appends the site title; a share card reads better without it.
+    const suffix = ` | ${SITE_TITLE}`
+    const ogTitle = title.endsWith(suffix) ? title.slice(0, -suffix.length) : title
+    return [
+      ['meta', { property: 'og:title', content: ogTitle }],
+      ['meta', { property: 'og:description', content: description }],
+      ['meta', { property: 'og:url', content: url }],
+      ['meta', { property: 'og:locale', content: path.startsWith('en/') ? 'en_US' : 'zh_CN' }],
+      ['meta', { name: 'twitter:title', content: ogTitle }],
+      ['meta', { name: 'twitter:description', content: description }],
+    ]
   },
   lastUpdated: true,
   themeConfig: {

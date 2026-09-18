@@ -76,10 +76,10 @@ const heroLogos = ['mysql', 'postgresql', 'clickhouse', 'kafka', 'redis', 'mongo
 const copy = computed(() => {
   if (isZh.value) {
     return {
-      badge: '开源 · 持续维护 · Apache 2.0 协议',
+      badge: 'DataX 的活跃维护继任者 · Apache 2.0 协议',
       heroTitle1: '异构数据源，',
       heroTitle2: '一份 JSON 搞定同步',
-      heroSub: '用一份 JSON 配置，把"读取 → 转换 → 写入"变成可复用、可运维的同步作业。内置 70+ 读写插件，覆盖主流数据源，开箱即用。',
+      heroSub: '一个快速、通用的开源 ETL 工具，支持 30+ 关系型与非关系型数据源。用一份 JSON 配置，把"读取 → 转换 → 写入"变成可复用、可运维的同步作业。',
       ctaPrimary: '快速开始',
       ctaSecondary: 'GitHub',
       heroNote: '几分钟完成安装 · 无需编写代码',
@@ -125,10 +125,10 @@ const copy = computed(() => {
     }
   }
   return {
-    badge: 'Open source · Actively maintained · Apache 2.0',
+    badge: 'Actively maintained successor to DataX · Apache 2.0',
     heroTitle1: 'Heterogeneous sources,',
     heroTitle2: 'one JSON to sync them all',
-    heroSub: 'Turn read → transform → write into reusable, operable sync jobs with a single JSON config. 70+ built-in plugins cover the mainstream data sources, ready out of the box.',
+    heroSub: 'A fast, versatile, open-source ETL tool supporting 30+ RDBMS and NoSQL data sources. Turn read → transform → write into reusable, operable sync jobs with a single JSON config.',
     ctaPrimary: 'Quick Start',
     ctaSecondary: 'GitHub',
     heroNote: 'Install in minutes · No code required',

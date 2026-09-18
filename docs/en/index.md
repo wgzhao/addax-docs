@@ -4,8 +4,8 @@ layout: home
 
 hero:
   name: "Addax"
-  text: "A stable and efficient heterogeneous data sync tool"
-  tagline: Define read → transform → write as a single JSON job, and operate it like an engineering artifact
+  text: "Heterogeneous sources, one JSON to sync them all"
+  tagline: "Actively maintained successor to Alibaba DataX — a fast, versatile, open-source ETL tool for 30+ RDBMS and NoSQL data sources."
   actions:
     - theme: brand
       text: Quickstart

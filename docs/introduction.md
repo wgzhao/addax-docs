@@ -2,7 +2,7 @@
 
 ## 概览
 
-Addax 是一个异构数据源离线同步工具，最初来源于阿里的 [DataX](https://github.com/alibaba/datax) ，致力于实现包括关系型数据库(MySQL、Oracle 等)、HDFS、Hive、HBase、FTP 等各种异构数据源之间稳定高效的数据同步功能。
+Addax 是阿里开源 [DataX](https://github.com/alibaba/datax) 的活跃维护继任者（DataX 官方仓库自 2023 年后已停止更新）。它是一个快速、通用的开源 ETL 工具，支持 30+ 关系型与非关系型数据源，致力于实现包括关系型数据库(MySQL、Oracle 等)、HDFS、Hive、HBase、FTP 等各种异构数据源之间稳定高效的数据同步。
 
 ![addax why new](/images/addax_why_new.png)
 
