@@ -20,8 +20,7 @@ MongoDB Writer 插件用于向 [MongoDB](https://mongodb.com) 写入数据。
 | splitter   |    否    | string        | 无     | 特殊分隔符，详见下文                                  |
 | writeMode  |    否    | string        | insert | 指定了传输数据时更新的信息,支持 insert， update 两种  |
 | batchSize  |    否    | int           | 2048   | 指定批次输入的数量                                    |
-| isUpsert   |    否    | boolean       | 无     | 当设置为 true 时，表示针对相同的 upsertKey 做更新操作 |
-| upsertKey  |    否    | string        | 无     | upsertKey 指定了没行记录的业务主键。用来做更新时使用  |
+| preSql     |    否    | object        | 无     | 写入前执行的语句，支持 drop 和 remove，详见下文        |
 
 ### column
 
@@ -37,6 +36,8 @@ MongoDB Writer 插件用于向 [MongoDB](https://mongodb.com) 写入数据。
   ]
 }
 ```
+
+`type` 支持的取值有 `string`（默认）、`int`（int32）、`long`（int64）、`double`、`date`、`bool`、`bytes`、`objectid`、`array` 以及 `json`，其中 `array` 必须同时配置 `splitter`。
 
 如果是数组类型，则需要配置 `splitter` 来告知分隔符，类似如下：
 
@@ -75,6 +76,41 @@ MongoDB Writer 插件用于向 [MongoDB](https://mongodb.com) 写入数据。
 ```
 
 上述配置表示依据字段 `unique_id` 来决定当前记录是插入还是更新，当前暂不支持指定多个字段
+
+### preSql
+
+`preSql` 在写入之前执行，用于清理目标集合，支持 `drop` 和 `remove` 两种类型：
+
+```json
+{
+  "preSql": {
+    "type": "drop"
+  }
+}
+```
+
+```json
+{
+  "preSql": {
+    "type": "remove",
+    "json": "{\"city\": \"beijing\"}",
+    "item": [
+      {
+        "name": "status",
+        "condition": "$ne",
+        "value": "active"
+      }
+    ]
+  }
+}
+```
+
+`remove` 的过滤条件由 `json` 和 `item` 两部分组成，两者可以同时配置，同时配置时按 `$and` 合并：
+
+- `json`：原始查询条件，格式与 reader 的 `query` 参数一致
+- `item`：条件列表，每项包含 `name`、可选的 `condition` 和 `value`，上述配置表示 `status != "active"`
+
+两者都没有配置（或 `json` 为空对象）时，插件会直接报错终止，避免误删整个集合。
 
 ## 类型转换
 
