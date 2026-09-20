@@ -18,7 +18,7 @@ MongoDBReader 插件利用 MongoDB 的java客户端MongoClient进行MongoDB的�
 | database   |    是    | string | 无     | MongoDB 数据库                              |
 | collection |    是    | string | 无     | MongoDB 的集合名，支持单值或范围通配符      |
 | column     |    是    | list   | 无     | MongoDB 的文档列名, 配置 `["*"]` 获取所有列 |
-| query      |    否    | string | 无     | 自定义查询条件                              |
+| query      |    否    | string/object | 无     | 自定义查询条件，详见下文                    |
 | fetchSize  |    否    | int    | 2048   | 批量获取的记录数                            |
 
 ### collection
@@ -59,7 +59,7 @@ MongoDBReader 插件利用 MongoDB 的java客户端MongoClient进行MongoDB的�
 
 ### query
 
-`query` 是只符合 MongoDB 查询格式的 BSON 字符串，比如：
+`query` 用于过滤要读取的文档，可以写成扩展 JSON（extended JSON）字符串，也可以直接写成 JSON 对象：
 
 ```json
 {
@@ -67,7 +67,33 @@ MongoDBReader 插件利用 MongoDB 的java客户端MongoClient进行MongoDB的�
 }
 ```
 
+```json
+{
+  "query": {
+    "amount": {
+      "$gt": 140900
+    }
+  }
+}
+```
+
 上述查询类似 SQL 中的 `where amount > 140900 and oc_date > 20190110`
+
+`query` 按**扩展 JSON** 解析，而不是按 JavaScript 解析，所以 mongosh 里能执行的 JS 写法在这里不一定成立，日期尤其要注意：
+
+| 写法                                   | 结果                                                                                                              |
+| :------------------------------------- | :---------------------------------------------------------------------------------------------------------------- |
+| `new Date('2026-09-20')`               | ✗ 报 `JSON reader expected a date in 'EEE MMM dd yyyy HH:mm:ss z' format`，字符串形式只认 Java 日期格式，不建议使用 |
+| `new Date(1789833600000)`              | ✓ 毫秒数                                                                                                           |
+| `ISODate('2026-09-20')`                | ✓ 按**运行任务的 JVM 默认时区**解析为当天 0 点                                                                      |
+| `ISODate('2026-09-20T00:00:00Z')`      | ✓ 按 UTC 解析                                                                                                      |
+| `ISODate('2026-09-20T00:00:00+08:00')` | ✗ 不接受时区偏移                                                                                                   |
+| `{"$date": "2026-09-20T00:00:00+08:00"}` | ✓ 时区明确，推荐                                                                                                 |
+| `{"$date": 1789833600000}`             | ✓ 毫秒数，推荐                                                                                                     |
+
+需要注意，mongosh 中的 `new Date('2026-09-20')` 按 UTC 解析，而这里的 `ISODate('2026-09-20')` 按运行任务的 JVM 默认时区解析，两者相差一个时区偏移。需要跨环境结果一致时，请使用带时区偏移的 `{"$date": ...}` 或毫秒数。
+
+`query` 无法解析时，任务会以配置错误直接终止并提示可用写法，不会静默地变成"读不到数据"。
 
 ## 类型转换
 
