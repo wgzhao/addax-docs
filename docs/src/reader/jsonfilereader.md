@@ -15,14 +15,13 @@ JSON File Reader 提供了读取本地文件系统数据存储的能力。
 
 ## 参数说明
 
-| 配置项         | 是否必须 | 数据类型 | 默认值 | 描述                                                                   |
-| :------------- | :------: | -------- | ------ | ---------------------------------------------------------------------- |
-| path           |    是    | list     | 无     | 本地文件系统的路径信息，注意这里可以支持填写多个路径,详细描述见下文    |
-| column         |    是    | list     | 无     | 读取字段列表，type指定源数据的类型，详见下文                           |
-| fieldDelimiter |    是    | string   | `,`    | 描述：读取的字段分隔符                                                 |
-| compress       |    否    | string   | 无     | 文本压缩类型，默认不填写意味着没有压缩。支持压缩类型为zip、gzip、bzip2 |
-| encoding       |    否    | string   | utf-8  | 读取文件的编码配置                                                     |
-| singleLine     |    否    | boolean  | true   | 每条数据是否为一行， 详见下文                                          |
+| 配置项     | 是否必须 | 数据类型 | 默认值 | 描述                                                                |
+| :--------- | :------: | -------- | ------ | ------------------------------------------------------------------- |
+| path       |    是    | list     | 无     | 本地文件系统的路径信息，注意这里可以支持填写多个路径,详细描述见下文 |
+| column     |    是    | list     | 无     | 读取字段列表，type指定源数据的类型，详见下文                        |
+| compress   |    否    | string   | 无     | 文本压缩类型，不填写时按文件内容和后缀自动识别，详见下文            |
+| encoding   |    否    | string   | utf-8  | 读取文件的编码配置                                                  |
+| singleLine |    否    | boolean  | true   | 每条数据是否为一行， 详见下文                                       |
 
 ### path
 
@@ -45,19 +44,30 @@ JSON File Reader 提供了读取本地文件系统数据存储的能力。
 
 读取字段列表，type指定源数据的类型，index指定当前列来自于json的指定，语法为 [Jayway JsonPath](https://github.com/json-path/JsonPath) 的语法，value指定当前类型为常量，不从源头文件读取数据，而是根据value值自动生成对应的列。 用户必须指定Column字段信息
 
-对于用户指定Column信息，type必须填写，index/value 必须选择其一
+对于用户指定Column信息，type必须填写，index/value 必须选择其一；不支持的类型会在任务启动阶段报错。
+
+index 匹配不到值时，该列写出 `NULL`，并按列给出一条警告，不会让整个任务失败。type 为 `string` 的列如果 index 指向一个对象或数组，则写出它的 JSON 文本，不会丢弃该列。
+
+### compress
+
+文本压缩类型，可填写 `zip`、`lzo`，或 commons-compress 支持的其它类型（如 `gzip`、`bzip2`，也接受 `gz`、`bz2` 的写法）。
+
+不填写该配置时按文件内容自动识别；zip、lzo 不在自动识别的范围内，会退回按文件后缀（`.zip`、`.lzo`）判断，因此名为 `xxx.zip` 的压缩文件不写该配置也能正常读取。
+
+不支持的压缩类型会在任务启动阶段报错。
 
 ### singleLine
 
 使用 JSON 格式存储数据，业界有两种方式，一种是每行一个 JSON 对象，也就是 `Single Line JSON(aka. JSONL or JSON Lines)`;
 另一种是整个文件是一个 JSON 数组，每个元素是一个 JSON 对象，也就是 `Multiline JSON`。
 
-Addax 默认支持每行一个 JSON 对象的格式，即 `singeLine = true`, 在这种情况下，要注意的是：
+Addax 默认支持每行一个 JSON 对象的格式，即 `singleLine = true`, 在这种情况下，要注意的是：
 
 1. 每行 JSON 对象的末尾不能有逗号，否则会解析失败。
 2. 一个JSON 对象不能跨行，否则会解析失败。
+3. 空行会被跳过，不影响后续行的读取。
 
-如果数据是整个文件是一个 JSON 数组，每个元素是一个 JSON 对象，需要设置 `singeLine` 为 `false`。
+如果数据是整个文件是一个 JSON 数组，每个元素是一个 JSON 对象，需要设置 `singleLine` 为 `false`。
 假设上述列子中的数据用下面的格式表示：
 
 ```json
@@ -100,7 +110,7 @@ Addax 默认支持每行一个 JSON 对象的格式，即 `singeLine = true`, �
 }
 ```
 
-因为这种格式是合法的 JSON 格式，因此每个 JSON 对象可以跨行。相应的，这类数据读取时，其 `path` 配置应该如下填写：
+因为这种格式是合法的 JSON 格式，因此每个 JSON 对象可以跨行。相应的，这类数据读取时，其 `column` 配置应该如下填写：
 
 ```json
 {
@@ -127,7 +137,7 @@ Addax 默认支持每行一个 JSON 对象的格式，即 `singeLine = true`, �
       "type": "double"
     },
     {
-      "index": "$..result[*].pubdate",
+      "index": "$.result[*].pubdate",
       "type": "date"
     },
     {
@@ -139,6 +149,12 @@ Addax 默认支持每行一个 JSON 对象的格式，即 `singeLine = true`, �
 ```
 
 更详细的使用说明请参考 [Jayway JsonPath](https://github.com/json-path/JsonPath) 的语法。
+
+这种格式的每一条记录由各列**按位置**拼装而成，因此配置上有以下要求：
+
+1. 每个 index 都必须是多值路径（匹配到 JSON 数组），否则任务会报错。
+2. 每个 index 匹配到的元素个数必须一致，否则任务会报错，以免把不同元素的值拼进同一条记录。
+3. 每个 index 应指向**叶子**字段。如果 JSONPath 的中间层级在部分元素里不存在，json-path 会跳过这些元素，此时各列的元素个数可能仍然相同但已经互相错位，程序无法发现。例如 `$.data[*].a.v` 与 `$.data[*].b.w`，如果有的元素只有 `a`、有的只有 `b`，两列各得到 2 个值，第 3 个元素的 `a.v` 会被拼到第 2 个元素的 `b.w` 上。
 
 注意: 这种数据在一个 JSON 数组里时，程序只能采取将整个文件读取到内存中，然后解析的方式，因此不适合大文件的读取。
 对于大文件的读取，建议使用每行一个 JSON 对象的格式，也就是 `Single Line JSON` 的格式，这种格式可以采取逐行读取的方式，不会占用太多内存。
