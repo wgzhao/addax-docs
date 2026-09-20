@@ -15,14 +15,13 @@ Where `/tmp/test*.json` are multiple copies of the same JSON file, with content 
 
 ## Parameters
 
-| Configuration  | Required | Data Type | Default Value | Description                                                                          |
-| :------------- | :------: | --------- | ------------- | ------------------------------------------------------------------------------------ |
-| path           |   Yes    | list      | None          | Local file system path information, note that multiple paths can be supported        |
-| column         |   Yes    | list      | None          | List of fields to read, type specifies the type of source data                       |
-| fieldDelimiter |   Yes    | string    | `,`           | Field delimiter for reading                                                          |
-| compress       |    No    | string    | None          | Text compression type, default empty means no compression. Supports zip, gzip, bzip2 |
-| encoding       |    No    | string    | utf-8         | Encoding configuration for reading files                                             |
-| singleLine     |    No    | boolean   | true          | Whether each data record is on one line                                              |
+| Configuration | Required | Data Type | Default Value | Description                                                                   |
+| :------------ | :------: | --------- | ------------- | ----------------------------------------------------------------------------- |
+| path          |   Yes    | list      | None          | Local file system path information, note that multiple paths can be supported |
+| column        |   Yes    | list      | None          | List of fields to read, type specifies the type of source data                |
+| compress      |    No    | string    | None          | Text compression type, detected from the content and the suffix when empty     |
+| encoding      |    No    | string    | utf-8         | Encoding configuration for reading files                                      |
+| singleLine    |    No    | boolean   | true          | Whether each data record is on one line                                       |
 
 ### path
 
@@ -45,7 +44,17 @@ It is particularly important to note that if there are no matching files for ext
 
 List of fields to read, type specifies the type of source data, index specifies the current column from json specification using [Jayway JsonPath](https://github.com/json-path/JsonPath) syntax, value specifies that the current type is constant, not reading data from source file, but automatically generating corresponding columns based on value. Users must specify Column field information.
 
-For user-specified Column information, type must be filled, and index/value must choose one.
+For user-specified Column information, type must be filled, and index/value must choose one. An unsupported type is rejected while the job is set up.
+
+When an index matches no value, the column holds `NULL` and one warning is logged per column; the task keeps running. A `string` column whose index points at an object or an array holds its json text instead of dropping the column.
+
+### compress
+
+The compression type: `zip`, `lzo`, or any type commons-compress supports (such as `gzip` and `bzip2`, the spellings `gz` and `bz2` are accepted as well).
+
+Without this option the type is detected from the content. zip and lzo are not covered by that detection and fall back to the file suffix (`.zip`, `.lzo`), which means a `xxx.zip` archive is read without the option as well.
+
+An unsupported compression type fails while the job is set up.
 
 ### singleLine
 
@@ -55,6 +64,7 @@ Addax supports one JSON object per line by default, i.e., `singleLine = true`. I
 
 1. There should be no comma at the end of each line's JSON object, otherwise parsing will fail.
 2. A JSON object cannot span multiple lines, otherwise parsing will fail.
+3. Blank lines are skipped and do not affect the lines that follow.
 
 If the data is an entire file as a JSON array with each element being a JSON object, you need to set `singleLine` to `false`.
 Suppose the data in the above example is represented in the following format:
@@ -99,7 +109,7 @@ Suppose the data in the above example is represented in the following format:
 }
 ```
 
-Because this format is valid JSON format, each JSON object can span multiple lines. Correspondingly, when reading such data, its `path` configuration should be filled as follows:
+Because this format is valid JSON format, each JSON object can span multiple lines. Correspondingly, when reading such data, its `column` configuration should be filled as follows:
 
 ```json
 {
@@ -126,7 +136,7 @@ Because this format is valid JSON format, each JSON object can span multiple lin
       "type": "double"
     },
     {
-      "index": "$..result[*].pubdate",
+      "index": "$.result[*].pubdate",
       "type": "date"
     },
     {
@@ -138,6 +148,12 @@ Because this format is valid JSON format, each JSON object can span multiple lin
 ```
 
 For more detailed usage instructions, please refer to [Jayway JsonPath](https://github.com/json-path/JsonPath) syntax.
+
+Every record of such a document is built from the columns **by position**, which requires the following of the configuration:
+
+1. Every index has to be a multi-value path that matches a JSON array, otherwise the task fails.
+2. Every index has to match the same number of elements, otherwise the task fails, so that values of different elements are not written into the same record.
+3. Every index should point at a **leaf** field. When an intermediate level of the JSONPath is missing from some elements, json-path skips those elements, and the columns can still hold the same number of values while no longer lining up, which the reader cannot detect. For example, with `$.data[*].a.v` and `$.data[*].b.w`, a document whose elements carry `a` or `b` gives both columns 2 values, and the `a.v` of the third element ends up on the `b.w` of the second.
 
 Note: When this type of data is in a JSON array, the program can only read the entire file into memory and then parse it, so it is not suitable for reading large files.
 For reading large files, it is recommended to use the format of one JSON object per line, which is the `Single Line JSON` format. This format can be read line by line without taking up too much memory.
