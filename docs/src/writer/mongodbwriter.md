@@ -79,6 +79,8 @@ MongoDB Writer 插件用于向 [MongoDB](https://mongodb.com) 写入数据。
 
 ### preSql
 
+`preSql` 与 `column`、`writeMode` 同级，位于 writer 的 `parameter` 下；旧写法把它放在 `connection` 内，该写法仍然兼容，但两者同时配置时以 `preSql` 为准。
+
 `preSql` 在写入之前执行，用于清理目标集合，支持 `drop` 和 `remove` 两种类型：
 
 ```json
@@ -93,7 +95,9 @@ MongoDB Writer 插件用于向 [MongoDB](https://mongodb.com) 写入数据。
 {
   "preSql": {
     "type": "remove",
-    "json": "{\"city\": \"beijing\"}",
+    "json": {
+      "city": "beijing"
+    },
     "item": [
       {
         "name": "status",
@@ -107,7 +111,7 @@ MongoDB Writer 插件用于向 [MongoDB](https://mongodb.com) 写入数据。
 
 `remove` 的过滤条件由 `json` 和 `item` 两部分组成，两者可以同时配置，同时配置时按 `$and` 合并：
 
-- `json`：原始查询条件，格式与 reader 的 `query` 参数一致
+- `json`：原始查询条件，可以写成 JSON 对象，也可以写成扩展 JSON 字符串，写法与 reader 的 `query` 参数一致。注意它按扩展 JSON 解析而不是按 JavaScript 解析，日期不能写成 `new Date('2026-09-20')`
 - `item`：条件列表，每项包含 `name`、可选的 `condition` 和 `value`，上述配置表示 `status != "active"`
 
 两者都没有配置（或 `json` 为空对象）时，插件会直接报错终止，避免误删整个集合。
