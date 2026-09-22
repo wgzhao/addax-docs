@@ -10,7 +10,7 @@ Download the Excel compressed file for demonstration from [here](assets/excel_re
 The three folders have the same content, where:
 
 - `demo.xlsx` is the new Excel format
-- `demo.xls` is the old Excel format
+- `demo_old.xls` is the old Excel format
 - `demo_gbk.xlsx` is created under Windows and stored with GBK encoding
 
 File content is shown in the following table:

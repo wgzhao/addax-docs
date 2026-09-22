@@ -10,7 +10,7 @@
 三个文件夹的内容相同，其中
 
 - `demo.xlsx` 是 Excel 新格式
-- `demo.xls` 是 Excel 老格式
+- `demo_old.xls` 是 Excel 老格式
 - `demo_gbk.xlsx` 是在 Windows 下创建，已 GBK 编码存储的文件
 
 文件内容，如下表所示：
