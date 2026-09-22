@@ -60,11 +60,14 @@ If there are no errors, you should get the following output:
 
 ## Parameters
 
-| Configuration | Required | Type        | Default Value | Description                                           |
-| :------------ | -------- | ----------- | ------------- | ----------------------------------------------------- |
-| path          | Yes      | string/list | None          | Specify the folder to read, multiple can be specified |
-| header        | No       | boolean     | false         | Whether the file contains headers                     |
-| skipRows      | No       | int         | 0             | How many rows to skip at the beginning                |
+| Configuration | Required | Type        | Default Value | Description                                               |
+| :------------ | -------- | ----------- | ------------- | --------------------------------------------------------- |
+| path          | Yes      | string/list | None          | Specify the folder to read, multiple can be specified     |
+| header        | No       | boolean     | false         | Whether the file contains headers                         |
+| skipRows      | No       | int         | 0             | How many rows to skip at the beginning                    |
+| sheetIndex    | No       | int         | 0             | Index of the sheet to read, counted from 0                |
+| sheetName     | No       | string      | None          | Name of the sheet to read, not together with `sheetIndex` |
+| trim          | No       | boolean     | true          | Whether to trim whitespace around text cells              |
 
 ### header
 
@@ -74,6 +77,27 @@ Whether the Excel file contains headers, if so, skip them.
 
 Specify the number of rows to skip, default is 0, meaning no skipping. Note that if `header` is set to true and `skipRows` is set to 2, it means the first three rows are all skipped.
 If `header` is false, it means skipping the first two rows.
+
+### sheetIndex / sheetName
+
+Only the first sheet is read by default. `sheetIndex` counts from 0 and `sheetName` selects by name;
+do not set both. When a workbook holds several sheets and the job names none of them, the plugin logs
+a warning saying which sheet it read.
+
+### trim
+
+Whether to remove the whitespace around the text of a cell, `true` by default. Text in Excel often
+carries spaces that cannot be seen; set it to `false` to keep the text as it is stored.
+
+The trimming follows Unicode whitespace; a non breaking space (`U+00A0`) is a character rather than
+whitespace and survives either setting.
+
+### Empty cells and formulas
+
+- A cell without a value — blank, an empty string, an error (`#DIV/0!` and friends) or one that was skipped — is read as `NULL`, never as an empty string
+- Every record is padded to the widest row with `NULL`, so a cell never lands in the wrong column
+- A formula cell is read as the result Excel stored in the file. A file written by a library (openpyxl, POI) that stores no result reads the formula column as `NULL` and logs a warning; opening and saving the file in Excel fills it in
+- The column count comes from the header row (with `header: true`) or the first data row; a later row that is wider is written with its own column count and reported once
 
 ### Supported Data Types
 
@@ -85,10 +109,16 @@ Currently, simple distinction is made for numeric types:
 2. Convert the numeric value to long integer and compare with the original value, if equal, determine as Long type
 3. Otherwise determine as Double type
 
+## Memory
+
+An `xlsx` file is read as a stream that holds one row at a time, so the memory it needs does not grow
+with the file. An `xls` file is loaded at once, which is affordable because the format itself stops at
+65536 rows.
+
 ## Limitations
 
-1. Currently only reads the first Sheet of the file and ignores other Sheets
-2. Does not support specifying column reading
-3. Does not support skipping trailing rows (for example, summary tail rows may not meet requirements)
-4. Does not check if the number of columns in each row is equal, Excel must ensure this
-5. Only reads files with `xlsx` or `xls` file extensions in the specified directory, other extension files will be ignored with warning messages
+1. Does not support specifying column reading
+2. Does not support skipping trailing rows (for example, summary tail rows may not meet requirements)
+3. Encrypted (password protected) workbooks are not supported and fail with an error
+4. Files in the directory are recognized by their content (the ZIP and OLE2 magics); a file that is not
+   a workbook is skipped with a warning, and a workbook whose extension is wrong is still read
