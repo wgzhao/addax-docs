@@ -63,14 +63,8 @@ S3 Reader 插件用于读取 Amazon AWS S3 存储上的数据。在实现上，�
 
 ## 类型转换
 
-| Addax 内部类型 | S3 数据类型                                                   |
-| -------------- | ------------------------------------------------------------- |
-| Long           | int, tinyint, smallint, mediumint, int, bigint                |
-| Double         | float, double, decimal                                        |
-| String         | varchar, char, tinytext, text, mediumtext, longtext, year,xml |
-| Date           | date, datetime, timestamp, time                               |
-| Boolean        | bit, bool                                                     |
-| Bytes          | tinyblob, mediumblob, blob, longblob, varbinary               |
+读取到的是文本内容，每个字段的类型由 `column` 里配置的 `type` 决定，填写方式见
+[RDBMS Reader][1] 中 `column` 的描述；`column` 填 `["*"]` 时所有字段按字符串读取。
 
 ## 限制说明
 
