@@ -34,9 +34,10 @@ bin/addax.sh job/hive2stream.json
 | password               |    否    | string      | 无     | 数据源指定用户名的密码，若无密码，可不指定                             |
 | table                  |    是    | list        | 无     | 所选取的需要同步的表名,使用 JSON 数据格式                              |
 | column                 |    是    | `list<map>` | 无     | 所配置的表中需要同步的列名集合，详细描述见 [rdbmreader][1]             |
-| splitPk                |    否    | string      | 无     | 使用 splitPk 代表的字段进行数据分片，详细描述见 [rdbmreader][1]        |
+| splitPk                |    否    | string      | 无     | 使用 splitPk 代表的字段进行数据分片，**Hive 上没有索引，每个 channel 都会全表扫描一次**，见下文说明 |
 | where                  |    否    | string      | 无     | 针对表的筛选条件                                                       |
 | querySql               |    否    | list        | 无     | 使用 SQL 来获取数据，当配置了这一项之后， `table`，`column` 配置项无效 |
+| fetchSize              |    否    | int         | 2048   | 每次从 HiveServer2 批量取回的记录数，调高可减少 RPC 往返次数，过大则占用更多内存 |
 | haveKerberos           |    否    | string      | 无     | 是否启用 Kerberos 认证，如果启用，则需要同时配置下面两项               |
 | kerberosKeytabFilePath |    否    | string      | 无     | Kerberos 认证的凭证文件路径, 比如 `/your/path/addax.service.keytab`    |
 | kerberosPrincipal      |    否    | string      | 无     | Kerberos 认证的凭证主体, 比如 `addax/node1@EXAMPLE.COM`                |
@@ -55,7 +56,7 @@ jdbc:hive2://node1:2181,node2:2181,node3:2181/;serviceDiscoveryMode=zooKeeper;zo
 
 ### driver
 
-当前 Addax 采用的 Hive JDBC 驱动为 3.1.0 以上版本，驱动类名使用的 `org.apache.hive.jdbc.HiveDriver`， 如果当前的 Hive JDBC 驱动不兼容 Hive 数据库， 则可以通过以下步骤替换驱动。
+当前 Addax 采用 **Hive 3.1.3** 的客户端（`plugin/reader/hivereader/libs/hive-*.jar`，包含 hive-jdbc、hive-service、hive-serde、hive-common 等一整套同版本 jar），驱动类名使用的 `org.apache.hive.jdbc.HiveDriver`， 如果当前的 Hive JDBC 驱动不兼容 Hive 数据库， 则可以通过以下步骤替换驱动。
 
 **替换插件内置的驱动**
 
@@ -65,9 +66,15 @@ jdbc:hive2://node1:2181,node2:2181,node3:2181/;serviceDiscoveryMode=zooKeeper;zo
 
 `cp hive-jdbc-<version>.jar plugin/reader/hivereader/libs/`
 
+注意：客户端这几个 hive-*.jar 需要同版本，只换 hive-jdbc 而不同步替换 hive-service/hive-serde/hive-common 等，可能出现类找不到或协议版本对不上的问题。
+
 **指定驱动类名称**
 
 在你的 json 文件类，配置 `"driver": "<your jdbc class name>"`
+
+### splitPk
+
+Hive 上没有索引也没有主键，`splitPk` 会把一条查询拆成多个区间查询，而**每个区间都要全表扫描一次**（并且各自规划一次执行计划），因此通常比单通道读取更慢。要并行读取，建议用 `where` 按分区列把一个作业切成多个作业，或者直接让 HiveServer2 去并行执行那条查询。
 
 ## 类型转换
 
@@ -84,8 +91,17 @@ jdbc:hive2://node1:2181,node2:2181,node3:2181/;serviceDiscoveryMode=zooKeeper;zo
 | Boolean        | boolean                                        |
 | Bytes          | binary                                         |
 
+`array`、`map`、`struct` 以及 `timestamp with local time zone`、`interval` 等类型会按服务端序列化后的文本读成字符串。
+
 [1]: ./rdbmsreader
 
 ## 相关限制
 
-经过测试，HiveReader 目前支持的 Hive 版本为 2.1.1 及以上版本并支持 4.0.0 版本。
+**从 6.1.1 起，HiveReader 最低支持 HiveServer2 3.0 版本，不再支持 Hive 2.1.1 及以下版本。**
+
+插件内置的客户端驱动已经升级到 Hive 3.1.3（此前的 2.1.1 是为了兼容 CDH Hive 2.0 而做的妥协）：
+
+- Hive 2.1.1 的驱动无法解析 Hive 3 服务端返回的 `timestamp with local time zone`、`interval` 等列类型，整条查询会直接失败；
+- 反之，3.1.3 的客户端与 HiveServer2 3.0 及以上版本按协议版本协商，已在 Apache Hive 3.1.0 上验证读取 ORC / Parquet 表。
+
+如果你必须读取 Hive 2.1.1 及以下版本，请使用 6.1.0 或更早版本的 hivereader，或按上文 `driver` 一节把客户端整组换成与服务端匹配的版本。
