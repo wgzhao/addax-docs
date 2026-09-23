@@ -10,17 +10,17 @@ MongoDB Writer 插件用于向 [MongoDB](https://mongodb.com) 写入数据。
 
 ## 参数说明
 
-| 配置项     | 是否必须 | 类型          | 默认值 | 描述                                                  |
-| :--------- | :------: | ------------- | ------ | ----------------------------------------------------- |
-| address    |    是    | list          | 无     | MongoDB 的数据地址信息                                |
-| username   |    否    | string        | 无     | MongoDB 的用户名                                      |
-| password   |    否    | string        | 无     | MongoDB 的密码                                        |
-| collection |    是    | string        | 无     | MongoDB 的集合名                                      |
-| column     |    是    | `list<map>/*` | 无     | MongoDB 的文档列名                                    |
-| splitter   |    否    | string        | 无     | 特殊分隔符，详见下文                                  |
-| writeMode  |    否    | string        | insert | 指定了传输数据时更新的信息,支持 insert， update 两种  |
-| batchSize  |    否    | int           | 2048   | 指定批次输入的数量                                    |
-| preSql     |    否    | object        | 无     | 写入前执行的语句，支持 drop 和 remove，详见下文        |
+| 配置项     | 是否必须 | 类型          | 默认值 | 描述                                                 |
+| :--------- | :------: | ------------- | ------ | ---------------------------------------------------- |
+| address    |    是    | list          | 无     | MongoDB 的数据地址信息                               |
+| username   |    否    | string        | 无     | MongoDB 的用户名                                     |
+| password   |    否    | string        | 无     | MongoDB 的密码                                       |
+| collection |    是    | string        | 无     | MongoDB 的集合名                                     |
+| column     |    是    | `list<map>/*` | 无     | MongoDB 的文档列名                                   |
+| splitter   |    否    | string        | 无     | 特殊分隔符，详见下文                                 |
+| writeMode  |    否    | string        | insert | 指定了传输数据时更新的信息,支持 insert， update 两种 |
+| batchSize  |    否    | int           | 2048   | 指定批次输入的数量                                   |
+| preSql     |    否    | object        | 无     | 写入前执行的语句，支持 drop 和 remove，详见下文      |
 
 ### column
 
@@ -75,7 +75,11 @@ MongoDB Writer 插件用于向 [MongoDB](https://mongodb.com) 写入数据。
 }
 ```
 
-上述配置表示依据字段 `unique_id` 来决定当前记录是插入还是更新，当前暂不支持指定多个字段
+上述配置表示依据字段 `unique_id` 来决定当前记录是插入还是更新，当前暂不支持指定多个字段，但更新字段可以是嵌套路径，如 `update(user.id)`。
+
+更新字段必须是 `column` 中配置的字段之一，更新模式下每条记录在该字段上都必须有值：取不到值的记录会被收集为脏记录（受 `errorLimit` 控制），不会参与写入。这类记录在过去会产生 `{字段: null}` 的查询条件，从而覆盖掉一个它并未指定的文档。
+
+`writeMode` 写错（既不是 `insert` 也不是 `update(字段)`）时按 `insert` 处理，同时在日志里给出告警。
 
 ### preSql
 
@@ -116,6 +120,11 @@ MongoDB Writer 插件用于向 [MongoDB](https://mongodb.com) 写入数据。
 
 两者都没有配置（或 `json` 为空对象）时，插件会直接报错终止，避免误删整个集合。
 
+### 写入失败处理
+
+- 一个批次以无序方式写入，服务端会保留批次中写入成功的文档，只报回失败文档的位置：这些文档被收集为脏记录（受 `errorLimit` 控制），同一批次里其它记录不受影响。
+- 整批写入因连接等底层原因失败时（此时无法判断哪些文档已经写入），插件会退化为逐条写入，逐条失败的记录同样收集为脏记录。
+
 ## 类型转换
 
 | Addax 内部类型 | MongoDB 数据类型 |
@@ -125,4 +134,4 @@ MongoDB Writer 插件用于向 [MongoDB](https://mongodb.com) 写入数据。
 | String         | string, array    |
 | Date           | date             |
 | Boolean        | boolean          |
-| Bytes          | bytes            |
+| Bytes          | binary           |
