@@ -77,7 +77,7 @@ Without the parameter a record is inserted directly. To insert or update a recor
 
 That configuration decides from the field `unique_id` whether the record is inserted or updated. More than one field is not supported yet, the update field may be a nested path though, such as `update(user.id)`.
 
-The update field has to be one of the fields configured in `column`, and in update mode every record has to carry a value there: a record without one is collected as a dirty record (governed by `errorLimit`) and is not written. Such a record used to produce the filter `{field: null}`, which overwrote a document it never named.
+The update field has to be one of the fields configured in `column`; with `["*"]` a record is one whole document, so the update field has to be a field of that document. In update mode every record has to carry a value there: a record without one is collected as a dirty record (governed by `errorLimit`) and is not written. Such a record used to produce the filter `{field: null}`, which overwrote a document it never named.
 
 A `writeMode` that is neither `insert` nor `update(field)` is written as an insert, with a warning in the log.
 
