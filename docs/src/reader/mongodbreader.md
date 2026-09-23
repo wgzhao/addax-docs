@@ -10,16 +10,16 @@ MongoDBReader 插件利用 MongoDB 的java客户端MongoClient进行MongoDB的�
 
 ## 参数说明
 
-| 配置项     | 是否必须 | 类型   | 默认值 | 描述                                        |
-| :--------- | :------: | ------ | ------ | ------------------------------------------- |
-| address    |    是    | list   | 无     | MongoDB 的数据地址信息, 可写多个            |
-| username   |    否    | string | 无     | MongoDB 用户名                              |
-| password   |    否    | string | 无     | MongoDB 密码                                |
-| database   |    是    | string | 无     | MongoDB 数据库                              |
-| collection |    是    | string | 无     | MongoDB 的集合名，支持单值或范围通配符      |
-| column     |    是    | list   | 无     | MongoDB 的文档列名, 配置 `["*"]` 获取所有列 |
+| 配置项     | 是否必须 | 类型          | 默认值 | 描述                                        |
+| :--------- | :------: | ------------- | ------ | ------------------------------------------- |
+| address    |    是    | list          | 无     | MongoDB 的数据地址信息, 可写多个            |
+| username   |    否    | string        | 无     | MongoDB 用户名                              |
+| password   |    否    | string        | 无     | MongoDB 密码                                |
+| database   |    是    | string        | 无     | MongoDB 数据库                              |
+| collection |    是    | string        | 无     | MongoDB 的集合名，支持单值或范围通配符      |
+| column     |    是    | list          | 无     | MongoDB 的文档列名, 配置 `["*"]` 获取所有列 |
 | query      |    否    | string/object | 无     | 自定义查询条件，详见下文                    |
-| fetchSize  |    否    | int    | 2048   | 批量获取的记录数                            |
+| fetchSize  |    否    | int           | 2048   | 批量获取的记录数                            |
 
 ### collection
 
@@ -57,6 +57,8 @@ MongoDBReader 插件利用 MongoDB 的java客户端MongoClient进行MongoDB的�
 }
 ```
 
+同时配置某个字段和它下面的字段（如 `["col3", "col3.subcol1"]`）也是允许的，两者都能读到值。插件只按宽度更大的那个路径向服务端请求数据，窄路径的字段从已有的数据里取。
+
 ### query
 
 `query` 用于过滤要读取的文档，可以写成扩展 JSON（extended JSON）字符串，也可以直接写成 JSON 对象：
@@ -81,27 +83,34 @@ MongoDBReader 插件利用 MongoDB 的java客户端MongoClient进行MongoDB的�
 
 `query` 按**扩展 JSON** 解析，而不是按 JavaScript 解析，所以 mongosh 里能执行的 JS 写法在这里不一定成立，日期尤其要注意：
 
-| 写法                                   | 结果                                                                                                              |
-| :------------------------------------- | :---------------------------------------------------------------------------------------------------------------- |
-| `new Date('2026-09-20')`               | ✗ 报 `JSON reader expected a date in 'EEE MMM dd yyyy HH:mm:ss z' format`，字符串形式只认 Java 日期格式，不建议使用 |
-| `new Date(1789833600000)`              | ✓ 毫秒数                                                                                                           |
-| `ISODate('2026-09-20')`                | ✓ 按**运行任务的 JVM 默认时区**解析为当天 0 点                                                                      |
-| `ISODate('2026-09-20T00:00:00Z')`      | ✓ 按 UTC 解析                                                                                                      |
-| `ISODate('2026-09-20T00:00:00+08:00')` | ✗ 不接受时区偏移                                                                                                   |
-| `{"$date": "2026-09-20T00:00:00+08:00"}` | ✓ 时区明确，推荐                                                                                                 |
-| `{"$date": 1789833600000}`             | ✓ 毫秒数，推荐                                                                                                     |
+| 写法                                     | 结果                                                                                                                |
+| :--------------------------------------- | :------------------------------------------------------------------------------------------------------------------ |
+| `new Date('2026-09-20')`                 | ✗ 报 `JSON reader expected a date in 'EEE MMM dd yyyy HH:mm:ss z' format`，字符串形式只认 Java 日期格式，不建议使用 |
+| `new Date(1789833600000)`                | ✓ 毫秒数                                                                                                            |
+| `ISODate('2026-09-20')`                  | ✓ 按**运行任务的 JVM 默认时区**解析为当天 0 点                                                                      |
+| `ISODate('2026-09-20T00:00:00Z')`        | ✓ 按 UTC 解析                                                                                                       |
+| `ISODate('2026-09-20T00:00:00+08:00')`   | ✗ 不接受时区偏移                                                                                                    |
+| `{"$date": "2026-09-20T00:00:00+08:00"}` | ✓ 时区明确，推荐                                                                                                    |
+| `{"$date": 1789833600000}`               | ✓ 毫秒数，推荐                                                                                                      |
 
 需要注意，mongosh 中的 `new Date('2026-09-20')` 按 UTC 解析，而这里的 `ISODate('2026-09-20')` 按运行任务的 JVM 默认时区解析，两者相差一个时区偏移。需要跨环境结果一致时，请使用带时区偏移的 `{"$date": ...}` 或毫秒数。
 
 `query` 无法解析时，任务会以配置错误直接终止并提示可用写法，不会静默地变成"读不到数据"。
 
+`query` 没有匹配到任何文档、或者集合本身为空时，任务正常结束，读取 0 条记录（不会报错）。
+
 ## 类型转换
 
-| Addax 内部类型 | MongoDB 数据类型 |
-| -------------- | ---------------- |
-| Long           | int, Long        |
-| Double         | double           |
-| String         | string, array    |
-| Date           | date             |
-| Boolean        | boolean          |
-| Bytes          | bytes            |
+| Addax 内部类型 | MongoDB 数据类型                                                 |
+| -------------- | ---------------------------------------------------------------- |
+| Long           | int32, int64                                                     |
+| Double         | double                                                           |
+| String         | string, objectid, decimal128, array, document, timestamp, 正则等 |
+| Date           | date                                                             |
+| Boolean        | boolean                                                          |
+| Bytes          | binary                                                           |
+
+- `objectid` 读作 24 位十六进制字符串，`decimal128` 读作其十进制文本，`array` 和 `document` 读作扩展 JSON 文本。
+- timestamp、正则表达式、minkey/maxkey 等没有对应 Addax 类型的值同样读作扩展 JSON 文本，与配置 `["*"]` 时的写法一致。
+- 字段不存在或值为 `null` 时读作空字符串。
+- 配置 `["*"]` 时整个文档作为一列扩展 JSON 文本读出，不再按上表拆分。
