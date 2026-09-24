@@ -64,6 +64,7 @@ The output of the above command is roughly as follows:
 | isPage        |    No    |  boolean  |     None      | Whether interface supports pagination                                                 |
 | pageParams    |    No    |    map    |     None      | Pagination parameters                                                                 |
 | maxPages      |    No    |    int    |       0       | Upper bound of paged requests, `0` means no limit                                     |
+| prefetchPages |    No    |    int    |       1       | Pages in flight, the next page is requested while the current one is written          |
 | timeout       |    No    |    int    |      60       | Timeout in seconds, applied to the connection and to the whole exchange               |
 | encoding      |    No    |  string   |     UTF-8     | Charset of the response body; a charset in the response headers is ignored            |
 | sslVerify     |    No    |  boolean  |     false     | Whether to verify the certificate and hostname of https endpoints, off by default     |
@@ -242,6 +243,25 @@ If an endpoint answers with a full page every time (for example because it ignor
 requests, and when two consecutive pages carry **exactly the same full payload** the reader logs a WARN and stops,
 instead of requesting forever and writing the same records again and again.
 
+### prefetchPages
+
+Defaults to `1`: while the current page is being parsed and written, the request for the next page is already on
+its way, so the round trip of a page is not spent idle. Records are still written strictly in page order, and the
+endpoint sees the same sequence of requests (only one request travels between the client and the endpoint at a
+time).
+
+Against a slow endpoint a larger value makes several pages truly concurrent. For a read of 21 pages, 300 ms per
+response and a writer that needs 100 ms per page:
+
+| prefetchPages | Read time |
+| ------------- | --------- |
+| 1 (default)   | 6.5 s     |
+| 2             | 3.4 s     |
+| 4             | 2.3 s     |
+
+The price: when a short page ends the read, the requests that were already sent are cancelled and the endpoint may
+already have handled up to `prefetchPages - 1` of them, and a few response bodies are held in memory at once.
+
 ### pageParams
 
 The `pageParams` parameter only takes effect when the `isPage` parameter is `true`. It is a JSON dictionary containing two optional fields `pageIndex` and `pageSize`.
@@ -302,7 +322,7 @@ This means the pagination parameters passed to the interface are `page=1&size=10
 1. The returned result must be JSON type
 2. Currently all key values are treated as string type
 3. Currently only one auth call is performed at task startup; automatic token refresh is not supported
-4. Paging is serial: the next page is requested after the current one has been processed, and the reader does
-   not split into several tasks (`split` returns a single task)
+4. The reader does not split into several tasks (`split` returns a single task) and paging advances in order,
+   see `prefetchPages`
 5. The charset of the response body comes from `encoding` (UTF-8 by default), a charset in the response
    headers is not used
