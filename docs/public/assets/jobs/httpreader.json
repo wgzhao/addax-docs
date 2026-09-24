@@ -10,15 +10,13 @@
       "reader": {
         "name": "httpreader",
         "parameter": {
-          "connection": [
-            {
-              "url": "http://127.0.0.1:9090/mock/17/LDJSC/ASSET",
-              "proxy": {
-                "host": "http://127.0.0.1:3128",
-                "auth": "user:pass"
-              }
+          "connection": {
+            "url": "http://127.0.0.1:9090/mock/17/LDJSC/ASSET",
+            "proxy": {
+              "host": "http://127.0.0.1:3128",
+              "auth": "user:pass"
             }
-          ],
+          },
           "reqParams": {
             "CURR_DATE": "2021-01-18",
             "DEPT": "9700"
