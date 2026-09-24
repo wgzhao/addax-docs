@@ -56,7 +56,6 @@
         "parameter": {
           "endpoint": "http://localhost:9200",
           "index": "test-1",
-          "type": "default",
           "cleanup": true,
           "settings": {
             "index": {
