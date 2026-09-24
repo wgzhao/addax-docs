@@ -23,6 +23,7 @@ settings 和 mappings 一次创建，已存在索引的 mappings 通过 `/{index
 | index            |    是    | string      | 无     | index 名                                                              |
 | cleanup          |    否    | boolean     | false  | 是否删除原表                                                          |
 | batchSize        |    否    | int         | 1000   | 每次批量数据的条数                                                    |
+| parallelBulk     |    否    | int         | 1      | 一个任务同时保持在飞的 bulk 请求数                                    |
 | trySize          |    否    | int         | 30     | 失败后重试的次数                                                      |
 | timeout          |    否    | int         | 600000 | 客户端超时时间，单位为毫秒(ms)                                        |
 | discovery        |    否    | boolean     | false  | 启用节点发现将(轮询)并定期更新客户机中的服务器列表                    |
@@ -59,6 +60,16 @@ settings 和 mappings 一次创建，已存在索引的 mappings 通过 `/{index
 单次 bulk 请求的文档数，是对任务耗时影响最大的一个参数：20 万条 250 字节的文档写入单节点，
 默认 1000 用时 12 秒，改成 5000 用时 6 秒（均为单 channel），因为一次 bulk 请求无论多大都要一次往返。
 elasticsearch 建议单次 bulk 控制在 5~15MB，文档较大时应调小该值。
+
+### parallelBulk
+
+一个任务同时在飞的 bulk 请求数。任务写完一批要等它返回，而这段等待正是一个任务的时间去向：
+在"一次 100 条文档的 bulk 需要 30ms"的集群上，2 万条文档 parallelBulk=1 用时 7.5 秒，
+2 用时 3.7 秒，4 用时 1.8 秒（均为单 channel、batchSize=100）。当 job 无法拆成更多任务时
+（任务数由 reader 决定）用它来提速；能拆成多任务时，多几个任务也能达到同样吞吐，无需该参数。
+
+只有 parallelBulk=1 时批次才严格按读取顺序落库：主键值相同的两条记录如果落在不同批次，
+到达索引的顺序不确定。每个在飞批次最多占用 `batchSize` 条记录的内存。
 
 ## 约束限制
 

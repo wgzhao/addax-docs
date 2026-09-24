@@ -63,6 +63,19 @@ with the default of 1000 and 6 seconds with 5000 (both at one channel), because 
 request costs a round trip whatever its size. Elasticsearch recommends keeping a bulk
 between 5 and 15 MB, so a wider document wants a smaller batch.
 
+### parallelBulk
+
+The number of bulk requests one task keeps in flight. A task writes a batch and waits for
+its answer, and that wait is what a single task spends its time on: against a cluster
+answering a bulk of 100 documents in 30 ms, 20 000 documents took 7.5 seconds with
+parallelBulk=1, 3.7 with 2 and 1.8 with 4 (one channel, batchSize 100). Raise it when a job
+cannot be split into more tasks -- the number of tasks comes from the reader -- since
+several tasks reach the same throughput without it.
+
+The batches are applied in the order they were read only while parallelBulk is 1: two
+records carrying the same primary key value in different batches may reach the index in
+either order. Each batch in flight holds up to `batchSize` records in memory.
+
 ## Constraints
 
 - If importing id, data import failures will also retry, re-import will only overwrite, ensuring data consistency
