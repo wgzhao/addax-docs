@@ -48,25 +48,26 @@ bin/addax.sh job/httpreader2stream.json
 
 ## 参数说明
 
-| 配置项     | 是否必须 | 数据类型 | 默认值 | 说明                                                                 |
-| ---------- | :------: | :------: | :----: | -------------------------------------------------------------------- |
-| url        |    是    |  string  |   无   | 要访问的 HTTP 地址                                                   |
-| reqParams  |    否    |   map    |   无   | 接口请求参数                                                         |
-| resultKey  |    否    |  string  |   无   | 要获取结果的那个 key 值，如果是获取整个返回值，则可以不用填写        |
-| method     |    否    |  string  |  get   | 请求模式，仅支持 GET，POST 两种，不区分大小写                        |
-| column     |    是    |   list   |   无   | 要获取的 key，配置为 `"*"` 表示获取本页记录的所有 key 值             |
-| username   |    否    |  string  |   无   | 接口请求需要的认证帐号(如有)，与 `password` 必须成对配置             |
-| password   |    否    |  string  |   无   | 接口请求需要的密码(如有)                                             |
-| authConfig |    否    |   map    |   无   | 鉴权接口配置，先调用鉴权接口拿 token，再用于业务接口请求头           |
-| token      |    否    |  string  |   无   | 直接指定业务接口的 token，配置了 `authConfig` 时以鉴权接口返回的为准 |
-| proxy      |    否    |   map    |   无   | 代理地址,详见下面描述                                                |
-| headers    |    否    |   map    |   无   | 定制的请求头信息，不能包含 `Host`、`Connection` 等客户端保留头       |
-| isPage     |    否    | boolean  |   无   | 接口是否分支分页                                                     |
-| pageParams |    否    |   map    |   无   | 分页参数                                                             |
-| maxPages   |    否    |   int    |   0    | 分页请求数的上限，`0` 表示不限制                                     |
-| timeout    |    否    |   int    |   60   | 超时秒数，同时约束连接建立和整次请求（含响应体传输）                 |
-| encoding   |    否    |  string  | UTF-8  | 读取响应体使用的字符集；响应头里的 charset 不生效                    |
-| sslVerify  |    否    | boolean  | false  | 是否校验 https 端点的证书与主机名，默认关闭（不校验）                |
+| 配置项        | 是否必须 | 数据类型 | 默认值 | 说明                                                                 |
+| ------------- | :------: | :------: | :----: | -------------------------------------------------------------------- |
+| url           |    是    |  string  |   无   | 要访问的 HTTP 地址                                                   |
+| reqParams     |    否    |   map    |   无   | 接口请求参数                                                         |
+| resultKey     |    否    |  string  |   无   | 要获取结果的那个 key 值，如果是获取整个返回值，则可以不用填写        |
+| method        |    否    |  string  |  get   | 请求模式，仅支持 GET，POST 两种，不区分大小写                        |
+| column        |    是    |   list   |   无   | 要获取的 key，配置为 `"*"` 表示获取本页记录的所有 key 值             |
+| username      |    否    |  string  |   无   | 接口请求需要的认证帐号(如有)，与 `password` 必须成对配置             |
+| password      |    否    |  string  |   无   | 接口请求需要的密码(如有)                                             |
+| authConfig    |    否    |   map    |   无   | 鉴权接口配置，先调用鉴权接口拿 token，再用于业务接口请求头           |
+| token         |    否    |  string  |   无   | 直接指定业务接口的 token，配置了 `authConfig` 时以鉴权接口返回的为准 |
+| proxy         |    否    |   map    |   无   | 代理地址,详见下面描述                                                |
+| headers       |    否    |   map    |   无   | 定制的请求头信息，不能包含 `Host`、`Connection` 等客户端保留头       |
+| isPage        |    否    | boolean  |   无   | 接口是否分支分页                                                     |
+| pageParams    |    否    |   map    |   无   | 分页参数                                                             |
+| maxPages      |    否    |   int    |   0    | 分页请求数的上限，`0` 表示不限制                                     |
+| prefetchPages |    否    |   int    |   1    | 同时在途的页数，下一页会在当前页解析/写出期间就发起请求              |
+| timeout       |    否    |   int    |   60   | 超时秒数，同时约束连接建立和整次请求（含响应体传输）                 |
+| encoding      |    否    |  string  | UTF-8  | 读取响应体使用的字符集；响应头里的 charset 不生效                    |
+| sslVerify     |    否    | boolean  | false  | 是否校验 https 端点的证书与主机名，默认关闭（不校验）                |
 
 ### reqParams
 
@@ -237,6 +238,23 @@ reqParams 是请求参数， 如果请求是 `GET` 方式，则会以 `k=v` 的�
 此时 `maxPages` 可以用来设置请求页数上限；另外当连续两次拿到**完全相同且满页**的响应时，
 程序会给出 WARN 并停止分页，以免无限请求并反复写入重复数据。
 
+### prefetchPages
+
+默认 `1`：在解析并写出当前页的时候，下一页的请求已经在路上了，这样每页的网络往返不会白白空等。
+记录仍然严格按页顺序写出，接口看到的请求顺序也不变（任意时刻只有一个请求在客户端与接口之间）。
+
+接口响应较慢（比如每页几百毫秒）时，把它调大可以让多页请求真正并发。以 21 页、每页响应 300 ms、
+写入器每页需要 100 ms 的读取为例：
+
+| prefetchPages | 读取耗时 |
+| ------------- | -------- |
+| 1（默认）     | 6.5 s    |
+| 2             | 3.4 s    |
+| 4             | 2.3 s    |
+
+代价是读到最后（接口返回一页不满）时，已经发出的后续请求会被取消，接口可能已经处理了其中最多
+`prefetchPages - 1` 个请求；同时内存里会多缓存几页响应体。
+
 ### pageParams
 
 `pageParams` 参数仅在 `isPage` 参数为 `true` 时生效，它是一个 JSON 字典，包含两个可选字段 `pageIndex` 和 `pageSize` 。
@@ -296,5 +314,5 @@ reqParams 是请求参数， 如果请求是 `GET` 方式，则会以 `k=v` 的�
 1. 返回的结果必须是 JSON 类型
 2. 当前所有 key 的值均当作字符串类型
 3. 当前仅支持“任务启动时鉴权一次”，不支持运行中自动刷新 token
-4. 分页是串行的：上一页处理完才请求下一页；读取任务也不做拆分（`split` 只返回一个 task）
+4. 读取任务不做拆分（`split` 只返回一个 task）；分页默认按顺序推进（见 `prefetchPages`）
 5. 响应体字符集由 `encoding` 决定（默认 UTF-8），不读取响应头里的 charset
