@@ -31,7 +31,6 @@ The output result is similar to the following (output records are reduced):
 | accessId      |    No    | string  | `""`                   | User in http auth                                                             |
 | accessKey     |    No    | string  | `""`                   | Password in http auth                                                         |
 | index         |   Yes    | string  | None                   | Index name in elasticsearch                                                   |
-| type          |    No    | string  | index name             | Type name of index in elasticsearch                                           |
 | search        |   Yes    | list    | `[]`                   | JSON format API search data body                                              |
 | column        |   Yes    | list    | None                   | Fields to be read                                                             |
 | timeout       |    No    | int     | 60                     | Client timeout (unit: seconds)                                                |
@@ -41,6 +40,28 @@ The output result is similar to the following (output records are reduced):
 | searchType    |    No    | string  | `dfs_query_then_fetch` | Search type                                                                   |
 | headers       |    No    | map     | `{}`                   | HTTP request headers                                                          |
 | scroll        |    No    | string  | `""`                   | Scroll pagination configuration                                               |
+| batchSize     |    No    | int     | 1000                   | Documents per scroll page, used when `search` does not set `size`             |
+| filter        |    No    | string  | `""`                   | OGNL expression selecting the documents to read                               |
+
+### scroll and the page size
+
+Elasticsearch answers with 10 documents per page when the search body carries no
+`size`. Together with `scroll` that is one round trip per 10 documents, so a scroll
+without a `size` in the body pages with `batchSize` (1000 by default) instead. A `size`
+in the body always wins. Without `scroll` the body is left untouched -- reading the
+first documents of an index in one request is a legitimate use -- and the job logs a
+warning when it is about to read only 10 of them.
+
+### filter
+
+`filter` is an [OGNL](https://commons.apache.org/proper/commons-ognl/language-guide.html)
+expression evaluated against every document, and only the documents it accepts are
+written. `qty > 0 and active == true` keeps the documents that have a positive `qty` and
+are active; a document whose `qty` is missing evaluates to null and is dropped.
+
+The expression is evaluated against the fields the reader has read, so it can only use
+the columns listed in `column`. It must evaluate to a boolean, and a document for which
+it cannot be evaluated is kept.
 
 ### search
 
