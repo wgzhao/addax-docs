@@ -8,19 +8,52 @@ Paimon Writer 提供向 已有的paimon表写入数据的能力。
 
 ## 参数说明
 
-| 配置项       | 是否必须 | 数据类型 | 默认值 | 说明                                                                 |
-| :----------- | :------: | -------- | ------ | -------------------------------------------------------------------- |
-| dbName       |    是    | string   | 无     | 要写入的paimon数据库名                                               |
-| tableName    |    是    | string   | 无     | 要写入的paimon表名                                                   |
-| writeMode    |    是    | string   | 无     | 写入模式，详述见下                                                   |
-| paimonConfig |    是    | json     | {}     | 里可以配置与 Paimon catalog和Hadoop 相关的一些高级参数，比如HA的配置 |
+| 配置项          | 是否必须 | 数据类型 | 默认值 | 说明                                                                  |
+| :-------------- | :------: | -------- | ------ | --------------------------------------------------------------------- |
+| dbName          |    是    | string   | 无     | 要写入的paimon数据库名                                                |
+| tableName       |    是    | string   | 无     | 要写入的paimon表名                                                    |
+| writeMode       |    是    | string   | 无     | 写入模式，详述见下                                                    |
+| column          |    否    | array    | 无     | 按名映射读取端的列到表的列，顺序与 reader 的 column 一致，详述见下    |
+| writeBufferSize |    否    | string   | 64 mb  | 单个 task 允许缓冲的数据量（Paimon 的 `write-buffer-size`），详述见下 |
+| paimonConfig    |    是    | json     | {}     | 里可以配置与 Paimon catalog和Hadoop 相关的一些高级参数，比如HA的配置  |
 
 ### writeMode
 
 写入前数据清理处理模式：
 
-- append，写入前不做任何处理，直接写入，不清除原来的数据。
+- append / insert，写入前不做任何处理，直接写入，不清除原来的数据。
 - truncate 写入前先清空表，再写入。
+
+其它取值会被直接拒绝，而不是当成 append 写入。
+
+### 表结构要求
+
+- 表必须已经存在，插件只写数据，不建库建表。
+- **分桶**：主键表请使用固定桶（`'bucket' = 'N'`）。Paimon 1.2 起主键表的默认值是动态桶（`'bucket' = '-1'`），而动态桶的桶归属由 Paimon 的 assigner 维护，离线批量写入无法参与其中，插件对这类表会直接报错，而不是写出一批重复主键。确实要做批量导入，可以用 postpone 桶（`'bucket' = '-2'`），但数据先落在 `bucket-postpone`，需要 Paimon compaction 之后才对查询可见。
+
+### column
+
+默认按位置把读取端的列对应到表的列。如果 reader 的列顺序和表结构不一致，用 `column` 显式按名映射：
+
+```json
+{
+  "name": "paimonwriter",
+  "parameter": {
+    "dbName": "test",
+    "tableName": "test2",
+    "writeMode": "truncate",
+    "column": ["name", "id"]
+  }
+}
+```
+
+`column` 里的名字个数和顺序要和 reader 输出的列一一对应，表里没有的列名会被拒绝；没有出现在 `column` 里的表列写入 NULL。
+
+### writeBufferSize
+
+一个 task 在写出数据文件之前允许缓冲的数据量，直接对应 Paimon 表属性 `write-buffer-size`。一个 task 只持有一个 writer，所以作业为此占用的堆内存上限约为 `通道数 × writeBufferSize`，默认值按启动脚本默认的 1G 堆给出。
+
+优先级：job 里的 `writeBufferSize` > 表自身的 `write-buffer-size` > 默认的 `64 mb`。
 
 ### paimonConfig
 
@@ -43,18 +76,17 @@ Paimon Writer 提供向 已有的paimon表写入数据的能力。
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hadoop.version>3.2.4</hadoop.version>
-        <woodstox.version>7.0.0</woodstox.version>
+        <hadoop.version>3.3.6</hadoop.version>
+        <woodstox.version>7.2.2</woodstox.version>
     </properties>
 
 <dependencies>
     <dependency>
         <groupId>org.apache.paimon</groupId>
         <artifactId>paimon-bundle</artifactId>
-        <version>1.0.0</version>
+        <version>1.2.0</version>
     </dependency>
 
     <dependency>
@@ -227,76 +259,59 @@ Paimon Writer 提供向 已有的paimon表写入数据的能力。
 ::: details
 
 ```java
+import org.apache.hadoop.conf.Configuration;
 import org.apache.paimon.catalog.Catalog;
 import org.apache.paimon.catalog.CatalogContext;
 import org.apache.paimon.catalog.CatalogFactory;
 import org.apache.paimon.catalog.Identifier;
 import org.apache.paimon.fs.Path;
+import org.apache.paimon.options.Options;
 import org.apache.paimon.schema.Schema;
 import org.apache.paimon.types.DataTypes;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class CreatePaimonTable {
 
     public static Catalog createFilesystemCatalog() {
-        CatalogContext context = CatalogContext.create(new Path("file:///g:/paimon"));
+        CatalogContext context = CatalogContext.create(new Path("file:///tmp/paimon"));
         return CatalogFactory.createCatalog(context);
     }
-    /* 如果是minio则例子如下
 
-     public static Catalog createFilesystemCatalog() {
+    /* 如果是 minio 则例子如下
+
+    public static Catalog createFilesystemCatalog() {
         Options options = new Options();
-        options.set("warehouse", "s3a://pvc-91d1e2cd-4d25-45c9-8613-6c4f7bf0a4cc/paimon");
+        options.set("warehouse", "s3a://my-bucket/paimon");
         Configuration hadoopConf = new Configuration();
         hadoopConf.set("fs.s3a.endpoint", "http://localhost:9000");
-        hadoopConf.set("fs.s3a.access.key", "gy0dX5lALP176g6c9fYf");
-        hadoopConf.set("fs.s3a.secret.key", "ReuUrCzzu5wKWAegtswoHIWV389BYl9AB1ZQbiKr");
+        hadoopConf.set("fs.s3a.access.key", "your-access-key");
+        hadoopConf.set("fs.s3a.secret.key", "your-secret-key");
         hadoopConf.set("fs.s3a.connection.ssl.enabled", "false");
         hadoopConf.set("fs.s3a.path.style.access", "true");
-        hadoopConf.set("fs.s3a.impl","org.apache.hadoop.fs.s3a.S3AFileSystem");
-        CatalogContext context = CatalogContext.create(options,hadoopConf);
-
-
-        return CatalogFactory.createCatalog(context);
+        hadoopConf.set("fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem");
+        return CatalogFactory.createCatalog(CatalogContext.create(options, hadoopConf));
     }
-     *
-     *
-     * */
+    */
 
     public static void main(String[] args) {
-        Schema.Builder schemaBuilder = Schema.newBuilder();
-        schemaBuilder.primaryKey("id");
-        schemaBuilder.column("id", DataTypes.INT());
-        schemaBuilder.column("name", DataTypes.STRING());
-        Map<String, String> options = new HashMap<>();
-        options.put("bucket", "1");//由于paimon java api 限制需要bucket>0
-        options.put("bucket-key", "id");
-        options.put("file.format", "orc");
-        options.put("file.compression", "lz4");
-        options.put("lookup.cache-spill-compression", "lz4");
-        options.put("spill-compression", "LZ4");
-        options.put("orc.compress", "lz4");
-        options.put("manifest.format", "orc");
-
-        schemaBuilder.options(options);
-        Schema schema = schemaBuilder.build();
-
         Identifier identifier = Identifier.create("test", "test2");
-        try {
-            Catalog catalog = CreatePaimonTable.createFilesystemCatalog();
-            catalog.createDatabase("test",true);
+        Schema schema = Schema.newBuilder()
+                .column("id", DataTypes.INT())
+                .column("name", DataTypes.STRING())
+                .primaryKey("id")
+                // 固定桶，动态桶（-1）的桶归属由 Paimon 的 assigner 维护，离线写入无法参与，见「表结构要求」
+                .option("bucket", "1")
+                .option("bucket-key", "id")
+                .option("file.format", "orc")
+                .option("file.compression", "lz4")
+                .option("manifest.format", "orc")
+                .build();
+
+        try (Catalog catalog = createFilesystemCatalog()) {
+            catalog.createDatabase("test", true);
             catalog.createTable(identifier, schema, true);
-        } catch (Catalog.TableAlreadyExistException e) {
-            e.printStackTrace();
-        } catch (Catalog.DatabaseNotExistException e) {
-            e.printStackTrace();
-        } catch (Catalog.DatabaseAlreadyExistException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-
     }
 }
 ```
@@ -306,16 +321,13 @@ public class CreatePaimonTable {
 Spark 或者 flink 环境创建表
 
 ```sql
-CREATE TABLE if not exists test.test2(id int ,name string)  tblproperties (
+CREATE TABLE if not exists test.test2(id int ,name string) tblproperties (
     'primary-key' = 'id',
     'bucket' = '1',
-    'bucket-key' = 'id'
-    'file.format'='orc',
-    'file.compression'='lz4',
-    'lookup.cache-spill-compression'='lz4',
-    'spill-compression'='LZ4',
-    'orc.compress'='lz4',
-    'manifest.format'='orc'
+    'bucket-key' = 'id',
+    'file.format' = 'orc',
+    'file.compression' = 'lz4',
+    'manifest.format' = 'orc'
 )
 ```
 
@@ -379,8 +391,8 @@ s3 或者 minio catalog例子
               "warehouse": "s3a://pvc-91d1e2cd-4d25-45c9-8613-6c4f7bf0a4cc/paimon",
               "metastore": "filesystem",
               "fs.s3a.endpoint": "http://localhost:9000",
-              "fs.s3a.access.key": "gy0dX5lALP176g6c9fYf",
-              "fs.s3a.secret.key": "ReuUrCzzu5wKWAegtswoHIWV389BYl9AB1ZQbiKr",
+              "fs.s3a.access.key": "your-access-key",
+              "fs.s3a.secret.key": "your-secret-key",
               "fs.s3a.connection.ssl.enabled": "false",
               "fs.s3a.path.style.access": "true",
               "fs.s3a.impl": "org.apache.hadoop.fs.s3a.S3AFileSystem"
@@ -427,12 +439,20 @@ hdfs catalog例子
 
 ## 类型转换
 
-| Addax 内部类型 | Paimon 数据类型              |
-| -------------- | ---------------------------- |
-| Integer        | TINYINT,SMALLINT,INT,INTEGER |
-| Long           | BIGINT                       |
-| Double         | FLOAT,DOUBLE,DECIMAL         |
-| String         | STRING,VARCHAR,CHAR          |
-| Boolean        | BOOLEAN                      |
-| Date           | DATE,TIMESTAMP               |
-| Bytes          | BINARY                       |
+| Addax 内部类型     | Paimon 数据类型              |
+| ------------------ | ---------------------------- |
+| Integer            | TINYINT,SMALLINT,INT,INTEGER |
+| Long               | BIGINT                       |
+| Double             | FLOAT,DOUBLE,DECIMAL         |
+| String             | STRING,VARCHAR,CHAR          |
+| Boolean            | BOOLEAN                      |
+| Date               | DATE,TIMESTAMP               |
+| Bytes              | BINARY                       |
+| String（逗号分隔） | ARRAY                        |
+| String（JSON对象） | MAP                          |
+
+复杂类型（ARRAY / MAP）以文本形式传入：ARRAY 是逗号分隔的列表，例如 `1,2,3`，元素两侧空白会被去掉，元素内不能出现逗号；MAP 是 JSON 对象，例如 `{"a": 1}`。元素/键值按表里声明的类型转换。
+
+## 脏数据
+
+某一列转换失败（例如时间字符串格式不对）时，整条记录记为脏数据并被跳过，不会把写了一半的记录送进表里，因此作业的 `errorLimit` 会自动覆盖这类问题。
