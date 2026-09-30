@@ -24,21 +24,24 @@ bin/addax.sh job/influx2stream.json
 
 ## Parameters
 
-| Configuration | Required | Data Type | Default Value | Description                                                                                                 |
-| :------------ | :------: | --------- | ------------- | ----------------------------------------------------------------------------------------------------------- |
-| endpoint      |   Yes    | string    | None          | InfluxDB connection string                                                                                  |
-| token         |   Yes    | string    | None          | Token for accessing database                                                                                |
-| table         |    No    | list      | None          | Selected table names (i.e., metrics) to be synchronized                                                     |
-| org           |   Yes    | string    | None          | Specify InfluxDB org name                                                                                   |
-| bucket        |   Yes    | string    | None          | Specify InfluxDB bucket name                                                                                |
-| column        |    No    | list      | None          | Collection of column names to be synchronized in configured table, detailed description see [rdbmreader][1] |
-| range         |   Yes    | list      | None          | Time range for reading data                                                                                 |
-| limit         |    No    | int       | None          | Limit number of records to get                                                                              |
+| Configuration | Required | Data Type | Default Value | Description                                                                                              |
+| :------------ | :------: | --------- | ------------- | -------------------------------------------------------------------------------------------------------- |
+| endpoint      |   Yes    | string    | None          | InfluxDB connection string                                                                               |
+| token         |   Yes    | string    | None          | Token for accessing database                                                                             |
+| table         |    No    | list      | None          | Selected table names (i.e., metrics) to be synchronized, every metric of the bucket is read when omitted |
+| org           |   Yes    | string    | None          | Specify InfluxDB org name                                                                                |
+| bucket        |   Yes    | string    | None          | Specify InfluxDB bucket name                                                                             |
+| column        |    No    | list      | None          | Collection of column names to be synchronized in configured table, see below                             |
+| range         |   Yes    | list      | None          | Time range for reading data                                                                              |
+| limit         |    No    | int       | None          | Limit number of records to get, N records per metric and tag combination, see below                      |
 
 ### column
 
-If `column` is not specified, or `column` is specified as `["*"]`, all valid `_field` fields and `_time` field will be read.
-Otherwise, read according to specified fields.
+The columns are resolved from the InfluxDB index and do not depend on the write time, so they are known even when the time range holds no data.
+
+- If `column` is not specified, or `column` is specified as `["*"]`, `_time`, all tag columns and all field columns are read. The `_measurement` column is added as well when `table` holds more than one metric, otherwise the rows cannot be told apart
+- When `column` is specified explicitly, only the records carrying these fields are read, so records of a metric that lacks the requested fields are not returned
+- A column that does not exist makes the job fail with the list of the available columns
 
 ### range
 
@@ -50,7 +53,7 @@ Otherwise, read according to specified fields.
 }
 ```
 
-`range` consists of a list of two strings, the first string represents start time, the second represents end time. The time expression format must comply with [Flux format requirements][2], like this:
+`range` consists of a list of one or two strings, the first string represents start time and is mandatory, the second represents end time and may be omitted. The time expression format must comply with [Flux format requirements][2], like this:
 
 ```json
 {
@@ -66,13 +69,28 @@ If you don't want to specify the second end time, you can omit it, like this:
 }
 ```
 
+`range` holds Flux time literals, both a relative duration (`-15h`) and an absolute time (`2018-11-01T00:00:00Z`) are accepted, but **an absolute time must not be quoted** — `"2018-11-01T00:00:00Z"` is rejected by InfluxDB.
+
 ## Type Conversion
 
-Current implementation treats all fields as strings.
+| InfluxDB type                   | Converted type |
+| :------------------------------ | :------------- |
+| long/unsignedLong               | integer        |
+| double                          | float          |
+| boolean                         | boolean        |
+| dateTime                        | timestamp      |
+| anything else (string included) | string         |
+| empty value                     | NULL           |
+
+## Behavior
+
+- An empty time range is not an error: the job finishes normally with 0 records
+- A `table` or `column` that does not exist makes the job fail, listing the available metrics/columns
 
 ## Limitations
 
 1. Current plugin only supports version 2.0 and above
+2. `limit` follows the Flux `limit()` semantics: N records **per metric and tag combination**, not N records in total
+3. `setting.speed.channel` has no effect on this plugin, the read is always done by a single task
 
-[1]: ./rdbmsreader
 [2]: https://docs.influxdata.com/influxdb/v2.0/query-data/flux/
