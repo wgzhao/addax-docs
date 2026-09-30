@@ -14,7 +14,7 @@ Iceberg Writer 提供向 已有的iceberg表写入数据的能力。
 | catalogType  |    是    | string   | 无     | catalog类型, 目前支持 hive,hadoop                                     |
 | warehouse    |    是    | string   | 无     | 仓库地址                                                              |
 | writeMode    |    是    | string   | 无     | 写入模式，详述见下                                                    |
-| hadoopConfig |    是    | json     | {}     | 里可以配置与 Iceberg catalog和Hadoop 相关的一些高级参数，比如HA的配置 |
+| hadoopConfig |    否    | json     | {}     | 里可以配置与 Iceberg catalog和Hadoop 相关的一些高级参数，比如HA的配置 |
 
 ### writeMode
 
@@ -26,6 +26,8 @@ Iceberg Writer 提供向 已有的iceberg表写入数据的能力。
 ### hadoopConfig
 
 `hadoopConfig` 里可以配置与 Iceberg catalog和Hadoop 相关的一些高级参数，比如HA的配置
+
+该配置项可以不填，此时使用 classpath 上的 hadoop 配置（即 `core-site.xml` 等的默认值）。
 
 创建表实例:
 
@@ -588,6 +590,13 @@ hive catalog例子
 | Bytes                         | BINARY           |
 | STRING(逗号分隔如'a,b,c')     | ARRAY            |
 | STRING(json格式如'{"a":"1"}') | MAP              |
+
+表里没列出的 Iceberg 类型按下述方式取值：
+
+- `TIME` 取日期/时间列的时分秒部分，`UUID` 由字符串解析，`FIXED` 由字节列写入。
+- `ARRAY` 的元素类型、`MAP` 的键和值类型按表结构的声明转换，源串按该类型解析（例如 `'1,2,3'` 写入 `array<int>`，`'{"a":"1"}'` 写入 `map<string,bigint>`）。
+- 表结构里的 `struct`、`variant` 以及 `array`/`map` 里嵌套的结构，插件不写入：映射到这些列的任务会在读到第一条记录时报错退出。
+- 某一行的值无法转换为列声明的类型时，该行会被跳过并计入脏数据，而不会以 `null` 写入。
 
 ## 插件构建
 
