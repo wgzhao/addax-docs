@@ -11,23 +11,18 @@ Addax 运行一个任务的大致流程如下：
 启动步骤为：
 
 1. 解析配置，包括 `job.json`、`core.json`、`plugin.json` 三个配置
-2. 设置 `jobId` 到 `configuration` 当中
-3. 启动 Engine，通过 `Engine.start()` 进入启动程序
-4. 设置 `RUNTIME_MODE` 到 `configuration` 当中
-5. 通过 JobContainer 的 `start()` 方法启动
-6. 依次执行 job 的 `preHandler()`、`init()`、`prepare()`、`split()`、`schedule()`、`post()`、`postHandle()` 等方法。
-7. `init()` 方法涉及到根据 configuration 来初始化 reader 和 writer 插件，这里涉及到 jar 包热加载以及调用插件 `init()` 操作方法，同时设置 reader 和 writer 的 configuration 信息
-8. `prepare()` 方法涉及到初始化 reader 和 writer 插件的初始化，通过调用插件的 `prepare()` 方法实现，每个插件都有自己的 jarLoader，通过集成 `URLClassloader` 实现而来
-9. `split()` 方法通过 `adjustChannelNumber()` 方法调整 channel 个数，同时执行 reader 和 writer 最细粒度的切分，需要注意的是，writer 的切分结果要参照 reader
-   的切分结果，达到切分后数目相等，才能满足 1：1 的通道模型
-10. channel 的计数主要是根据 byte 和 record 的限速来实现的，在 `split()` 的函数中第一步就是计算 channel 的大小
-11. `split()` 方法 reader 插件会根据 channel 的值进行拆分，但是有些 reader 插件可能不会参考 channel 的值，writer 插件会完全根据 reader 的插件 1:1 进行返回
-12. `split()` 方法内部的 `mergeReaderAndWriterTaskConfigs()` 负责合并 reader、writer、以及 transformer 三者关系，生成 task 的配置，并且重写 `job.content` 的配置
-13. `schedule()` 方法根据 `split()` 拆分生成的 task 配置分配生成 taskGroup 对象，根据 task 的数量和单个 taskGroup 支持的 task 数量进行配置，两者相除就可以得出 taskGroup 的数量
-14. `schedule()` 内部通过 AbstractScheduler 的 `schedule()` 执行，继续执行`startAllTaskGroup()` 方法创建所有的 TaskGroupContainer 组织相关的
-    task，TaskGroupContainerRunner 负责运行 TaskGroupContainer 执行分配的 task。scheduler 的具体实现类为 `ProcessInnerScheduler`。
-15. `taskGroupContainerExecutorService` 启动固定的线程池用以执行 `TaskGroupContainerRunner` 对象，TaskGroupContainerRunner 的 `run()` 方法调用 `taskGroupContainer.
-start()` 方法，针对每个 channel 创建一个 TaskExecutor，通过 `taskExecutor.doStart()` 启动任务。
+2. 启动 Engine，通过 `Engine.start()` 进入启动程序
+3. 通过 JobContainer 的 `start()` 方法启动
+4. 依次执行 job 的 `preHandler()`、`init()`、`prepare()`、`split()`、`schedule()`、`post()`、`postHandle()` 等方法。
+5. `init()` 方法涉及到根据 configuration 来初始化 reader 和 writer 插件，这里涉及到 jar 包热加载以及调用插件 `init()` 操作方法，同时设置 reader 和 writer 的 configuration 信息
+6. `prepare()` 方法涉及到初始化 reader 和 writer 插件的初始化，通过调用插件的 `prepare()` 方法实现，每个插件都有自己的 jarLoader，通过集成 `URLClassloader` 实现而来
+7. `split()` 方法通过 `adjustChannelNumber()` 方法调整 channel 个数，同时执行 reader 和 writer 最细粒度的切分，需要注意的是，writer 的切分结果要参照 reader 的切分结果，达到切分后数目相等，才能满足 1：1 的通道模型
+8. channel 的计数主要是根据 byte 和 record 的限速来实现的，在 `split()` 的函数中第一步就是计算 channel 的大小
+9. `split()` 方法 reader 插件会根据 channel 的值进行拆分，但是有些 reader 插件可能不会参考 channel 的值，writer 插件会完全根据 reader 的插件 1:1 进行返回
+10. `split()` 方法内部的 `mergeReaderAndWriterTaskConfigs()` 负责合并 reader、writer、以及 transformer 三者关系，生成 task 的配置，并写入内部键 `core.container.taskConfigs`（`job.content` 保持用户配置的形态不变）
+11. `schedule()` 方法根据 `split()` 拆分生成的 task 配置分配生成 taskGroup 对象：channel 总数除以每个 taskGroup 支持的 channel 数（向上取整）即可得出 taskGroup 的数量
+12. `schedule()` 内部通过 `StandAloneScheduler` 的 `schedule()` 执行，继续执行 `startAllTaskGroup()` 方法创建所有的 TaskGroupContainer 组织相关的 task，TaskGroupContainerRunner 负责运行 TaskGroupContainer 执行分配的 task
+13. `taskGroupContainerExecutorService` 启动固定的线程池用以执行 `TaskGroupContainerRunner` 对象，TaskGroupContainerRunner 的 `run()` 方法调用 `taskGroupContainer.start()` 方法，针对每个 channel 创建一个 TaskExecutor，通过 `taskExecutor.doStart()` 启动任务
 
 ## 插件机制
 
@@ -146,7 +141,7 @@ public class SomeReader
 
 需要注意的是：
 
-- `Job` 和 `Task` 之间一定不能有共享变量，因为分布式运行时不能保证共享变量会被正确初始化。两者之间只能通过配置文件进行依赖。
+- `Job` 和 `Task` 之间一定不能有共享变量。两者之间只能通过配置文件进行依赖。
 - `prepare` 和 `post` 在 `Job` 和 `Task` 中都存在，插件需要根据实际情况确定在什么地方执行操作。
 
 框架按照如下的顺序执行 `Job` 和 `Task` 的接口：
@@ -297,24 +292,24 @@ mvn package assembly:single
 - 类似通用：遵守同一类型的插件的习惯，比如关系型数据库的 `connection` 参数都是如下结构：
 
 ```json
-  {
-    "connection": [
-      {
-        "table": ["table_1", "table_2"],
-        "jdbcUrl": [
-          "jdbc:mysql://127.0.0.1:3306/database_1",
-          "jdbc:mysql://127.0.0.2:3306/database_1_slave"
-        ]
-      },
-      {
-        "table": ["table_3", "table_4"],
-        "jdbcUrl": [
-          "jdbc:mysql://127.0.0.3:3306/database_2",
-          "jdbc:mysql://127.0.0.4:3306/database_2_slave"
-        ]
-      }
-    ]
-  }
+{
+  "connection": [
+    {
+      "table": ["table_1", "table_2"],
+      "jdbcUrl": [
+        "jdbc:mysql://127.0.0.1:3306/database_1",
+        "jdbc:mysql://127.0.0.2:3306/database_1_slave"
+      ]
+    },
+    {
+      "table": ["table_3", "table_4"],
+      "jdbcUrl": [
+        "jdbc:mysql://127.0.0.3:3306/database_2",
+        "jdbc:mysql://127.0.0.4:3306/database_2_slave"
+      ]
+    }
+  ]
+}
 ```
 
 ### 如何使用 `Configuration` 类
@@ -453,14 +448,16 @@ Addax 的内部类型在实现上会选用不同的 java 类型：
 
 类型之间相互转换的关系如下：
 
-| from/to | Date                    | Long                     | Double                       | Bytes                        | String                     | Bool                                                |
-| ------- | ----------------------- | ------------------------ | ---------------------------- | ---------------------------- | -------------------------- | ---------------------------------------------------- |
-| Date    | -                       | 使用毫秒时间戳           | 不支持                       | 不支持                       | 按配置格式转换             | 不支持                                                     |
-| Long    | 作为毫秒时间戳构造 Date | -                        | `BigDecimal.doubleValue()`   | 不支持                       | `BigInteger.toString()`    | 0 为 `false`，其他为 `true`                             |
-| Double  | 不支持                  | `BigDecimal.longValue()` | -                            | 不支持                       | 直接返回内部 String        | 不支持                                                     |
-| Bytes   | 不支持                  | 不支持                   | 不支持                       | -                            | 按utf-8编码转换为 `byte[]` | 不支持                                                     |
-| String  | 按配置的 格式解析       | `BigDecimal.longValue`   | `BigDecimal.doubleValue`[^1] | 按 utf-8 编码[^2]转换为 `byte[]` | -                          | "true"为`true`, "false"为`false`，不区分大小写。其他不支持 |
-| Bool    | 不支持                  | `true`为`1L`，否则`0L`   | 不支持                       | `true`为`1.0`，否则`0.0`     | 不支持                     | -                                                          |
+| from/to | Date                    | Long                     | Double                     | Bytes                        | String                     | Bool                                                       |
+| ------- | ----------------------- | ------------------------ | -------------------------- | ---------------------------- | -------------------------- | ---------------------------------------------------------- |
+| Date    | -                       | 使用毫秒时间戳           | 不支持                     | 不支持                       | 按配置格式转换             | 不支持                                                     |
+| Long    | 作为毫秒时间戳构造 Date | -                        | `BigDecimal.doubleValue()` | 不支持                       | `BigInteger.toString()`    | 0 为 `false`，其他为 `true`                                |
+| Double  | 不支持                  | `BigDecimal.longValue()` | -                          | 不支持                       | 直接返回内部 String        | 不支持                                                     |
+| Bytes   | 不支持                  | 不支持                   | 不支持                     | -                            | 按utf-8编码转换为 `byte[]` | 不支持                                                     |
+| String  | 按配置的 格式解析       | `BigDecimal.longValue`   | `BigDecimal.doubleValue`   | 按 utf-8 编码转换为 `byte[]` | -                          | "true"为`true`, "false"为`false`，不区分大小写。其他不支持 |
+| Bool    | 不支持                  | `true`为`1L`，否则`0L`   | 不支持                     | `true`为`1.0`，否则`0.0`     | 不支持                     | -                                                          |
+
+String 转 `Double` 时会处理 `NaN`、`Infinity`、`-Infinity` 等数值；String 转 `Bytes` 默认按 utf-8 编码，除非另有指定编码格式。
 
 ## 脏数据处理
 
@@ -488,6 +485,3 @@ Addax 的内部类型在实现上会选用不同的 java 类型：
 
 [1]: https://hadoop.apache.org/docs/stable/hadoop-yarn/hadoop-yarn-site/YARN.html
 [2]: https://github.com/wgzhao/Addax/blob/master/common/src/main/java/com/wgzhao/addax/common/util/Configuration.java
-
-[^1]: 处理 `NaN`, `Infinity`, `-Infinity` 等数值
-[^2]: 除非另有指定编码格式
