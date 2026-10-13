@@ -54,7 +54,7 @@ Addax 运行一个任务的大致流程如下：
 
 那么，`Job` 和 `Task` 的逻辑应是怎么对应到具体的代码中的？
 
-首先，插件的入口类必须扩展 `Reader` 或 `Writer` 抽象类，并且实现分别实现 `Job` 和 `Task` 两个内部抽象类，`Job` 和 `Task` 的实现必须是 **内部类** 的形式，原因见 **加载原理** 一节。以 `Reader` 为例：
+首先，插件必须定义一个外层类，它要扩展 `Reader` 或 `Writer` 抽象类，并以 **public static 嵌套类** 的形式实现各自的 `Job` 和 `Task` 两个内部抽象类，原因见 **加载原理** 一节。以 `Reader` 为例：
 
 ```java
 public class SomeReader
@@ -219,7 +219,7 @@ classDiagram
 
 ### 插件定义
 
-在每个插件的项目中，都有一个`plugin.json`文件，这个文件定义了插件的相关信息，包括入口类。例如：
+在每个插件的项目中，都有一个`plugin.json`文件，这个文件定义了插件的相关信息，包括入口类所在的外层类。例如：
 
 ```json
 {
@@ -231,7 +231,7 @@ classDiagram
 ```
 
 - `name`: 插件名称，大小写敏感。框架根据用户在配置文件中指定的名称来搜寻插件。 **十分重要** 。
-- `class`: 入口类的全限定名称，框架通过反射创建入口类的实例。**十分重要** 。
+- `class`: 入口类所在的外层类（宿主类）的全限定名称。框架通过反射实例化的是它的两个嵌套类 `Job` 和 `Task`（编译后的类名分别是 `<class>$Job` 和 `<class>$Task`），job 启动时会校验这两个入口类，不满足要求会直接报错退出。**十分重要** 。
 - `description`: 描述信息。
 - `developer`: 开发人员。
 
@@ -478,10 +478,10 @@ String 转 `Double` 时会处理 `NaN`、`Infinity`、`-Infinity` 等数值；St
 
 ## 加载原理
 
-1. 框架扫描 `plugin/reader` 和 `plugin/writer`目录，加载每个插件的 `plugin.json` 文件。
-2. 以 `plugin.json` 文件中 `name` 为 key，索引所有的插件配置。如果发现重名的插件，框架会异常退出。
-3. 用户在插件中在 `reader`/`writer` 配置的 `name` 字段指定插件名字。框架根据插件的类型（`reader`/`writer`）和插件名称去插件的路径下扫描所有的 jar，加入 `classpath`。
-4. 根据插件配置中定义的入口类，框架通过反射实例化对应的 `Job` 和 `Task` 对象。
+1. 用户在 job 的 `reader`/`writer` 中指定插件名后，框架根据插件类型（`reader`/`writer`）和插件名称，到 `plugin/<类型>/<名称>/plugin.json` 读取插件声明；只有 job 实际引用到的插件会被读取，包括 `job.preHandler` / `job.postHandler` 使用的插件。
+2. 框架把该插件目录及其子目录下的所有 jar 通过一个独立的 `classloader` 加入 `classpath`，实现不同插件之间依赖的隔离。
+3. job 启动时（任何任务开始之前），框架对 reader、writer 以及配置了的 pre/post-handler 插件逐一解析并校验其入口类：`<class>$Job` 和 `<class>$Task` 必须存在，必须是 **public static** 嵌套类，必须分别继承对应的 SPI 类型（reader 插件为 `Reader.Job` / `Reader.Task`，writer 插件为 `Writer.Job` / `Writer.Task`），并且具有 public 无参构造函数；校验只加载类，不创建实例。任何一项不满足，job 立即报错退出，错误信息会给出插件名、`plugin.json` 路径和期望的入口类名。
+4. 校验通过后，框架通过反射实例化 `Job` 完成准备与切分，并在任务运行阶段实例化 `Task` 执行实际的读写。
 
 [1]: https://hadoop.apache.org/docs/stable/hadoop-yarn/hadoop-yarn-site/YARN.html
 [2]: https://github.com/wgzhao/Addax/blob/master/common/src/main/java/com/wgzhao/addax/common/util/Configuration.java

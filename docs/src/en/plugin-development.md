@@ -54,7 +54,7 @@ In short, a `Job` is split into `Tasks`, which are executed in containers provid
 
 So, how should the logic of `Job` and `Task` be mapped to specific code?
 
-First, the entry class of a plugin must extend the `Reader` or `Writer` abstract class and implement their respective `Job` and `Task` inner abstract classes. The implementations of `Job` and `Task` must be in the form of **inner classes**.
+First, a plugin must define an outer class that extends the `Reader` or `Writer` abstract class and implements their respective `Job` and `Task` inner abstract classes. The implementations of `Job` and `Task` must be **public static nested classes**, for the reason explained in the **Loading Principle** section.
 
 ```java
 public class SomeReader
@@ -219,7 +219,7 @@ classDiagram
 
 ### Plugin Definition
 
-In each plugin's project, there is a `plugin.json` file that defines the plugin's information, including its entry class. For example:
+In each plugin's project, there is a `plugin.json` file that defines the plugin's information, including the outer class that hosts the entry classes. For example:
 
 ```json
 {
@@ -231,7 +231,7 @@ In each plugin's project, there is a `plugin.json` file that defines the plugin'
 ```
 
 - `name`: The plugin name, case-sensitive. The framework searches for the plugin based on the name specified by the user in the configuration file. **Very important**.
-- `class`: The fully qualified name of the entry class. The framework creates an instance of the entry class via reflection. **Very important**.
+- `class`: The fully qualified name of the outer class that hosts the entry classes. The framework instantiates its two nested classes `Job` and `Task` via reflection (binary names `<class>$Job` and `<class>$Task`); they are validated when the job starts and an invalid one fails the job immediately. **Very important**.
 - `description`: Descriptive information.
 - `developer`: The developer.
 
@@ -477,10 +477,10 @@ Users can specify a limit on the number of dirty data records or a percentage li
 
 ## Loading Principle
 
-1. The framework scans the `plugin/reader` and `plugin/writer` directories and loads each plugin's `plugin.json` file.
-2. It indexes all plugin configurations using the `name` from the `plugin.json` file as the key. If duplicate plugin names are found, the framework will exit with an error.
-3. The user specifies the plugin name in the `name` field of the `reader`/`writer` configuration. The framework then scans all jars in the plugin's path based on the plugin type (`reader`/`writer`) and name, and adds them to a custom `classloader`.
-4. Based on the entry class defined in the plugin configuration, the framework instantiates the corresponding `Job` and `Task` objects via reflection.
+1. After the user specifies the plugin name in the `reader`/`writer` configuration, the framework reads the plugin declaration from `plugin/<type>/<name>/plugin.json` according to the plugin type (`reader`/`writer`) and name. Only the plugins actually referenced by the job are read, including those used by `job.preHandler` / `job.postHandler`.
+2. The framework adds all jars in the plugin directory (including its subdirectories) to a dedicated `classloader`, which isolates the dependencies of different plugins from each other.
+3. When a job starts (before any task begins), the framework resolves and validates the entry classes of the reader, the writer and the configured pre-/post-handler plugins: `<class>$Job` and `<class>$Task` must exist, must be **public static** nested classes, must extend the corresponding SPI types (`Reader.Job` / `Reader.Task` for reader plugins, `Writer.Job` / `Writer.Task` for writer plugins), and must declare a public no-arg constructor. Validation only loads the classes; it does not instantiate them. If any check fails, the job exits with an error that names the plugin, the `plugin.json` path and the expected entry classes.
+4. Once the validation passes, the framework instantiates `Job` via reflection to perform the preparation and splitting, and instantiates `Task` when the tasks run to perform the actual reading and writing.
 
 [1]: https://hadoop.apache.org/docs/stable/hadoop-yarn/hadoop-yarn-site/YARN.html
 [2]: https://github.com/wgzhao/Addax/blob/master/common/src/main/java/com/wgzhao/addax/common/util/Configuration.java
