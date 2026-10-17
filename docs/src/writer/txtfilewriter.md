@@ -30,8 +30,10 @@ TxtFile Writer 提供了向本地文件写入类 CSV 格式的一个或者多个
 写入前数据清理处理模式：
 
 - truncate，写入前清理目录下一 fileName 前缀的所有文件。
-- append，写入前不做任何处理，直接使用 filename 写入，并保证文件名不冲突。
+- append，写入前不做任何处理，直接使用 filename 写入；目标文件已存在时在其末尾追加，不存在时新建。多通道时每个通道仍会生成互不冲突的文件名。
 - nonConflict，如果目录下有 fileName 前缀的文件，直接报错。
+
+append 与 `compress` 同时使用时，如果目标文件已存在会直接报错：每次运行写出一个完整的压缩流，zip 压缩包无法续写，gz/bzip2/xz 的拼接流也只有支持多成员的读取端才能完整解出。请先删除目标文件，或改用 `truncate`/`nonConflict`。
 
 ### fileFormat
 

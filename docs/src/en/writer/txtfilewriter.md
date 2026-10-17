@@ -30,8 +30,10 @@ TxtFile Writer provides writing CSV-like format to one or more table files in lo
 Data cleanup processing mode before writing:
 
 - truncate: Clean all files with fileName prefix under directory before writing.
-- append: No processing before writing, write directly using filename and ensure no filename conflicts.
+- append: No processing before writing, write directly using filename; an existing target is extended at its end, a missing one is created. With several channels, each channel still gets a conflict-free name of its own.
 - nonConflict: If there are files with fileName prefix under directory, report error directly.
+
+`append` combined with `compress` fails when the target already exists: each run writes one complete compressed stream — a zip archive cannot be extended, and a concatenated gz/bzip2/xz stream is only decoded in full by readers that handle multiple members. Remove the target first, or use `truncate`/`nonConflict`.
 
 ### fileFormat
 
