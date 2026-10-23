@@ -16,6 +16,37 @@ end
 target(("target"))
 source ==> fr ==> target
 ```
+
+## 配置方式
+
+内置函数支持命名参数（推荐）：
+
+```json
+{
+  "transformer": [
+    {
+      "name": "dx_substr",
+      "parameter": { "idx": 1, "pos": 0, "length": 3 }
+    }
+  ]
+}
+```
+
+早期版本使用位置参数：
+
+```json
+{
+  "transformer": [
+    {
+      "name": "dx_substr",
+      "parameter": { "columnIndex": 1, "paras": ["0", "3"] }
+    }
+  ]
+}
+```
+
+位置参数仍然兼容，但已标记为废弃。Addax 会在日志中输出告警，后续版本可能移除该写法，请尽快迁移到命名参数。
+
 ## UDF 函数
 
 ### dx_substr
@@ -39,7 +70,7 @@ source ==> fr ==> target
 - `idx`: 字段编号，对应record中第几个字段
 - `flag`: "l","r", 指示是在头进行填充，还是尾进行填充
 - `length`: 目标字段长度
-- `chr`: 需要填充的字符
+- `chr`: 需要填充的字符，不能为空字符串
 
 返回： 如果源字符串长度小于目标字段长度，按照位置添加pad字符后返回。如果长于，直接截断（都截右边）。如果字段为空值，转换为空字符串进行pad，即最后的字符串全是需要pad的字符
 
@@ -73,9 +104,8 @@ source ==> fr ==> target
 参数：
 
 - `idx`: 字段编号，对应record中第几个字段
-- `operator`: 运算符, 支持 `like`, `not like`, `>`, `=`, `<`, `>=`, `!=`, `<=`
+- `operator`: 运算符, 支持 `like`, `not like`, `>`, `=`, `==`, `<`, `>=`, `!=`, `<=`
 - `expr`: 正则表达式（java正则表达式）、值
-- `str`: 要替换的字符串
 
 返回：
 
@@ -91,13 +121,65 @@ source ==> fr ==> target
 
 关联filter暂不支持，即多个字段的联合判断，函参太过复杂，用户难以使用。
 
+### dx_map
+
+`dx_map(idx, operator, value)`
+
+对指定字段执行算术运算。
+
+参数
+
+- `idx`: 字段编号，对应record中第几个字段
+- `operator`: 运算符，支持 `+`, `-`, `*`, `/`, `%`, `^`
+- `value`: 参与运算的数值
+
+返回：运算后的值以字符串列写回原字段。字段为空值时原样返回。除法保留字段值原有小数位数，没有小数位时保留 2 位。
+
+举例
+
+```json
+{
+  "name": "dx_map",
+  "parameter": { "idx": 2, "operator": "^", "value": 2 }
+}
+```
+
+### dx_null_to_default
+
+`dx_null_to_default(column)`
+
+将空值替换为目标写入端对应类型的默认值，适合不支持空值的 writer（如部分 NoSQL 写入场景）。
+
+参数
+
+- `column`: 与 writer 的 `column` 配置顺序一致的对象数组，每项包含 `name` 和 `type`
+
+返回：空字符串/日期/JSON 类型转为 `""`，整数类型转为 `0`，浮点类型转为 `0.0`，布尔类型转为 `false`，二进制类型转为空字节数组；非空值原样保留。
+
+举例
+
+```json
+{
+  "name": "dx_null_to_default",
+  "parameter": {
+    "column": [
+      { "name": "id", "type": "string" },
+      { "name": "amount", "type": "double" },
+      { "name": "count", "type": "long" }
+    ]
+  }
+}
+```
+
+注意：该转换器只按 `column` 中声明的类型生成默认值，不会读取 writer 配置；请保证这里的列顺序和类型与 writer 保持一致。
+
 ### dx_groovy
 
 `dx_groovy(code, package) -> record`
 
 参数
 
-- `coee`: 符合 groovy 编码要求的代码
+- `code`: 符合 groovy 编码要求的代码
 - `package`: extraPackage, 列表或者为空
 
 返回
@@ -111,7 +193,6 @@ Record 数据类型
   ，以及element下的各种column（BoolColumn.class,BytesColumn.class,DateColumn.class,DoubleColumn.class,LongColumn.class,StringColumn.class）。
   不支持其他包，如果用户有需要用到其他包，可设置extraPackage，注意extraPackage不支持第三方jar包。
 - `groovy code` 中，返回更新过的 `Record`（比如record.setColumn(columnIndex, new StringColumn(newValue));），或者null。返回null表示过滤此行。
-- 用户可以直接调用静态的Util方式（GroovyTransformerStaticUtil)
 
 举例:
 
@@ -123,7 +204,6 @@ String code="Column column = record.getColumn(1);\n"+
 " String newValue = oriValue.substring(0, 3);\n"+
 " record.setColumn(1, new StringColumn(newValue));\n"+
 " return record;";
-dx_groovy(record);
 ```
 
 groovy 实现的Replace
@@ -188,21 +268,17 @@ return record
 
 文件也可以使用绝对路径来指定。
 
-
 ## Job定义
 
 本例中，配置4个UDF。
 
 <<<@/public/assets/jobs/udfdemo.json
 
-
 ## 自定义函数
 
 如果自带的函数不满足数据转换要求，我们可以在 `transformer` 编写满足 `groovy` 规范要求的代码，下面给出一个完整的例子
 
-
 <<<@/public/assets/jobs/groovydemo.json
-
 
 上述 `transformer` 代码针对每条记录的前面两个字段做了修改，对第一个字段的字符串，在字符串前面增加 `Header_` 字符；
 第二个整数字段值进行倍增处理。最后执行的结果如下：
@@ -243,4 +319,4 @@ Total 1000000 records, 22000000 bytes | Transform 100000 records(in), 10000 reco
 同步失败总数                    :                   0
 ```
 
-注意，这里主要记录转换的输入输出，需要检测数据输入输出的记录数量变化。
+注意，这里主要记录转换的输入输出，需要检测数据输入输出的记录数量变化。`Transformer success` 只统计通过全部转换并输出的记录，被过滤的记录计入 `filter`，两者之和加上失败记录等于转换的输入记录数。

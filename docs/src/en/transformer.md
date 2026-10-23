@@ -17,6 +17,36 @@ target(("target"))
 source ==> fr ==> target
 ```
 
+## Configuration
+
+The built-in functions accept named parameters (recommended):
+
+```json
+{
+  "transformer": [
+    {
+      "name": "dx_substr",
+      "parameter": { "idx": 1, "pos": 0, "length": 3 }
+    }
+  ]
+}
+```
+
+Earlier versions used positional parameters:
+
+```json
+{
+  "transformer": [
+    {
+      "name": "dx_substr",
+      "parameter": { "columnIndex": 1, "paras": ["0", "3"] }
+    }
+  ]
+}
+```
+
+The positional form is still accepted, but it is deprecated. Addax logs a warning for it, and it may be removed in a future release; migrate to named parameters.
+
 ## UDF Functions
 
 ### dx_substr
@@ -40,7 +70,7 @@ source ==> fr ==> target
 - `idx`: The index of the field in the record.
 - `flag`: "l" or "r", indicating whether to pad at the beginning (left) or the end (right).
 - `length`: The target length of the field.
-- `chr`: The character to use for padding.
+- `chr`: The character to use for padding. It must not be empty.
 
 **Returns:** If the source string's length is less than the target length, it returns the string after padding. If it's longer, it is truncated (always from the right). If the field is null, it is converted to an empty string before padding.
 
@@ -74,7 +104,7 @@ source ==> fr ==> target
 **Parameters:**
 
 - `idx`: The index of the field in the record.
-- `operator`: The operator. Supported operators are `like`, `not like`, `>`, `=`, `<`, `>=`, `!=`, `<=`.
+- `operator`: The operator. Supported operators are `like`, `not like`, `>`, `=`, `==`, `<`, `>=`, `!=`, `<=`.
 - `expr`: A regular expression (Java-style) or a value.
 
 **Returns:**
@@ -90,6 +120,58 @@ source ==> fr ==> target
 - `dx_filter(1, ">=", "10")`
 
 Compound filters (i.e., conditions involving multiple fields) are not currently supported as the function parameters would be too complex for users.
+
+### dx_map
+
+`dx_map(idx, operator, value)`
+
+Applies an arithmetic operation to the specified column.
+
+**Parameters**
+
+- `idx`: The index of the field in the record.
+- `operator`: The operator. Supported operators are `+`, `-`, `*`, `/`, `%`, `^`.
+- `value`: The numeric operand.
+
+**Returns:** The result is written back to the column as a string. A null field is returned unchanged. Division keeps the number of decimal places of the field value, or 2 places when it has none.
+
+**Example**
+
+```json
+{
+  "name": "dx_map",
+  "parameter": { "idx": 2, "operator": "^", "value": 2 }
+}
+```
+
+### dx_null_to_default
+
+`dx_null_to_default(column)`
+
+Replaces nulls with type-appropriate defaults, which is useful for writers that cannot handle nulls (for example some NoSQL targets).
+
+**Parameters**
+
+- `column`: An array of `{name, type}` objects in the same order as the writer column configuration.
+
+**Returns:** Null string/date/JSON values become `""`, integer types become `0`, floating point types become `0.0`, boolean types become `false`, and binary types become an empty byte array. Non-null values are left unchanged.
+
+**Example**
+
+```json
+{
+  "name": "dx_null_to_default",
+  "parameter": {
+    "column": [
+      { "name": "id", "type": "string" },
+      { "name": "amount", "type": "double" },
+      { "name": "count", "type": "long" }
+    ]
+  }
+}
+```
+
+Note: this transformer generates defaults only from the types declared in `column`; it does not read the writer configuration. Keep the column order and types in sync with the writer.
 
 ### dx_groovy
 
@@ -109,7 +191,6 @@ A `Record` data type.
 - `dx_groovy` can only be called once per transformer configuration. Multiple calls are not allowed.
 - The `groovy code` supports packages from `java.lang` and `java.util`. Objects that can be directly referenced include `record` and various column types under `element` (BoolColumn.class, BytesColumn.class, DateColumn.class, DoubleColumn.class, LongColumn.class, StringColumn.class). Other packages are not supported by default. If you need to use other packages, you can set `extraPackage`. Note that `extraPackage` does not support third-party JARs.
 - In the `groovy code`, you must return the updated `Record` (e.g., `record.setColumn(columnIndex, new StringColumn(newValue));`) or `null`. Returning `null` filters out the current row.
-- You can directly call static utility methods (GroovyTransformerStaticUtil).
 
 **Examples:**
 
@@ -121,7 +202,6 @@ String code="Column column = record.getColumn(1);\n"+
 " String newValue = oriValue.substring(0, 3);\n"+
 " record.setColumn(1, new StringColumn(newValue));\n"+
 " return record;";
-dx_groovy(code); // Note: The original doc had `dx_groovy(record)` which is incorrect. It should be the code string.
 ```
 
 Groovy implementation of `replace`:
@@ -234,9 +314,9 @@ Average   bps             :              110B/s
 Average   rps             :              3rec/s
 Number of rec             :                  10
 Failed record             :                   0
-Transformer success records:                  10
-Transformer failed  records:                   0
-Transformer filter  records:                   0
+Transformer success rec   :                  10
+Transformer failed  rec   :                   0
+Transformer filter  rec   :                   0
 ```
 
-Note: This mainly records the input and output of the transformation, which requires monitoring changes in the number of data records.
+Note: This mainly records the input and output of the transformation, which requires monitoring changes in the number of data records. `Transformer success` counts only the records that pass all transforms and are written out; filtered records are counted in `filter`, so success plus filter plus failed equals the number of input records.
