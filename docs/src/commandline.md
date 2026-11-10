@@ -67,17 +67,13 @@ bin/addax.sh <job_file>
 bin/addax.sh job/test.json -p "-Dusername=root -Dpassword=123456 -Dparam1=value1 -Dparam2=value2"
 ```
 
-为了方便使用，程序内置了部分常见时间变量，可以直接。假定当前时间是 `2025-07-16 12:13:14`，下面列出可以直接使用的变量以及变量值：
+日期变量（`${curr_*}`、`${biz_*}`）不再由 `addax.sh` 注入。原先的 `biz_*` 固定按“昨天”计算，无法适配交易日历、补采等场景，现在统一由调度端提供：
 
-| 变量名                    | 变量值                |
-| ------------------------- | --------------------- |
-| `${curr_date_short}`      | `20250716`            |
-| `${curr_date_dash}`       | `2025-07-16`          |
-| `$curr_datetime_short}`   | `20250716121314`      |
-| `${curr_datetime_dash}`   | `2025-07-16 12:13:14` |
-| `${biz_date_short}`       | `20250715`            |
-| `${biz_date_dash}`        | `2025-07-15`          |
-| `${biz_datetime_short}`   | `20250715121314`      |
-| `${biz_datetime_dash}`    | `2025-07-15 12:13:14` |
-| `${biz_datetime_0_short}` | `20250715000000`      |
-| `${biz_datetime_0_dash}`  | `2025-07-15 00:00:00` |
+- 使用 [addax-admin](https://github.com/wgzhao/addax-admin) 调度时，管理端会按任务的业务日期填充这些变量，补采时也会按指定的业务日期生成。
+- 直接运行 `addax.sh` 时，通过 `-p` 显式传入，例如：
+
+```bash
+bin/addax.sh job/test.json -p "-Dbiz_date_short=20250716 -Dcurr_date_short=20250717"
+```
+
+未传入的占位符会原样保留（例如 `${biz_date_short}`），不会被替换。
