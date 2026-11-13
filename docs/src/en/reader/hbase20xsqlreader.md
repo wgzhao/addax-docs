@@ -26,6 +26,10 @@ Configure a job to synchronize and extract data from Phoenix to local:
 }
 ```
 
+## Connection
+
+This plugin supports the Phoenix Query Server thin protocol only. The thin client is bundled with the distribution, so no extra Phoenix client jar — in particular the ~144 MB thick `phoenix-client-hbase-2.1` — is required.
+
 ## Parameters
 
 This plugin is based on [RDBMS Reader](rdbmsreader), so you can refer to all configuration items of RDBMS Reader.

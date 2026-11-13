@@ -73,3 +73,4 @@ HBase20 SQL Reader 插件实现了从 [Phoenix(HBase SQL)](https://phoenix.apach
 - 不设置 `splitPoint` 默认使用自动切分，此时切分列仅支持整形和字符型
 - 表名和 `SCHEMA` 名及列名大小写敏感，请与 Phoenix 表实际大小写保持一致
 - 仅支持通过 Phoenix QueryServer 读取数据，因此您的 Phoenix 必须启动 QueryServer 服务才能使用本插件
+- 本插件只使用 QueryServer 的 thin 客户端，发行版已内置该驱动（`phoenix-queryserver-client`），无需额外部署 Phoenix 客户端或 thick 驱动

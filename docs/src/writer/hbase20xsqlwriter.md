@@ -24,19 +24,11 @@ HBase 1.x 的支持已在 6.0.11 版本移除，本插件仅支持 HBase 2.x。
 
 ### jdbcUrl
 
-`queryServerAddress` 是满足 Phoenix 链接的地址，具体格式和要求可以参考[官方文档][1] ，其 jdbc 连接串格式如下：
+`jdbcUrl` 是 Phoenix 的 JDBC 连接地址，支持 Phoenix Query Server 的 thin 模式和直连 ZooKeeper 的 thick 模式。
 
-```java
-jdbc:phoenix [ :<zookeeper quorum> [ :<port number> [ :<root node> [ :<principal> [ :<keytab file> ] ] ] ] ]
-```
+#### Thin 模式（默认，开箱即用）
 
-- zookeeper quorum: zookeeper 集群地址，多个地址用逗号分隔，如：`node1,node2,node3`
-- port number: zookeeper 集群端口，默认为 2181
-- root node: zookeeper 集群根节点，默认为 `/hbase`，启用 kerberos 后，默认为 `/hbase-secure`
-- principal: kerberos 凭证信息，仅当 `havekerberos` 启用后有效
-- keytab file: kerberos 凭证文件的绝对路径，仅当 `havekerberos` 启用后有效
-
-如果你希望通过连接 Phoenix Query Server (a.k.a PQS) ，则 JDBC 连接串如下：
+发行版内置 Phoenix Query Server 的 thin 客户端（`phoenix-queryserver-client`，约 6 MB），JDBC 连接串如下：
 
 ```java
 jdbc:phoenix:thin:url=<scheme>://<server-hostname>:<port>[;option=value...]
@@ -49,13 +41,33 @@ jdbc:phoenix:thin:url=<scheme>://<server-hostname>:<port>[;option=value...]
 
 更详细的描述，可以参考[官方文档][2]
 
+#### Thick 模式（需自备驱动）
+
+::: warning
+发行版不再内置 thick 驱动。此前依赖的 `phoenix-client-hbase-2.1` 是约 144 MB 的 HBase/Hadoop shaded 全量包，而 thin 客户端只有约 6 MB，因此默认只发布 thin 客户端。
+
+如需使用 thick 模式，请把与集群 Phoenix 版本匹配的 thick 客户端（例如 Phoenix 5.1.x 对应的 `phoenix-client-hbase-2.1-5.1.3.jar`）放入 `plugin/writer/hbase20xsqlwriter/libs/`；如果发行版执行过 `shrink_package.sh`，请放入 `shared/` 并在 `libs/` 下建立同名软链接。缺少该 jar 时，插件会在启动时报告 `JDBC driver org.apache.phoenix.jdbc.PhoenixDriver not found`。
+:::
+
+连接串格式及参数含义可以参考[官方文档][1]：
+
+```java
+jdbc:phoenix [ :<zookeeper quorum> [ :<port number> [ :<root node> [ :<principal> [ :<keytab file> ] ] ] ] ]
+```
+
+- zookeeper quorum: zookeeper 集群地址，多个地址用逗号分隔，如：`node1,node2,node3`
+- port number: zookeeper 集群端口，默认为 2181
+- root node: zookeeper 集群根节点，默认为 `/hbase`，启用 kerberos 后，默认为 `/hbase-secure`
+- principal: kerberos 凭证信息，仅当 `havekerberos` 启用后有效
+- keytab file: kerberos 凭证文件的绝对路径，仅当 `havekerberos` 启用后有效
+
 ### nullMode
 
 `skip` 表示不向hbase写这列；`empty`：写入 `HConstants.EMPTY_BYTE_ARRAY`，即`new byte [0]`
 
-注意：启用kerberos认证后，程序需要知道`hbase-site.xml` 所在的路径，一种办法是运行执行在环境变量 `CLASSPATH` 中增加该文件的所在路径。
+注意：thick 模式启用kerberos认证后，程序需要知道`hbase-site.xml` 所在的路径，一种办法是运行执行在环境变量 `CLASSPATH` 中增加该文件的所在路径。
 
-另外一个解决办法是将 `hbase-site.xml` 文件拷贝到插件的 `libs` 目录里。
+另外一个解决办法是将 `hbase-site.xml` 文件拷贝到插件的 `libs` 目录里。thin 模式的 kerberos 凭证通过连接串传递，不需要 `hbase-site.xml`。
 
 [1]: http://phoenix.apache.org/index.html
 [2]: https://phoenix.apache.org/documentation/queryserver/connect.html
