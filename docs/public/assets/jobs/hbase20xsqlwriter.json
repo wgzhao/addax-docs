@@ -37,7 +37,7 @@
             "EVENTID",
             "CONTENT"
           ],
-          "queryServerAddress": "http://127.0.0.1:8765",
+          "jdbcUrl": "jdbc:phoenix:thin:url=http://127.0.0.1:8765",
           "nullMode": "skip",
           "table": "TEST_TBL"
         }
