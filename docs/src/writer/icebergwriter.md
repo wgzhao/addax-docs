@@ -6,6 +6,8 @@ Iceberg Writer 提供向 已有的iceberg表写入数据的能力。
 
 <<<@/public/assets/jobs/icebergwriter.json
 
+上例的 warehouse 使用 `s3a://`，发行版默认不含其所需的 `hadoop-aws`，使用前请先看下面的「使用 s3a 协议（S3 / MinIO）」。运行 `addax.sh gen` 生成的默认模板使用的是本地文件系统。
+
 ## 参数说明
 
 | 配置项       | 是否必须 | 数据类型 | 默认值 | 说明                                                                  |
@@ -28,6 +30,27 @@ Iceberg Writer 提供向 已有的iceberg表写入数据的能力。
 `hadoopConfig` 里可以配置与 Iceberg catalog和Hadoop 相关的一些高级参数，比如HA的配置
 
 该配置项可以不填，此时使用 classpath 上的 hadoop 配置（即 `core-site.xml` 等的默认值）。
+
+### 使用 s3a 协议（S3 / MinIO）
+
+发行版默认不带 `hadoop-aws`。它只为 `s3a://` 提供 `S3AFileSystem`，却会通过 `aws-java-sdk-bundle` 引入一个约 297 MB 的 AWS SDK v1 全服务包，使插件的 `libs` 从约 95 MB 涨到约 392 MB——写 HDFS 或本地路径的作业也要一起承担这份体积。
+
+因此，warehouse 使用 `s3a://` 时，需要自行把下面两个 jar 放到 `plugin/writer/icebergwriter/libs/`（如果发行版执行过 `shrink_package.sh`，放到 `shared/`，再在 `libs/` 下建立同名软链接）：
+
+```bash
+mvn dependency:get -Dartifact=org.apache.hadoop:hadoop-aws:3.3.6
+mvn dependency:get -Dartifact=com.amazonaws:aws-java-sdk-bundle:1.12.367
+
+cp ~/.m2/repository/org/apache/hadoop/hadoop-aws/3.3.6/hadoop-aws-3.3.6.jar \
+   plugin/writer/icebergwriter/libs/
+cp ~/.m2/repository/com/amazonaws/aws-java-sdk-bundle/1.12.367/aws-java-sdk-bundle-1.12.367.jar \
+   plugin/writer/icebergwriter/libs/
+```
+
+版本必须与插件内置的 Hadoop 版本一致（当前为 3.3.6），`aws-java-sdk-bundle` 用该版本 hadoop-aws 声明的版本（当前为 1.12.367）。放好后按下方「s3 或者 minio hadoop catalog 例子」在 `hadoopConfig` 里配置 `fs.s3a.*` 即可。
+
+缺少这两个 jar 时，`s3a://` 作业会在加载表时报
+`ClassNotFoundException: Class org.apache.hadoop.fs.s3a.S3AFileSystem not found`。
 
 创建表实例:
 
