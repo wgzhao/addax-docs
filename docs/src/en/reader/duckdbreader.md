@@ -84,6 +84,34 @@ Set `channel: 1` explicitly. DuckDB has no `splitPk` sharding, so a `channel` ab
 
 Writing a `TIME` column to a text sink can show a value that differs from the stored one by several hours. The text conversion uses the configurable `common.column.timeZone` of `ColumnCast` (default `GMT+8`) rather than the JVM timezone the read used, and every other RDBMS reader behaves the same way. To see the stored value in the text output, align the timezone of the job with that setting.
 
+## Platform Support
+
+The `duckdb_jdbc` shipped with the distribution carries the native library for **Linux x86_64** only. On any other platform the job fails at startup because the driver cannot find its native library; replace the driver jar with the one built for your platform.
+
+| Platform | Driver jar |
+| --- | --- |
+| macOS Apple Silicon | `duckdb_jdbc-<version>-macos_arm64.jar` |
+| macOS Intel | `duckdb_jdbc-<version>-macos_amd64.jar` |
+| Windows x64 | `duckdb_jdbc-<version>-windows_amd64.jar` |
+| Windows ARM64 | `duckdb_jdbc-<version>-windows_arm64.jar` |
+| Linux ARM64 | `duckdb_jdbc-<version>-linux_arm64.jar` |
+
+`<version>` is the driver version the distribution already uses, shown by the original file name under `libs/`; the artifacts live at
+`https://repo1.maven.org/maven2/org/duckdb/duckdb_jdbc/<version>/`.
+
+Put the downloaded jar into the `libs/` directory of both the reader and the writer plugin, and delete the original Linux driver:
+
+```
+plugin/reader/duckdbreader/libs/duckdb_jdbc-<version>-linux_amd64.jar
+plugin/writer/duckdbwriter/libs/duckdb_jdbc-<version>-linux_amd64.jar
+```
+
+In the official tar.gz those two files are symlinks to `shared/duckdb_jdbc-<version>-linux_amd64.jar`, so overwriting the contents of that file works as well and the name can stay. Windows extraction tools usually do not recreate symlinks, so replacing the files under `libs/` is the safer route there.
+
+Alternatively, `bin/install_plugins.sh -f duckdbreader duckdbwriter` (needs Maven and network) downloads the driver matching the current platform from Maven Central.
+
+A build from source needs no manual step: the build picks the jar for the host OS and architecture, and a cross-build can pass `-Dduckdb.jdbc.classifier=macos_arm64`. Use `linux_amd64_musl` / `linux_arm64_musl` on musl systems such as Alpine.
+
 ## Data Type Mapping
 
 | DuckDB Type                         | Addax Type    | Notes                                                     |

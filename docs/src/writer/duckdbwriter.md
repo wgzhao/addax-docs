@@ -85,6 +85,34 @@ Can't open a connection to same database file with a different configuration tha
 
 `replace` 和 `update` 都不使用 Appender，走普通的批量写入。
 
+## 平台支持
+
+发行版里的 `duckdb_jdbc` 只包含 **Linux x86_64** 的原生库，其余平台需要换成对应平台的驱动 jar，否则作业启动时会因为找不到原生库而失败。
+
+| 平台 | 驱动 jar |
+| --- | --- |
+| macOS Apple Silicon | `duckdb_jdbc-<version>-macos_arm64.jar` |
+| macOS Intel | `duckdb_jdbc-<version>-macos_amd64.jar` |
+| Windows x64 | `duckdb_jdbc-<version>-windows_amd64.jar` |
+| Windows ARM64 | `duckdb_jdbc-<version>-windows_arm64.jar` |
+| Linux ARM64 | `duckdb_jdbc-<version>-linux_arm64.jar` |
+
+`<version>` 是发行版当前使用的驱动版本，从 `libs/` 下的原文件名即可看到；下载地址为
+`https://repo1.maven.org/maven2/org/duckdb/duckdb_jdbc/<version>/`。
+
+把下载的 jar 放进 reader 和 writer 两个插件各自的 `libs/` 目录，并删掉原来的 Linux 驱动：
+
+```
+plugin/reader/duckdbreader/libs/duckdb_jdbc-<version>-linux_amd64.jar
+plugin/writer/duckdbwriter/libs/duckdb_jdbc-<version>-linux_amd64.jar
+```
+
+官方 tar.gz 中的这两个文件是 `shared/duckdb_jdbc-<version>-linux_amd64.jar` 的软链接，因此直接覆盖 `shared/` 下该文件的内容也可以（文件名不需要改）；Windows 的解压工具通常不会还原软链接，按上面的方法替换 `libs/` 里的文件更稳妥。
+
+也可以在有 Maven 和网络的环境里执行 `bin/install_plugins.sh -f duckdbreader duckdbwriter`，它会从 Maven Central 拉取当前平台对应的驱动。
+
+从源码构建时不需要手工替换：构建会按当前机器的系统和架构自动选择，交叉打包时指定 `-Dduckdb.jdbc.classifier=macos_arm64` 等；Alpine 等 musl 环境使用 `linux_amd64_musl` / `linux_arm64_musl`。
+
 ## 类型转换
 
 | Addax 内部类型         | DuckDB 数据类型                              |
