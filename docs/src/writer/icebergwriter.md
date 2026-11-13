@@ -35,21 +35,48 @@ Iceberg Writer 提供向 已有的iceberg表写入数据的能力。
 
 发行版默认不带 `hadoop-aws`。它只为 `s3a://` 提供 `S3AFileSystem`，却会通过 `aws-java-sdk-bundle` 引入一个约 297 MB 的 AWS SDK v1 全服务包，使插件的 `libs` 从约 95 MB 涨到约 392 MB——写 HDFS 或本地路径的作业也要一起承担这份体积。
 
-因此，warehouse 使用 `s3a://` 时，需要自行把下面两个 jar 放到 `plugin/writer/icebergwriter/libs/`（如果发行版执行过 `shrink_package.sh`，放到 `shared/`，再在 `libs/` 下建立同名软链接）：
+因此，warehouse 使用 `s3a://` 时，需要把下面这些 jar 放到 `plugin/writer/icebergwriter/libs/`（如果发行版执行过 `shrink_package.sh`，放到 `shared/`，再在 `libs/` 下建立同名软链接）：
+
+| 文件 | 用途 |
+| --- | --- |
+| `hadoop-aws-3.3.6.jar` | `S3AFileSystem` 实现 |
+| `aws-java-sdk-s3-1.12.367.jar` | S3 客户端 |
+| `aws-java-sdk-sts-1.12.367.jar` | 临时凭证 |
+| `aws-java-sdk-core-1.12.367.jar` | AWS SDK v1 核心 |
+| `aws-java-sdk-kms-1.12.367.jar` | S3 加密 |
+| `jmespath-java-1.12.367.jar` | 端点解析 |
+| `joda-time-2.15.1.jar` | 时间处理 |
+| `httpclient-4.5.14.jar` | HTTP 客户端 |
+| `httpcore-4.4.16.jar` | HTTP 核心 |
 
 ```bash
-mvn dependency:get -Dartifact=org.apache.hadoop:hadoop-aws:3.3.6
-mvn dependency:get -Dartifact=com.amazonaws:aws-java-sdk-bundle:1.12.367
+for a in \
+  org.apache.hadoop:hadoop-aws:3.3.6 \
+  com.amazonaws:aws-java-sdk-s3:1.12.367 \
+  com.amazonaws:aws-java-sdk-sts:1.12.367 \
+  com.amazonaws:aws-java-sdk-core:1.12.367 \
+  com.amazonaws:aws-java-sdk-kms:1.12.367 \
+  com.amazonaws:jmespath-java:1.12.367 \
+  joda-time:joda-time:2.15.1 \
+  org.apache.httpcomponents:httpclient:4.5.14 \
+  org.apache.httpcomponents:httpcore:4.4.16; do
+  mvn -q dependency:get -Dartifact="$a"
+done
 
 cp ~/.m2/repository/org/apache/hadoop/hadoop-aws/3.3.6/hadoop-aws-3.3.6.jar \
-   plugin/writer/icebergwriter/libs/
-cp ~/.m2/repository/com/amazonaws/aws-java-sdk-bundle/1.12.367/aws-java-sdk-bundle-1.12.367.jar \
+   ~/.m2/repository/com/amazonaws/aws-java-sdk-{s3,sts,core,kms}/1.12.367/aws-java-sdk-*-1.12.367.jar \
+   ~/.m2/repository/com/amazonaws/jmespath-java/1.12.367/jmespath-java-1.12.367.jar \
+   ~/.m2/repository/joda-time/joda-time/2.15.1/joda-time-2.15.1.jar \
+   ~/.m2/repository/org/apache/httpcomponents/httpclient/4.5.14/httpclient-4.5.14.jar \
+   ~/.m2/repository/org/apache/httpcomponents/httpcore/4.4.16/httpcore-4.4.16.jar \
    plugin/writer/icebergwriter/libs/
 ```
 
-版本必须与插件内置的 Hadoop 版本一致（当前为 3.3.6），`aws-java-sdk-bundle` 用该版本 hadoop-aws 声明的版本（当前为 1.12.367）。放好后按下方「s3 或者 minio hadoop catalog 例子」在 `hadoopConfig` 里配置 `fs.s3a.*` 即可。
+不要放 `aws-java-sdk-bundle-1.12.367.jar`：Hadoop 3.3.2+ 支持 unshaded 的 AWS SDK v1，上面这套按 hadoop-aws 3.3.6 实际使用的模块拆分，合计约 5.5 MB。版本必须与插件内置的 Hadoop 版本一致（当前为 3.3.6），AWS SDK 使用该 hadoop-aws 构建时的 1.12.367。
 
-缺少这两个 jar 时，`s3a://` 作业会在加载表时报
+放好后按下方「s3 或者 minio hadoop catalog 例子」在 `hadoopConfig` 里配置 `fs.s3a.*` 即可。
+
+缺少 `hadoop-aws-3.3.6.jar` 时，`s3a://` 作业会在加载表时报
 `ClassNotFoundException: Class org.apache.hadoop.fs.s3a.S3AFileSystem not found`。
 
 创建表实例:
