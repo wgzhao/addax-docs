@@ -49,6 +49,7 @@ The output looks like:
 | table                    |   yes    | List   | none    | The tables to be synchronized                                                          |
 | column                   |   yes    | list   | none    | Columns to synchronize, see [RBDMS Writer][1] for details                              |
 | batchSize                |    no    | int    | 2048    | Max rows of one batch; the batch is written as soon as this many rows are buffered     |
+| batchByteSize            |    no    | long   | 33554432 | Max buffered bytes of one batch (32MB by default); the batch is written as soon as this byte count is reached, whichever limit comes first |
 | connectTimeout           |    no    | int    | 5000    | Connection timeout in milliseconds                                                     |
 | socketTimeout            |    no    | int    | 600000  | Response timeout in milliseconds; must cover the time a full sized batch takes to load |
 | connectionRequestTimeout |    no    | int    | 5000    | Timeout for leasing a connection from the pool, in milliseconds                        |
@@ -106,11 +107,14 @@ Note: in CSV mode the plugin does not escape the field content, so a field conta
 
 Every Stream Load request creates one import transaction in Doris, so small batches produce a large number of small transactions, which adds version and compaction pressure. `batchSize` defaults to 2048 rows (the same default as the other writers in this project); raise it for jobs that write a lot of data.
 
+Batch memory is bounded by both `batchSize` (rows) and `batchByteSize` (bytes): the batch is written as soon as either limit is reached. A single row may be arbitrarily large, so the row count alone cannot bound the batch size; the plugin therefore also caps the buffered bytes, flushing every 32MB by default.
+
 Recommendations:
 
-- Raising `batchSize` (50000 to 200000 rows for example) cuts the number of import transactions substantially. Keep in mind that it counts **rows**: for wide tables with large rows, work out what that means in bytes so a single batch does not take up too much memory.
+- Raising `batchSize` (50000 to 200000 rows for example) cuts the number of import transactions substantially. Keep in mind that it counts **rows**: for wide tables with large rows, look at `batchByteSize` as well so a single batch does not take up too much memory.
+- `batchByteSize` caps the bytes buffered for one batch; the actual batch may slightly exceed it because the last record is buffered whole. Lower it when memory is tight, but keep it above the size of a single row, otherwise every row becomes its own batch.
 - `flushInterval` is the longest time a record waits to be batched. Lower it when the write rate is low and latency matters; when the write rate is high the row limit triggers first, so raise `batchSize` instead to get bigger batches.
-- `flushQueueLength` is the number of batches waiting to be uploaded and therefore also bounds the memory usage (roughly (queue length + 1) × bytes per batch). Keep the default of 1 when memory is tight.
+- `flushQueueLength` is the number of batches waiting to be uploaded and therefore also bounds the memory usage (roughly (queue length + 1) × bytes per batch, where the bytes per batch are capped by `batchByteSize`). Keep the default of 1 when memory is tight.
 - Every task reuses one HTTP connection pool, connections are no longer re-established per batch. On a low latency network `connectTimeout` can be lowered, while `socketTimeout` has to cover the load time of the largest batch or a big batch will be reported as timed out.
 - While a job runs, the `rows[]` and `bytes[]` values in the log show the actual batch sizes.
 - Note that measured end to end, the batch size only shifts the wall clock time as far as the Doris cluster and the network allow; on a slow load path the difference is small. The main benefit of a larger `batchSize` is fewer transactions and less compaction pressure.
