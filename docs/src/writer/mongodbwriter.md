@@ -10,17 +10,17 @@ MongoDB Writer 插件用于向 [MongoDB](https://mongodb.com) 写入数据。
 
 ## 参数说明
 
-| 配置项     | 是否必须 | 类型          | 默认值 | 描述                                                 |
-| :--------- | :------: | ------------- | ------ | ---------------------------------------------------- |
-| address    |    是    | list          | 无     | MongoDB 的数据地址信息                               |
-| username   |    否    | string        | 无     | MongoDB 的用户名                                     |
-| password   |    否    | string        | 无     | MongoDB 的密码                                       |
-| collection |    是    | string        | 无     | MongoDB 的集合名                                     |
-| column     |    是    | `list<map>/*` | 无     | MongoDB 的文档列名                                   |
-| splitter   |    否    | string        | 无     | 特殊分隔符，详见下文                                 |
-| writeMode  |    否    | string        | insert | 指定了传输数据时更新的信息,支持 insert， update 两种 |
-| batchSize  |    否    | int           | 2048   | 指定批次输入的数量                                   |
-| preSql     |    否    | object        | 无     | 写入前执行的语句，支持 drop 和 remove，详见下文      |
+| 配置项     | 是否必须 | 类型          | 默认值 | 描述                                                                     |
+| :--------- | :------: | ------------- | ------ | ------------------------------------------------------------------------ |
+| address    |    是    | list          | 无     | MongoDB 的数据地址信息                                                   |
+| username   |    否    | string        | 无     | MongoDB 的用户名                                                         |
+| password   |    否    | string        | 无     | MongoDB 的密码                                                           |
+| collection |    是    | string        | 无     | MongoDB 的集合名                                                         |
+| column     |    是    | `list<map>/*` | 无     | MongoDB 的文档列名                                                       |
+| splitter   |    否    | string        | 无     | 特殊分隔符，详见下文                                                     |
+| writeMode  |    否    | string        | insert | 写入模式，支持 `insert`、`update(字段)` 和 `merge(字段, op列)`，详见下文 |
+| batchSize  |    否    | int           | 2048   | 指定批次输入的数量                                                       |
+| preSql     |    否    | object        | 无     | 写入前执行的语句，支持 drop 和 remove，详见下文                          |
 
 ### column
 
@@ -79,7 +79,32 @@ MongoDB Writer 插件用于向 [MongoDB](https://mongodb.com) 写入数据。
 
 更新字段必须是 `column` 中配置的字段之一；配置 `["*"]` 时记录本身就是一篇完整文档，更新字段必须是该文档里的字段。更新模式下每条记录在该字段上都必须有值：取不到值的记录会被收集为脏记录（受 `errorLimit` 控制），不会参与写入。这类记录在过去会产生 `{字段: null}` 的查询条件，从而覆盖掉一个它并未指定的文档。
 
-`writeMode` 写错（既不是 `insert` 也不是 `update(字段)`）时按 `insert` 处理，同时在日志里给出告警。
+`merge(字段, op列)` 模式根据每条记录的 op 列决定写入还是删除，两个参数都必须配置：
+
+```json
+{
+  "writeMode": "merge(unique_id, op)"
+}
+```
+
+op 列支持以下取值（大小写不敏感）：
+
+| op 列取值                         | 行为                                        |
+| :-------------------------------- | :------------------------------------------ |
+| `A`、`I`、`U`、`INSERT`、`UPDATE` | 按字段值做 upsert：文档存在则替换，否则插入 |
+| `D`、`DELETE`                     | 删除按字段值匹配到的文档                    |
+
+- op 列是控制字段，写入前会从文档中移除，不会存入 MongoDB。
+- op 列为 `null`、空字符串或其它未列出的取值时，该记录被收集为脏记录（受 `errorLimit` 控制），不会参与写入，也不会退化成插入。
+- op 列取不到值的记录同样收集为脏记录；删除操作按该字段过滤，字段应当能够唯一确定目标文档。
+- 同一批次内同一个字段值出现多次时，只有最后一条操作生效，因此最终状态与批次内记录的先后顺序无关。
+- merge key 和 op 列都必须是 `column` 中配置的字段（key 可以是已配置叶子字段的父路径），任一缺失都会在初始化时直接报错；配置 `["*"]` 时由记录本身携带这些字段。
+
+`merge` 适合同步带删除标记的数据：源端把操作类型写入 op 列，writer 据此决定替换还是删除目标文档。
+
+嵌套路径的 key 支持逐列配置（如 `meta.id`、`meta.tag`）或 `["*"]` 模式；类型为 `json` 的列会把整个对象作为一个值写入，其内部字段不能用作 key 或 op 列。
+
+`writeMode` 不配置时按 `insert` 处理。配置值只接受 `insert`、`update(字段)` 和 `merge(字段, op列)`：模式名大小写不敏感，但整个值必须完整匹配；其它取值（拼写错误、空值、`update(id)junk` 这类带多余字符的值）会让任务以 `ILLEGAL_VALUE` 失败，不再静默按 `insert` 处理。
 
 ### preSql
 

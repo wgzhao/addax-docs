@@ -10,17 +10,17 @@ This example writes streamed data to a MongoDB collection
 
 ## Parameters
 
-| Configuration | Required | Type          | Default Value | Description                                                                   |
-| :------------ | :------: | ------------- | ------------- | ----------------------------------------------------------------------------- |
-| address       |   Yes    | list          | None          | MongoDB data address information                                              |
-| username      |    No    | string        | None          | MongoDB username                                                              |
-| password      |    No    | string        | None          | MongoDB password                                                              |
-| collection    |   Yes    | string        | None          | MongoDB collection name                                                       |
-| column        |   Yes    | `list<map>/*` | None          | MongoDB document column names                                                 |
-| splitter      |    No    | string        | None          | Separator, see below                                                          |
-| writeMode     |    No    | string        | insert        | Whether a record is inserted or upserted, `insert` and `update` are supported |
-| batchSize     |    No    | int           | 2048          | Number of records of a batch                                                  |
-| preSql        |    No    | object        | None          | Statement run before the write, `drop` and `remove`, see below                |
+| Configuration | Required | Type          | Default Value | Description                                                                                 |
+| :------------ | :------: | ------------- | ------------- | ------------------------------------------------------------------------------------------- |
+| address       |   Yes    | list          | None          | MongoDB data address information                                                            |
+| username      |    No    | string        | None          | MongoDB username                                                                            |
+| password      |    No    | string        | None          | MongoDB password                                                                            |
+| collection    |   Yes    | string        | None          | MongoDB collection name                                                                     |
+| column        |   Yes    | `list<map>/*` | None          | MongoDB document column names                                                               |
+| splitter      |    No    | string        | None          | Separator, see below                                                                        |
+| writeMode     |    No    | string        | insert        | Write mode, `insert`, `update(field)` and `merge(field, opColumn)` are supported, see below |
+| batchSize     |    No    | int           | 2048          | Number of records of a batch                                                                |
+| preSql        |    No    | object        | None          | Statement run before the write, `drop` and `remove`, see below                              |
 
 ### column
 
@@ -79,7 +79,32 @@ That configuration decides from the field `unique_id` whether the record is inse
 
 The update field has to be one of the fields configured in `column`; with `["*"]` a record is one whole document, so the update field has to be a field of that document. In update mode every record has to carry a value there: a record without one is collected as a dirty record (governed by `errorLimit`) and is not written. Such a record used to produce the filter `{field: null}`, which overwrote a document it never named.
 
-A `writeMode` that is neither `insert` nor `update(field)` is written as an insert, with a warning in the log.
+The `merge(field, opColumn)` mode decides from the op column of every record whether the document is written or deleted, both parameters are required:
+
+```json
+{
+  "writeMode": "merge(unique_id, op)"
+}
+```
+
+The op column accepts the following values, case-insensitively:
+
+| op column value                   | Behaviour                                              |
+| :-------------------------------- | :----------------------------------------------------- |
+| `A`, `I`, `U`, `INSERT`, `UPDATE` | Upsert by the field: replace the document or insert it |
+| `D`, `DELETE`                     | Delete the documents matched by the field              |
+
+- The op column is a control field, it is removed from the document before the write and never stored in MongoDB.
+- A record whose op column is `null`, an empty string or any other value is collected as a dirty record (governed by `errorLimit`) and is not written; it never falls back to an insert.
+- A record without a value at the merge key is collected as a dirty record as well. The delete filters on that field, so it should identify the target document unambiguously.
+- When the same key value appears more than once in one batch, only its last operation takes effect, so the final state does not depend on the order of the records in the batch.
+- Both the merge key and the op column have to be fields configured in `column` (the key may be the parent path of configured leaf fields), otherwise the task fails while it initializes; with `["*"]` the record itself carries them.
+
+`merge` suits a sync that carries deletion marks: the source writes the operation type into the op column and the writer decides whether to replace or delete the target document from it.
+
+Nested keys work with per-leaf columns (`meta.id`, `meta.tag`) or with `["*"]`; a column of type `json` stores the whole object as one value, so its inner fields cannot be used as the key or the op column.
+
+Without the parameter a record is inserted. The configured value accepts `insert`, `update(field)` and `merge(field, opColumn)`: the mode name is case-insensitive, but the whole value has to be the mode. Any other value, such as a typo, an empty value or trailing text like `update(id)junk`, fails the task with `ILLEGAL_VALUE` instead of falling back to an insert.
 
 ### preSql
 
