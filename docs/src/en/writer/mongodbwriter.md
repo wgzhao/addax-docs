@@ -104,7 +104,7 @@ The op column accepts the following values, case-insensitively:
 
 Nested keys work with per-leaf columns (`meta.id`, `meta.tag`) or with `["*"]`; a column of type `json` stores the whole object as one value, so its inner fields cannot be used as the key or the op column.
 
-Without the parameter a record is inserted. The configured value accepts `insert`, `update(field)` and `merge(field, opColumn)`: the mode name is case-insensitive, but the whole value has to be the mode. Any other value, such as a typo, an empty value or trailing text like `update(id)junk`, fails the task with `ILLEGAL_VALUE` instead of falling back to an insert.
+Without the parameter a record is inserted. The configured value accepts `insert`, `update(field)` and `merge(field, opColumn)`: the mode name is case-insensitive, but the whole value has to be the mode. Any other value, such as a typo, an empty value, a whitespace-only parameter like `update(   )` or `merge(id,   )`, or trailing text like `update(id)junk`, fails the task with `ILLEGAL_VALUE` instead of falling back to an insert. With `update(field)`, the field has to be configured in `column` as well (the key may be the parent path of configured leaf fields), otherwise the task fails while it initializes.
 
 ### preSql
 

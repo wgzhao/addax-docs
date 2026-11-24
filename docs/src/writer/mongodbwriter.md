@@ -104,7 +104,7 @@ op 列支持以下取值（大小写不敏感）：
 
 嵌套路径的 key 支持逐列配置（如 `meta.id`、`meta.tag`）或 `["*"]` 模式；类型为 `json` 的列会把整个对象作为一个值写入，其内部字段不能用作 key 或 op 列。
 
-`writeMode` 不配置时按 `insert` 处理。配置值只接受 `insert`、`update(字段)` 和 `merge(字段, op列)`：模式名大小写不敏感，但整个值必须完整匹配；其它取值（拼写错误、空值、`update(id)junk` 这类带多余字符的值）会让任务以 `ILLEGAL_VALUE` 失败，不再静默按 `insert` 处理。
+`writeMode` 不配置时按 `insert` 处理。配置值只接受 `insert`、`update(字段)` 和 `merge(字段, op列)`：模式名大小写不敏感，但整个值必须完整匹配；其它取值（拼写错误、空值、空白参数如 `update(   )` / `merge(id,   )`、`update(id)junk` 这类带多余字符的值）会让任务以 `ILLEGAL_VALUE` 失败，不再静默按 `insert` 处理。使用 `update(字段)` 时，该字段同样必须是 `column` 中配置的字段（可以是已配置叶子字段的父路径），缺失会在初始化时直接报错。
 
 ### preSql
 
