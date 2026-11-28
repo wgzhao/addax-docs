@@ -101,7 +101,9 @@ To import JSON instead, configure `loadProps`:
 }
 ```
 
-Note: in CSV mode the plugin does not escape the field content, so a field containing the column separator (`\t` by default) or a newline breaks the row. Use `format: json` for such data, or replace the special characters upstream.
+::: caution CSV mode does not escape fields
+In CSV mode the plugin does not escape field content, so a field containing the column separator (`\t` by default) or a newline breaks the row. Use `format: json` for such data, or replace the special characters upstream.
+:::
 
 ## Performance tuning
 

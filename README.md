@@ -75,5 +75,6 @@ Build directory: .vitepress/dist
 
 - **素材是所有版本共用的。** 删除任何被归档页面引用的 `docs/public` 文件都会让构建失败。这是有意设计——宁可构建失败，也不要发出打不开的页面。
 - **归档是「当时发布的文档原貌」，不是「该版本的准确文档」。** 文档可能滞后于代码，例如 6.0.12 的归档里仍包含 6.0.11 就已移除的插件页面。
-- **`@viteplus/versions` 的 peer 范围是 `^2.0.0`，不匹配本项目使用的 `2.0.0-alpha.16`。** `.npmrc` 里设置了 `legacy-peer-deps=true`，实测可正常工作，但属于「能用」而非「受支持」。升级 VitePress 时请重新验证构建。
+- **`@viteplus/versions` 固定在 2.x**。从 3.0 起，当前版本文档会发布到 `/master/`，`/` 变成跳转，会破坏站点现有的根路径 URL、clean URL 与 sitemap，因此暂不升级。2.3.0 的 peer 范围已包含 `2.0.0-0`，与当前 VitePress 2 alpha 兼容，不再需要 `legacy-peer-deps`。
 - **`mermaid` 是 `vitepress-mermaid-renderer` 的 peer 依赖**，必须显式声明在 `package.json` 中，否则干净安装后构建会失败。
+- **中文容器标题、代码复制按钮和搜索框文案在 `.vitepress/config.ts` 的 locale 配置里本地化**；新增容器（如 `::: success`）要先注册在根级 `markdown.container.customContainers`，再在 locale 里覆盖标题。

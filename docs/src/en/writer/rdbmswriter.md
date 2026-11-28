@@ -16,7 +16,9 @@ At the same time, RDBMS Writer is also the base class for other relational datab
 - [SQLite Writer](sqlitewriter)
 - [DuckDB Writer](duckdbwriter)
 
-Note: If a dedicated database writer plugin is already provided, it is recommended to use the dedicated plugin. If the database you need to write to does not have a dedicated plugin, consider using this generic plugin. Before use, you need to perform the following operations to run normally, otherwise exceptions will occur.
+::: warning Prefer a dedicated plugin
+If a dedicated database writer plugin exists, use it. Only fall back to this generic plugin when your database has no dedicated plugin, and configure the driver described below first — otherwise the job fails at startup.
+:::
 
 ## Configure Driver
 

@@ -17,8 +17,9 @@ bin/addax.sh job/stream2excel.sh
 
 You should get output similar to the following:
 
-:::details
+::: details Sample output {open}
 <<<@/public/assets/output/excelwriter.txt
+:::
 
 ## Parameters
 

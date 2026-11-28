@@ -28,9 +28,13 @@ The `date` type also supports `dateFormat` configuration to specify the format o
 }
 ```
 
-Note that regardless of the input format for date type, it is internally converted to `yyyy-MM-dd HH:mm:ss` format.
+::: note
+Regardless of the input format, date values are converted internally to `yyyy-MM-dd HH:mm:ss`.
+:::
 
+::: warning Use HH for the hour
 Use `HH` (the hour of a 24 hour clock) for the hour in a date format. `hh` is the hour of a 12 hour clock and needs an `AM/PM` marker to be read, so a format with `hh` but without the marker fails the job at startup with a message that asks for `HH`.
+:::
 
 StreamReader also supports random input functionality. For example, to randomly get any integer between 0-10, we can configure the column like this:
 
@@ -59,7 +63,9 @@ To specify decimal places for floating point numbers, e.g., 2 decimal places, co
 }
 ```
 
-Note: It cannot guarantee that the generated decimal always has exactly 2 places. If the decimal part is 0, the decimal places will be fewer than specified.
+::: note
+The generated decimal is not guaranteed to always have exactly 2 places. If the decimal part is 0, fewer decimal places are shown than specified.
+:::
 
 Here we use the `random` keyword to indicate its value is random, with the range being a closed interval.
 

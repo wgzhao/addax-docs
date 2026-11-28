@@ -43,8 +43,9 @@ bin/addax.sh job/httpreader2stream.json
 
 The output of the above command is roughly as follows:
 
-:::details
+::: details Sample output {open}
 <<<@/public/assets/output/httpreader.txt
+:::
 
 ## Parameters
 

@@ -2,7 +2,9 @@
 
 ## Overview
 
-Addax is the actively maintained successor to Alibaba's [DataX](https://github.com/alibaba/datax), which has been frozen since 2023. It is a fast, versatile, open-source ETL tool supporting 30+ RDBMS and NoSQL data sources, dedicated to stable and efficient data synchronization between heterogeneous sources including relational databases (MySQL, Oracle, etc.), HDFS, Hive, HBase, FTP, and more.
+Addax is the actively maintained successor to Alibaba's [DataX](https://github.com/alibaba/datax)[^datax]. It is a fast, versatile, open-source ETL tool supporting 30+ RDBMS and NoSQL data sources, dedicated to stable and efficient data synchronization between heterogeneous sources including relational databases (MySQL, Oracle, etc.), HDFS, Hive, HBase, FTP, and more.
+
+[^datax]: The official DataX repository has been frozen since 2023; see [alibaba/datax](https://github.com/alibaba/datax).
 
 ![addax why new](/images/addax_why_new.png)
 

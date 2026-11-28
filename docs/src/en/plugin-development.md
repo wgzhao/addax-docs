@@ -280,6 +280,7 @@ The `value` part of `job.content.reader.parameter` in the configuration is passe
 
 ### How to Design Configuration Parameters
 
+> [!TIP]
 > Designing the configuration file is the first step in plugin development!
 
 The `parameter` section under `reader` and `writer` in the task configuration contains the plugin's configuration parameters. These parameters should follow these principles:

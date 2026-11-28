@@ -208,9 +208,9 @@ normal 模式下，对于用户指定Column信息，type必须填写，name/valu
 | Date           | date                 |
 | Boolean        | boolean              |
 
-请注意:
-
-`除上述罗列字段类型外，其他类型均不支持`
+::: caution
+除上述罗列字段类型外，其他类型均不支持。
+:::
 
 ## 限制
 

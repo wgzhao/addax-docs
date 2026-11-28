@@ -173,6 +173,9 @@ const SOCIAL_IMAGE = `${SITE_URL}/images/social-preview.png`
 // the first thing a shared link says about Addax. The image is the same card the
 // GitHub repo uses, so a link to either surface looks identical.
 const socialMeta: HeadConfig[] = [
+  // Without a declared icon every page load also requests /favicon.ico, which
+  // this site does not serve and which shows up as a console 404.
+  ['link', { rel: 'icon', type: 'image/svg+xml', href: '/images/logo.svg' }],
   ['meta', { property: 'og:type', content: 'website' }],
   ['meta', { property: 'og:site_name', content: 'Addax' }],
   ['meta', { property: 'og:image', content: SOCIAL_IMAGE }],
@@ -203,6 +206,9 @@ export default defineVersionedConfig({
     // currentVersion separately whenever you are not on it, so a version number
     // that also exists in the archive would be listed twice on every archived page.
     current: 'master',
+    // Stay on @viteplus/versions 2.x: v3 publishes every version under its own
+    // segment and turns `/` into a redirect to `/master/`, which would break
+    // every existing Addax docs URL and the clean-URL contract in the README.
     sources: 'src',
     archive: 'archive',
     versionSwitcher: {
@@ -216,16 +222,68 @@ export default defineVersionedConfig({
   // and every og:url would point at a redirect instead of the served URL.
   cleanUrls: true,
   head: socialMeta,
+  markdown: {
+    // VitePress 2 derives width/height from local images automatically, so the
+    // only thing left is to keep long pages from fetching every screenshot at
+    // once. Lazy loading starts below-the-fold images only as they scroll in.
+    image: { lazyLoad: true },
+    container: {
+      // Registered here so each locale can give it its own title; a container
+      // registered per locale is not supported.
+      customContainers: { success: '成功' },
+    },
+  },
   locales: {
     root: {
       label: ' 中文',
       lang: 'zh',
+      // Build-time strings baked into the markdown: container titles and the
+      // code block copy button. Without these the Chinese pages show the
+      // English defaults TIP / WARNING / Details.
+      markdown: {
+        container: {
+          tipLabel: '提示',
+          infoLabel: '信息',
+          warningLabel: '警告',
+          dangerLabel: '危险',
+          detailsLabel: '详细信息',
+          noteLabel: '注意',
+          importantLabel: '重要',
+          cautionLabel: '谨慎',
+        },
+        codeCopyButton: {
+          tooltipText: '复制代码',
+          copiedText: '已复制',
+        },
+      },
       themeConfig: {
         // https://vitepress.dev/reference/default-theme-config
         logo: {src: '/images/logo.svg', width: 32, height: 32},
         nav: zhNav,
         sidebar: zhSidebar,
-        search: { provider: 'local' },
+        search: {
+          provider: 'local',
+          options: {
+            translations: {
+              button: { buttonText: '搜索', buttonAriaLabel: '搜索文档' },
+              modal: {
+                displayDetails: '显示详细列表',
+                resetButtonTitle: '重置搜索',
+                backButtonTitle: '关闭搜索',
+                noResultsText: '没有找到结果',
+                footer: {
+                  selectText: '选择',
+                  selectKeyAriaLabel: '回车',
+                  navigateText: '切换',
+                  navigateUpKeyAriaLabel: '上箭头',
+                  navigateDownKeyAriaLabel: '下箭头',
+                  closeText: '关闭',
+                  closeKeyAriaLabel: 'Esc',
+                },
+              },
+            },
+          },
+        },
         socialLinks: [
           { icon: 'github', link: 'https://github.com/wgzhao/addax' }
         ]
@@ -234,11 +292,41 @@ export default defineVersionedConfig({
     en: {
       label: 'English',
       lang: 'en',
+      markdown: {
+        container: {
+          customContainers: { success: 'Success' },
+        },
+        codeCopyButton: {
+          tooltipText: 'Copy code',
+          copiedText: 'Copied',
+        },
+      },
       themeConfig: {
         logo: {src: '/images/logo.svg', width: 32, height: 32},
         nav: enNav,
         sidebar: enSidebar,
         search: { provider: 'local' },
+        // The root theme config carries the Chinese UI strings; every visible
+        // label has to be repeated here or English pages inherit them.
+        outline: {
+          level: [2, 3],
+          label: 'On this page'
+        },
+        docFooter: {
+          prev: 'Previous page',
+          next: 'Next page'
+        },
+        returnToTopLabel: 'Return to top',
+        sidebarMenuLabel: 'Menu',
+        darkModeSwitchLabel: 'Appearance',
+        lastUpdated: {
+          text: 'Last updated',
+          formatOptions: { dateStyle: 'medium', forceLocale: true }
+        },
+        footer: {
+          message: 'Released under the <a href="https://github.com/wgzhao/Addax/blob/master/LICENSE">Apache License 2.0</a>.',
+          copyright: 'Copyright © 2018-present <a href="https://github.com/wgzhao">Steven Zhao</a>'
+        },
         socialLinks: [
           { icon: 'github', link: 'https://github.com/wgzhao/addax' }
         ]
@@ -270,6 +358,10 @@ export default defineVersionedConfig({
   },
   lastUpdated: true,
   themeConfig: {
+    // The local search provider is resolved from this site-level themeConfig
+    // (locales only tune its translations), so it has to be declared here or
+    // the navbar renders no search button at all.
+    search: { provider: 'local' },
     outline: {
       level: [2, 3],
       label: '本页目录'
@@ -281,8 +373,18 @@ export default defineVersionedConfig({
     returnToTopLabel: '回到顶部',
     sidebarMenuLabel: '菜单',
     darkModeSwitchLabel: '主题',
+    lastUpdated: {
+      text: '最后更新于',
+      // Without forceLocale the date follows the visitor's browser language,
+      // so an English page can show a Chinese date (and the reverse).
+      formatOptions: { dateStyle: 'medium', forceLocale: true }
+    },
+    // Mark links that leave addax.wgzhao.com, and give warnings and cautions
+    // distinct severity colors instead of GitHub's shared red.
+    externalLinkIcon: true,
+    gradedContainers: true,
     footer: {
-      message: 'Released under the <a href="https://github.com/wgzhao/Addax/blob/master/LICENSE">Apache License 2.0</a>.',
+      message: '基于 <a href="https://github.com/wgzhao/Addax/blob/master/LICENSE">Apache License 2.0</a> 发布。',
       copyright: 'Copyright © 2018-present <a href="https://github.com/wgzhao">Steven Zhao</a>'
     }
   }

@@ -171,7 +171,9 @@ Replaces nulls with type-appropriate defaults, which is useful for writers that 
 }
 ```
 
-Note: this transformer generates defaults only from the types declared in `column`; it does not read the writer configuration. Keep the column order and types in sync with the writer.
+::: important
+This transformer generates defaults only from the types declared in `column`; it does not read the writer configuration. Keep the column order and types in sync with the writer.
+:::
 
 ### dx_groovy
 
@@ -186,11 +188,11 @@ Note: this transformer generates defaults only from the types declared in `colum
 
 A `Record` data type.
 
-**Notes:**
-
+::: note Constraints
 - `dx_groovy` can only be called once per transformer configuration. Multiple calls are not allowed.
 - The `groovy code` supports packages from `java.lang` and `java.util`. Objects that can be directly referenced include `record` and various column types under `element` (BoolColumn.class, BytesColumn.class, DateColumn.class, DoubleColumn.class, LongColumn.class, StringColumn.class). Other packages are not supported by default. If you need to use other packages, you can set `extraPackage`. Note that `extraPackage` does not support third-party JARs.
 - In the `groovy code`, you must return the updated `Record` (e.g., `record.setColumn(columnIndex, new StringColumn(newValue));`) or `null`. Returning `null` filters out the current row.
+:::
 
 **Examples:**
 
@@ -280,7 +282,7 @@ If the built-in functions do not meet your data transformation requirements, you
 
 The `transformer` code above modifies the first two fields of each record. It adds the prefix `Header_` to the first string field and doubles the value of the second integer field. The execution result is as follows:
 
-::: details
+::: details Sample output
 <<<@/public/assets/output/groovydemo.txt
 :::
 
@@ -300,7 +302,7 @@ The metrics displayed during the process are defined as follows:
 Total 1000000 records, 22000000 bytes | Transform 100000 records(in), 10000 records(out) | Speed 2.10MB/s, 100000 records/s | Error 0 records, 0 bytes | Percentage 100.00%
 ```
 
-::: info
+::: note
 This mainly records the input and output of the transformation, which requires monitoring changes in the number of data records.
 :::
 
@@ -319,4 +321,6 @@ Transformer failed  rec   :                   0
 Transformer filter  rec   :                   0
 ```
 
-Note: This mainly records the input and output of the transformation, which requires monitoring changes in the number of data records. `Transformer success` counts only the records that pass all transforms and are written out; filtered records are counted in `filter`, so success plus filter plus failed equals the number of input records.
+::: note
+This mainly records the input and output of the transformation, which requires monitoring changes in the number of data records. `Transformer success` counts only the records that pass all transforms and are written out; filtered records are counted in `filter`, so success plus filter plus failed equals the number of input records.
+:::

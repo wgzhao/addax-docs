@@ -10,6 +10,10 @@
 docker run -it --rm quay.io/wgzhao/addax:latest /opt/addax/bin/addax.sh /opt/addax/job/job.json
 ```
 
+::: tip {no-title}
+只想先跑通一个作业？Docker 镜像自带运行环境，无需在本地安装 JDK。
+:::
+
 ### 一键安装
 
 如果你不想编译，你可以执行下面的命令，一键安装（当前仅支持 Linux 和 macOS ）
@@ -49,3 +53,7 @@ bin/addax.sh job/test.json
 如果没有报错，应该会有类似这样的输出
 
 <<<@/public/assets/output/quickstart.txt
+
+::: success 运行成功
+看到类似上面的输出，并且末尾的错误记录数为 0，就说明第一个采集任务已经跑通了。
+:::

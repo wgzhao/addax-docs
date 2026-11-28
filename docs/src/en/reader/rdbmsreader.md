@@ -16,7 +16,9 @@ At the same time, RDBMS Reader is also the base class for other relational datab
 - [SQLite Reader](sqlitereader)
 - [DuckDB Reader](duckdbreader)
 
-Note: If a dedicated database reading plugin is already provided, it is recommended to use the dedicated plugin. If the database you need to read does not have a dedicated plugin, consider using this generic plugin. Before use, you need to perform the following operations to run normally, otherwise exceptions will occur.
+::: warning Prefer a dedicated plugin
+If a dedicated database reader plugin exists, use it. Only fall back to this generic plugin when your database has no dedicated plugin, and configure the driver described below first — otherwise the job fails at startup.
+:::
 
 ## Configure Driver
 
@@ -113,7 +115,9 @@ Supports constant configuration, users need to follow JSON format:
 - `2.3` is floating point number
 - `true` is boolean value. Similarly, boolean values here must also be quoted with double quotes
 
-Column must be explicitly filled and cannot be empty!
+::: important
+`column` must be explicitly filled in and cannot be empty.
+:::
 
 ### excludeColumn
 

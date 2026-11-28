@@ -61,7 +61,7 @@ Paimon Writer 提供向 已有的paimon表写入数据的能力。
 
 本地目录创建paimon表
 
-::: details
+::: details Maven 依赖
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -256,7 +256,7 @@ Paimon Writer 提供向 已有的paimon表写入数据的能力。
 
 程序代码
 
-::: details
+::: details Java 代码
 
 ```java
 import org.apache.hadoop.conf.Configuration;

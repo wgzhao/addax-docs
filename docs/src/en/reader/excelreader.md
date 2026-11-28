@@ -54,7 +54,7 @@ $ bin/addax.sh job/excel2stream.json
 
 If there are no errors, you should get the following output:
 
-::: details
+::: details Sample output
 <<<@/public/assets/output/excelreader.txt
 :::
 

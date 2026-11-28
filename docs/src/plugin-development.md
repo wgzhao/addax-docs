@@ -280,6 +280,7 @@ mvn package assembly:single
 
 ### 如何设计配置参数
 
+> [!TIP]
 > 配置文件的设计是插件开发的第一步！
 
 任务配置中 `reader` 和 `writer` 下 `parameter` 部分是插件的配置参数，插件的配置参数应当遵循以下原则：

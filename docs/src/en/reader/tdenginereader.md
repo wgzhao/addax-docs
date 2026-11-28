@@ -33,8 +33,9 @@ bin/addax.sh job/tdengine2stream.json
 
 Command output is similar to the following:
 
-:::details
+::: details Sample output {open}
 <<<@/public/assets/output/tdenginereader.txt
+:::
 
 ## Parameters
 
