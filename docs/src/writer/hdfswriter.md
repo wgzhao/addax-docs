@@ -135,7 +135,11 @@ Hadoop hdfs 文件系统 namenode 节点地址。格式：`hdfs://ip:port` ；�
 
 引入 `preShell` 与 `postShell` 的目的是为了在写入数据前后执行一些额外的操作，比如在写入数据前清空表，写入数据后查询表的行数等。一个典型的生产环境场景时，采集的数据按日分区保存在 HDFS
 上，
-采集之前需要创建分区，这样就可以通过配置 `preShell` 来实现，比如 `hive -e "alter table test.hello add partition(dt='${logdate}')"`
+采集之前需要创建分区，这样就可以通过配置 `preShell` 来实现，比如：
+
+```bash
+hive -e "alter table test.hello add partition(dt='${logdate}')"
+```
 
 ### ignoreError
 
@@ -144,7 +148,7 @@ Hadoop hdfs 文件系统 namenode 节点地址。格式：`hdfs://ip:port` ；�
 
 ### hdfsSitePath
 
-这是 `4.2.4` 引入的新配置想，用于指定 `hdfs-site.xml` 文件的路径，比如对 HDP/CDH 而言，可以这样配置：
+这是 `4.2.4` 引入的新配置项，用于指定 `hdfs-site.xml` 文件的路径，比如对 HDP/CDH 而言，可以这样配置：
 
 ```json
 {

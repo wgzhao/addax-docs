@@ -6,7 +6,9 @@ Access Writer plugin implements the functionality of writing data to [Access](ht
 
 Assume the Access table to be written has the following DDL statement:
 
+```sql
 create table tbl_test(name varchar(20), file_size int, file_date date, file_open boolean, memo blob);
+```
 
 Here we use data generated from memory to import into Access.
 

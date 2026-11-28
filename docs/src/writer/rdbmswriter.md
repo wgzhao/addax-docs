@@ -41,7 +41,7 @@ RDBMS Writer 插件支持向传统 RDBMS 写入数据。这是一个通用关系
 - [TrinoDB](https://trino.io): `io.trino.jdbc.TrinoDriver`
 - [PrestoSQL](https://trino.io): `io.prestosql.jdbc.PrestoDriver`
 - [Oracle DB](https://www.oracle.com/database/): `oracle.jdbc.OracleDriver`
-- [PostgreSQL](https://postgresql.org): `org.postgresql.Drive`
+- [PostgreSQL](https://postgresql.org): `org.postgresql.Driver`
 
 ## 配置说明
 

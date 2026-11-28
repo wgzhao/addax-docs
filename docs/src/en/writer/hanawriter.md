@@ -6,6 +6,7 @@ HANA Writer plugin implements the functionality of writing data to [SAP HANA](ht
 
 Assume the HANA table to be written has the following DDL statement:
 
+```sql
 create table system.addax_tbl
 (
 col1 varchar(200) ,
@@ -14,6 +15,7 @@ col3 date,
 col4 boolean,
 col5 clob
 );
+```
 
 Here we use data generated from memory to import into HANA.
 

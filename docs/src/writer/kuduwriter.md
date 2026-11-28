@@ -11,14 +11,16 @@ Kudu Writer 插件实现了将数据写入到 [kudu](https://kudu.apache.org) �
 
 我们用 [trino](https://trino.io) 工具连接到 kudu 服务，然后通过下面的 SQL 语句创建表
 
+```sql
 CREATE TABLE kudu.default.users (
-user_id int WITH (primary_key = true),
-user_name varchar,
-salary double
+  user_id int WITH (primary_key = true),
+  user_name varchar,
+  salary double
 ) WITH (
-partition_by_hash_columns = ARRAY['user_id'],
-partition_by_hash_buckets = 2
+  partition_by_hash_columns = ARRAY['user_id'],
+  partition_by_hash_buckets = 2
 );
+```
 
 ### job 配置文件
 

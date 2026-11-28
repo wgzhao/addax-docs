@@ -1,278 +1,133 @@
-# Text File Reader
+# TxtFile Reader
 
-The TxtFileReader plugin reads data from text files with configurable delimiters and encodings.
+TxtFile Reader provides the ability to read data from the local file system.
 
-## Example
+## Configuration Example
 
-Sample CSV file (`/tmp/users.csv`):
-
-csv
-id,name,age,email
-1,John Doe,30,john@example.com
-2,Jane Smith,25,jane@example.com
-3,Bob Johnson,35,bob@example.com
-
-Configuration to read the CSV file:
-
-```json
-{
-  "job": {
-    "content": [
-      {
-        "reader": {
-          "name": "txtfilereader",
-          "parameter": {
-            "path": "/tmp/users.csv",
-            "encoding": "UTF-8",
-            "column": [
-              {
-                "index": 0,
-                "type": "long"
-              },
-              {
-                "index": 1,
-                "type": "string"
-              },
-              {
-                "index": 2,
-                "type": "long"
-              },
-              {
-                "index": 3,
-                "type": "string"
-              }
-            ],
-            "fieldDelimiter": ",",
-            "skipHeader": true
-          }
-        },
-        "writer": {
-          "name": "streamwriter",
-          "parameter": {
-            "encoding": "UTF-8",
-            "print": true
-          }
-        }
-      }
-    ],
-    "setting": {
-      "speed": {
-        "channel": 1
-      }
-    }
-  }
-}
-```
+<<<@/public/assets/jobs/txtreader.json
 
 ## Parameters
 
-### Required Parameters
+| Parameter       | Required | Data Type      | Default | Description                                                                                              |
+| :-------------- | :------: | -------------- | ------- | -------------------------------------------------------------------------------------------------------- |
+| path            |   Yes    | list           | None    | Path information of the local file system. Note that multiple paths can be filled in here. See below for details |
+| column          |   Yes    | `list<map>\|*` | None    | List of fields to read. `type` specifies the type of the source data. See below for details              |
+| fieldDelimiter  |   Yes    | string         | `,`     | Description: field delimiter for reading                                                                 |
+| encoding        |    No    | string         | utf-8   | Encoding configuration for reading the file                                                              |
+| skipHeader      |    No    | boolean        | false   | CSV-like files may have a header as the title, which needs to be skipped. Not skipped by default           |
+| csvReaderConfig |    No    | string         | None    | Configuration parameters for reading CSV-type files, Map type. If not configured, the default values are used. See below for details |
 
-| Parameter | Description                 | Type   | Default |
-| --------- | --------------------------- | ------ | ------- |
-| path      | File path or directory path | string | None    |
-| column    | Column configuration        | array  | None    |
+### path
 
-### Optional Parameters
+Path information of the local file system. Note that multiple paths can be filled in here.
 
-| Parameter      | Description               | Type    | Default |
-| -------------- | ------------------------- | ------- | ------- |
-| encoding       | File encoding             | string  | UTF-8   |
-| fieldDelimiter | Field delimiter           | string  | ,       |
-| compress       | Compression format        | string  | None    |
-| skipHeader     | Skip first line           | boolean | false   |
-| nullFormat     | Null value representation | string  | \\N     |
+- When a single local file is specified, TxtFileReader can currently only use a single thread for data extraction. The second phase considers multi-threaded concurrent reading for a single File in the case of non-compressed files
+- When multiple local files are specified, TxtFileReader supports multi-threaded data extraction. The number of concurrent threads is specified by the number of channels
+- When a wildcard is specified, TxtFileReader attempts to iterate out the information of multiple files. For example: specifying `/*` means reading all files under the `/` directory, and specifying `/bazhen/*` means reading all files downstream of the `bazhen` directory. Currently only `*` is supported as a file wildcard.
 
-## Column Configuration
+Special note: Addax treats all Text Files synchronized under one job as the same data table. Users must ensure that all Files can adapt to the same set of schema information. The files read by users must be in CSV-like format, and Addax must be granted read permission.
 
-Each column in the `column` array can be configured with:
+Special note: if there is no file matching the extraction criteria under the path specified by Path, Addax will report an error.
 
-| Property | Description            | Type    | Required |
-| -------- | ---------------------- | ------- | -------- |
-| index    | Column index (0-based) | integer | Yes      |
-| type     | Data type              | string  | Yes      |
-| value    | Constant value         | string  | No       |
+Starting from version 3.2.3, `path` allows mixing files of different compression formats. The plugin attempts to automatically guess the compression format and decompress them automatically. Currently supported compression formats are:
 
-### Supported Data Types
+- zip
+- bzip2
+- gzip
+- LZ4
+- PACK200
+- XZ
+- Compress
 
-- `long`: Integer numbers
-- `double`: Floating point numbers
-- `string`: Text data
-- `date`: Date and time
-- `bool`: Boolean values
+### column
 
-## Path Configuration
+List of fields to read. `type` specifies the type of the source data, `index` specifies which column of the text the current column comes from (starting from 0), and `value` specifies that the current type is a constant, which does not read data from the source file but automatically generates the corresponding column according to the value.
 
-### Single File
+By default, users can read all data as the String type, configured as follows:
 
 ```json
 {
-  "path": "/data/users.csv"
+  "column": ["*"]
 }
 ```
 
-### Multiple Files with Wildcards
+Users can specify Column field information as follows:
 
 ```json
-{
-  "path": "/data/users_*.csv"
-}
+[
+  {
+    "type": "long",
+    "index": 0
+  },
+  {
+    "type": "string",
+    "value": "alibaba"
+  }
+]
 ```
 
-### Directory
+For user-specified Column information, `type` must be filled in, and one of `index`/`value` must be selected.
+
+Starting from `4.0.1`, in addition to using `index` to specify the order of fields, the `name` method is also supported. This requires that all the files being read contain a file header. The plugin will try to match the specified `name` against the file header read from the file, then obtain the corresponding `index` value and write it back to the configuration file. At the same time, `index` and `name` can be mixed on different columns, for example as follows:
 
 ```json
-{
-  "path": "/data/csv_files/"
-}
+[
+  {
+    "type": "long",
+    "index": 0
+  },
+  {
+    "name": "region",
+    "type": "string"
+  },
+  {
+    "type": "string",
+    "value": "alibaba"
+  }
+]
 ```
 
-## Delimiter Examples
+Note: This approach means that the file will be read during the preparation phase, so there will be a certain performance loss. If not necessary, it is not recommended to configure the `name` method.
 
-### Tab-separated Values
+### csvReaderConfig
 
-```json
-{
-  "fieldDelimiter": "\t"
-}
-```
+Configuration parameters for reading CSV-type files, Map type. Reading CSV-type files uses CsvReader, which has many configurations. If not configured, the default values are used.
 
-### Pipe-separated Values
+Common configuration:
 
 ```json
 {
-  "fieldDelimiter": "|"
-}
-```
-
-### Fixed-width (using spaces)
-
-```json
-{
-  "fieldDelimiter": " "
-}
-```
-
-## Compression Support
-
-### GZIP Files
-
-```json
-{
-  "path": "/data/users.csv.gz",
-  "compress": "gzip"
-}
-```
-
-### BZIP2 Files
-
-```json
-{
-  "path": "/data/users.csv.bz2",
-  "compress": "bzip2"
-}
-```
-
-## Advanced Examples
-
-### Reading JSON Lines Format
-
-```json
-{
-  "reader": {
-    "name": "txtfilereader",
-    "parameter": {
-      "path": "/data/users.jsonl",
-      "encoding": "UTF-8",
-      "column": [
-        {
-          "index": 0,
-          "type": "string"
-        }
-      ],
-      "fieldDelimiter": "\n"
-    }
+  "csvReaderConfig": {
+    "safetySwitch": false,
+    "skipEmptyRecords": false,
+    "useTextQualifier": false
   }
 }
 ```
 
-### Reading Log Files
+All configuration items and default values. When configuring, please **configure strictly according to the following field names** in the csvReaderConfig map:
 
-```json
-{
-  "reader": {
-    "name": "txtfilereader",
-    "parameter": {
-      "path": "/var/log/app.log",
-      "encoding": "UTF-8",
-      "column": [
-        {
-          "index": 0,
-          "type": "string"
-        }
-      ],
-      "fieldDelimiter": "\n",
-      "nullFormat": ""
-    }
-  }
-}
+```ini
+boolean caseSensitive = true;
+char textQualifier = 34;
+boolean trimWhitespace = true;
+boolean useTextQualifier = true;//whether to use csv escape character
+char delimiter = 44;//delimiter
+char recordDelimiter = 0;
+char comment = 35;
+boolean useComments = false;
+int escapeMode = 1;
+boolean safetySwitch = true;//whether the single column length is limited to 100000 characters
+boolean skipEmptyRecords = true;//whether to skip empty lines
+boolean captureRawRecord = true;
 ```
 
-### Constant Values
+## Type Conversion
 
-```json
-{
-  "column": [
-    {
-      "index": 0,
-      "type": "long"
-    },
-    {
-      "index": 1,
-      "type": "string"
-    },
-    {
-      "type": "string",
-      "value": "batch_001"
-    }
-  ]
-}
-```
-
-## Error Handling
-
-### Invalid Data Types
-
-When a field cannot be converted to the specified type, it will be treated as dirty data according to your error handling configuration.
-
-### Missing Files
-
-If specified files don't exist, the job will fail. Use wildcards carefully to ensure at least one file matches.
-
-### Encoding Issues
-
-If file encoding doesn't match the specified encoding, character corruption may occur. Always verify the actual file encoding.
-
-## Performance Tips
-
-### Large Files
-
-For very large files, consider splitting them or using multiple channels:
-
-```json
-{
-  "setting": {
-    "speed": {
-      "channel": 4
-    }
-  }
-}
-```
-
-### Memory Usage
-
-The reader loads data in chunks, so memory usage is generally stable regardless of file size.
-
-### Network Files
-
-When reading from network-mounted drives, network latency may affect performance. Consider copying files locally first for better performance.
+| Addax Internal Type | Local File Data Type |
+| ------------------- | -------------------- |
+| Long                | Long                 |
+| Double              | Double               |
+| String              | String               |
+| Boolean             | Boolean              |
+| Date                | Date                 |

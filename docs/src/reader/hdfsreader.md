@@ -15,13 +15,13 @@ HDFS Reader 提供了读取分布式文件系统 Hadoop HDFS 数据存储的能�
 
 1. 支持 textfile, orcfile, parquet, rcfile, sequence file 和 csv 格式的文件，且要求文件内容存放的是一张逻辑意义上的二维表。
 2. 支持多种类型数据读取(使用 String 表示)，支持列裁剪，支持列常量
-3. 支持递归读取、支持正则表达式（`*`和 `?`）。
+3. 支持递归读取，支持通配符（`*` 和 `?`）。
 4. 支持常见的压缩算法，包括 GZIP， SNAPPY， ZLIB 等。
 5. 多个 File 可以支持并发读取。
 6. 支持 sequence file 数据压缩，目前支持 lzo 压缩方式。
 7. csv 类型支持压缩格式有：gzip、bz2、zip、lzo、lzo_deflate、snappy。
-8. 目前插件中 Hive 版本为 `3.1.1`，Hadoop 版本为`3.1.1`, 在 Hadoop `2.7.x`, Hadoop `3.1.x` 和 Hive `2.x`, hive `3.1.x` 测试环境中写入正常；其它版本理论上都支持，但在生产环境使用前，请进一步测试；
-9. 支持`kerberos` 认证
+8. 目前插件中 Hive 版本为 `3.1.1`，Hadoop 版本为`3.1.1`, 在 Hadoop `2.7.x`、Hadoop `3.1.x` 和 Hive `2.x`、Hive `3.1.x` 测试环境中读取正常；其它版本理论上都支持，但在生产环境使用前，请进一步测试；
+9. 支持 `kerberos` 认证
 
 ## 配置样例
 
@@ -42,7 +42,7 @@ HDFS Reader 提供了读取分布式文件系统 Hadoop HDFS 数据存储的能�
 | kerberosKeytabFilePath |    否    | string      | 无      | Kerberos 认证的凭证文件路径, 比如 `/your/path/addax.service.keytab`                      |
 | kerberosPrincipal      |    否    | string      | 无      | Kerberos 认证的凭证主体, 比如 `addax/node1@WGZHAO.COM`                                   |
 | compress               |    否    | string      | 无      | 指定要读取的文件的压缩格式                                                               |
-| hadoopConfig           |    否    | map         | 无      | 里可以配置与 Hadoop 相关的一些高级参数，比如 HA 的配置                                   |
+| hadoopConfig           |    否    | map         | 无      | 用于配置与 Hadoop 相关的一些高级参数，比如 HA 的配置                                     |
 | hdfsSitePath           |    否    | string      | 无      | `hdfs-site.xml` 的路径，详细解释见下                                                     |
 
 ### path
@@ -97,12 +97,12 @@ HDFS Reader 提供了读取分布式文件系统 Hadoop HDFS 数据存储的能�
   {
     "type": "long",
     "index": 0,
-    "description": "从本地文件文本第一列获取int字段"
+    "description": "从 HDFS 文件文本第一列获取 int 字段"
   },
   {
     "type": "string",
     "value": "addax",
-    "description": "HdfsReader内部生成alibaba的字符串字段作为当前字段"
+    "description": "在 HdfsReader 内部生成值为 addax 的字符串字段作为当前字段"
   }
 ]
 ```
@@ -135,7 +135,7 @@ HDFS Reader 提供了读取分布式文件系统 Hadoop HDFS 数据存储的能�
 
 这里的 `cluster` 表示 HDFS 配置成 HA 时的名字，也是 `defaultFS` 配置项中的名字 如果实际环境中的名字不是 `cluster` ，则上述配置中所有写有 `cluster` 都需要替换
 
-#### csvReaderConfig
+### csvReaderConfig
 
 读取 CSV 类型文件参数配置，Map 类型。读取 CSV 类型文件使用的 CsvReader 进行读取，会有很多配置，不配置则使用默认值。
 
@@ -151,9 +151,9 @@ HDFS Reader 提供了读取分布式文件系统 Hadoop HDFS 数据存储的能�
 }
 ```
 
-所有配置项及默认值,配置时 csvReaderConfig 的 map 中请 **严格按照以下字段名字进行配置**：
+所有配置项及默认值，配置时 csvReaderConfig 的 map 中请**严格按照以下字段名字进行配置**：
 
-ini
+```ini
 boolean caseSensitive = true;
 char textQualifier = 34;
 boolean trimWhitespace = true;
@@ -166,10 +166,11 @@ int escapeMode = 1;
 boolean safetySwitch = true;//单列长度是否限制100000字符
 boolean skipEmptyRecords = true;//是否跳过空行
 boolean captureRawRecord = true;
+```
 
 ### hdfsSitePath
 
-这是 `4.2.4` 引入的新配置想，用于指定 `hdfs-site.xml` 文件的路径，比如对 HDP/CDH 而言，可以这样配置：
+这是 `4.2.4` 引入的新配置项，用于指定 `hdfs-site.xml` 文件的路径，比如对 HDP/CDH 而言，可以这样配置：
 
 ```json
 {

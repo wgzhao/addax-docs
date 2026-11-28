@@ -23,6 +23,7 @@ already exists are put at `/{index}/_mapping`. There is no `type` parameter any 
 | index            |   Yes    | string      | None          | Index name                                                                                               |
 | cleanup          |    No    | boolean     | false         | Whether to delete original table                                                                         |
 | batchSize        |    No    | int         | 1000          | Number of records in each batch                                                                          |
+| parallelBulk     |    No    | int         | 1             | Number of bulk requests a single task keeps in flight at the same time                                    |
 | trySize          |    No    | int         | 30            | Number of retries after failure                                                                          |
 | timeout          |    No    | int         | 600000        | Client timeout in milliseconds (ms)                                                                      |
 | discovery        |    No    | boolean     | false         | Enable node discovery (polling) and periodically update server list in client                            |
