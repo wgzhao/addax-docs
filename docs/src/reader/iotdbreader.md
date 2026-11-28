@@ -16,25 +16,25 @@ bin/addax.sh job/iotdb2stream.json
 
 ## 参数说明
 
-| 配置项             | 是否必须 | 类型   | 默认值  | 描述                                                                           |
-| :----------------- | :------: | ------ | ------- | ------------------------------------------------------------------------------ |
-| username           |    是    | string | 无      | IoTDB 用户名                                                                   |
-| password           |    否    | string | 无      | IoTDB 密码                                                                     |
-| connection.jdbcUrl |    是    | string | 无      | JDBC 连接串，例如 `jdbc:iotdb://127.0.0.1:6667/`                               |
-| sqlDialect         |    否    | string | tree    | `tree` 或 `table`；未配置时从 jdbcUrl 中的 `sql_dialect` 推断                  |
-| device             |    是    | string | 无      | tree model 的设备路径，例如 `root.factory.device1`；`querySqls` 非空时可不配置 |
-| measurements       |    是    | list   | 无      | tree model 的测点名列表，或 `["*"]`；`querySqls` 非空时可不配置                |
-| where              |    否    | string | 无      | 时间或测点过滤条件                                                             |
-| timeColumnPosition |    否    | int    | 0       | tree model 中隐式 time 列在输出记录中的位置                                    |
-| fetchSize          |    否    | int    | 10000   | JDBC 每次获取的记录数                                                          |
-| querySqls          |    否    | list   | 无      | 自定义 SQL 列表，每个 SQL 生成一个读取任务；也可写在 connection 中             |
-| table              |    是    | string | 无      | table model 的表名，格式为 `database.table`；`querySqls` 非空时可不配置        |
-| column             |    否    | list   | `["*"]` | table model 读取的列名，不能与 `*` 混用                                        |
-| beginDateTime      |    否    | string | 无      | 时间切分起始时间（包含），格式 `yyyy-MM-dd HH:mm:ss` 或毫秒时间戳              |
-| endDateTime        |    否    | string | 无      | 时间切分结束时间（不包含），格式同上                                           |
-| splitInterval      |    否    | string | 无      | 时间切分粒度，例如 `1d`、`6h`、`30m`、`10s`、`500ms`                           |
+| 配置项              | 是否必须 | 类型   | 默认值  | 描述                                                                                      |
+| :------------------ | :------: | ------ | ------- | ----------------------------------------------------------------------------------------- |
+| username            |    是    | string | 无      | IoTDB 用户名                                                                              |
+| password            |    否    | string | 无      | IoTDB 密码                                                                                |
+| connection.jdbcUrl  |    是    | string | 无      | JDBC 连接串，例如 `jdbc:iotdb://127.0.0.1:6667/`                                          |
+| sqlDialect          |    否    | string | tree    | `tree` 或 `table`；未配置时从 jdbcUrl 中的 `sql_dialect` 推断                             |
+| device              |    是    | string | 无      | tree model 的设备路径，例如 `root.factory.device1`；配置 `connection.querySql` 时可不配置 |
+| measurements        |    是    | list   | 无      | tree model 的测点名列表，或 `["*"]`；配置 `connection.querySql` 时可不配置                |
+| where               |    否    | string | 无      | 时间或测点过滤条件                                                                        |
+| timeColumnPosition  |    否    | int    | 0       | tree model 中隐式 time 列在输出记录中的位置                                               |
+| fetchSize           |    否    | int    | 10000   | JDBC 每次获取的记录数                                                                     |
+| connection.querySql |    否    | list   | 无      | 自定义 SQL 列表，每个 SQL 生成一个读取任务                                                |
+| table               |    是    | string | 无      | table model 的表名，格式为 `database.table`；配置 `connection.querySql` 时可不配置        |
+| column              |    否    | list   | `["*"]` | table model 读取的列名，不能与 `*` 混用                                                   |
+| beginDateTime       |    否    | string | 无      | 时间切分起始时间（包含），格式 `yyyy-MM-dd HH:mm:ss` 或毫秒时间戳                         |
+| endDateTime         |    否    | string | 无      | 时间切分结束时间（不包含），格式同上                                                      |
+| splitInterval       |    否    | string | 无      | 时间切分粒度，例如 `1d`、`6h`、`30m`、`10s`、`500ms`                                      |
 
-`beginDateTime`、`endDateTime`、`splitInterval` 必须同时配置；配置时间切分后不能再使用 `querySqls`，两者只能选其一。
+`beginDateTime`、`endDateTime`、`splitInterval` 必须同时配置；配置时间切分后不能再使用 `connection.querySql`，两者只能选其一。
 
 ## Tree model
 
@@ -50,15 +50,15 @@ tree model 的查询结果即使没有显式 `SELECT time`，也会在首列返�
 
 `measurements` 配置为 `["*"]` 时读取设备下的全部测点。设备下的测点集合可能随时间变化，生产任务建议显式列出测点。
 
-### 使用 querySqls 并行读取
+### 使用 querySql 并行读取
 
-`querySqls` 适合按时间范围或设备手工拆分并行读取，每个 SQL 生成一个 task：
+`connection.querySql` 适合按时间范围或设备手工拆分并行读取，每个 SQL 生成一个 task：
 
 ```json
 {
   "connection": {
     "jdbcUrl": "jdbc:iotdb://127.0.0.1:6667/",
-    "querySqls": [
+    "querySql": [
       "SELECT s1,s2 FROM root.demo.d1 WHERE time >= 0 AND time < 2000",
       "SELECT s1,s2 FROM root.demo.d1 WHERE time >= 2000 AND time < 4000"
     ]
@@ -67,11 +67,11 @@ tree model 的查询结果即使没有显式 `SELECT time`，也会在首列返�
 }
 ```
 
-`querySqls` 非空时，`device`、`measurements`、`where` 和三个时间切分参数都会被忽略，SQL 由用户完全控制。
+`connection.querySql` 非空时，`device`、`measurements`、`where` 和三个时间切分参数都会被忽略，SQL 由用户完全控制。
 
 ### 时间区间切分
 
-不写 `querySqls` 时，可以按时间区间自动切分。插件为每个区间生成
+不写 `connection.querySql` 时，可以按时间区间自动切分。插件为每个区间生成
 `WHERE (where) AND time >= begin AND time < end` 条件：
 
 ```json

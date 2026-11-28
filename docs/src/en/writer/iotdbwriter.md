@@ -25,7 +25,7 @@ bin/addax.sh job/stream2iotdb.json
 | sqlDialect         |    No    | string | tree    | `tree` or `table`; inferred from `sql_dialect` in the URL when omitted                        |
 | device             |   Yes    | string | None    | Tree-model target device, for example `root.factory.device1`                                  |
 | measurements       |   Yes    | list   | None    | Tree-model measurement names, in record order after the time column                           |
-| columnTypes        |    No    | list   | None    | Tree-model types: `INT32`, `INT64`, `FLOAT`, `DOUBLE`, `BOOLEAN`, `TEXT`, `TIMESTAMP`, `BLOB` |
+| columnType         |    No    | list   | None    | Tree-model types: `INT32`, `INT64`, `FLOAT`, `DOUBLE`, `BOOLEAN`, `TEXT`, `TIMESTAMP`, `BLOB` |
 | table              |   Yes    | string | None    | Table-model target in `database.table` form                                                   |
 | column             |   Yes    | list   | None    | Table-model insert columns; the time column must be included                                  |
 | timeColumnPosition |    No    | int    | 0       | Position of the time column in the record                                                     |
@@ -48,9 +48,9 @@ them with `Session.insertRecordsOfOneDevice`.
 }
 ```
 
-### columnTypes
+### columnType
 
-Without `columnTypes`, the plugin infers the IoTDB type from the first non-null value of each
+Without `columnType`, the plugin infers the IoTDB type from the first non-null value of each
 measurement in the batch:
 
 - Addax Long → `INT64`
@@ -60,17 +60,17 @@ measurement in the batch:
 - Addax Date/Timestamp → `TIMESTAMP`
 - Addax Bytes → `BLOB`
 
-Configure `columnTypes` when a measurement is null in the first batch, or when a Long must be written
+Configure `columnType` when a measurement is null in the first batch, or when a Long must be written
 to `INT32` or a Double to `FLOAT`:
 
 ```json
 {
   "measurements": ["s1", "s2"],
-  "columnTypes": ["INT32", "DOUBLE"]
+  "columnType": ["INT32", "DOUBLE"]
 }
 ```
 
-`columnTypes` must have the same order and length as `measurements`. A record whose value cannot be
+`columnType` must have the same order and length as `measurements`. A record whose value cannot be
 converted to the configured type is collected as a dirty record.
 
 ## Table Model
@@ -118,7 +118,7 @@ and `${device}` are replaced with the configured target:
 | Bytes               | BLOB            |
 
 The table model follows the target table schema and converts where possible. The tree model follows
-`columnTypes`, or the inferred type when it is not configured.
+`columnType`, or the inferred type when it is not configured.
 
 ## Supported Versions
 

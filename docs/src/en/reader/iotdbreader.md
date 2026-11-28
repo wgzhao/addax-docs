@@ -17,26 +17,26 @@ bin/addax.sh job/iotdb2stream.json
 
 ## Parameters
 
-| Configuration      | Required | Type   | Default | Description                                                                                    |
-| :----------------- | :------: | ------ | ------- | ---------------------------------------------------------------------------------------------- |
-| username           |   Yes    | string | None    | IoTDB username                                                                                 |
-| password           |    No    | string | None    | IoTDB password                                                                                 |
-| connection.jdbcUrl |   Yes    | string | None    | JDBC URL, for example `jdbc:iotdb://127.0.0.1:6667/`                                           |
-| sqlDialect         |    No    | string | tree    | `tree` or `table`; inferred from `sql_dialect` in the URL when omitted                         |
-| device             |   Yes    | string | None    | Tree-model device path, for example `root.factory.device1`; not needed when `querySqls` is set |
-| measurements       |   Yes    | list   | None    | Tree-model measurement names, or `["*"]`; not needed when `querySqls` is set                   |
-| where              |    No    | string | None    | Time or measurement filter                                                                     |
-| timeColumnPosition |    No    | int    | 0       | Position of the implicit time column in the output record                                      |
-| fetchSize          |    No    | int    | 10000   | Number of records fetched per JDBC round trip                                                  |
-| querySqls          |    No    | list   | None    | Custom SQL statements, one task per statement; may also be placed inside `connection`          |
-| table              |   Yes    | string | None    | Table-model name in `database.table` form; not needed when `querySqls` is set                  |
-| column             |    No    | list   | `["*"]` | Table-model columns to read; cannot be combined with `*`                                       |
-| beginDateTime      |    No    | string | None    | Inclusive start of a time-range split, `yyyy-MM-dd HH:mm:ss` or epoch milliseconds             |
-| endDateTime        |    No    | string | None    | Exclusive end of a time-range split, same formats                                              |
-| splitInterval      |    No    | string | None    | Time-range size, for example `1d`, `6h`, `30m`, `10s`, `500ms`                                 |
+| Configuration       | Required | Type   | Default | Description                                                                                              |
+| :------------------ | :------: | ------ | ------- | -------------------------------------------------------------------------------------------------------- |
+| username            |   Yes    | string | None    | IoTDB username                                                                                           |
+| password            |    No    | string | None    | IoTDB password                                                                                           |
+| connection.jdbcUrl  |   Yes    | string | None    | JDBC URL, for example `jdbc:iotdb://127.0.0.1:6667/`                                                     |
+| sqlDialect          |    No    | string | tree    | `tree` or `table`; inferred from `sql_dialect` in the URL when omitted                                   |
+| device              |   Yes    | string | None    | Tree-model device path, for example `root.factory.device1`; not needed when `connection.querySql` is set |
+| measurements        |   Yes    | list   | None    | Tree-model measurement names, or `["*"]`; not needed when `connection.querySql` is set                   |
+| where               |    No    | string | None    | Time or measurement filter                                                                               |
+| timeColumnPosition  |    No    | int    | 0       | Position of the implicit time column in the output record                                                |
+| fetchSize           |    No    | int    | 10000   | Number of records fetched per JDBC round trip                                                            |
+| connection.querySql |    No    | list   | None    | Custom SQL statements, one task per statement                                                            |
+| table               |   Yes    | string | None    | Table-model name in `database.table` form; not needed when `connection.querySql` is set                  |
+| column              |    No    | list   | `["*"]` | Table-model columns to read; cannot be combined with `*`                                                 |
+| beginDateTime       |    No    | string | None    | Inclusive start of a time-range split, `yyyy-MM-dd HH:mm:ss` or epoch milliseconds                       |
+| endDateTime         |    No    | string | None    | Exclusive end of a time-range split, same formats                                                        |
+| splitInterval       |    No    | string | None    | Time-range size, for example `1d`, `6h`, `30m`, `10s`, `500ms`                                           |
 
 `beginDateTime`, `endDateTime` and `splitInterval` must be configured together. A time-range split
-cannot be combined with `querySqls`; use one or the other.
+cannot be combined with `connection.querySql`; use one or the other.
 
 ## Tree Model
 
@@ -55,16 +55,16 @@ the output record starts with time followed by `measurements`.
 With `["*"]` the reader returns every measurement under the device. The set of measurements may
 change over time, so production jobs should list the measurements explicitly.
 
-### Parallel reads with querySqls
+### Parallel reads with querySql
 
-`querySqls` is the way to split a read manually, by time range or by device. Each statement becomes
+`connection.querySql` is the way to split a read manually, by time range or by device. Each statement becomes
 one task:
 
 ```json
 {
   "connection": {
     "jdbcUrl": "jdbc:iotdb://127.0.0.1:6667/",
-    "querySqls": [
+    "querySql": [
       "SELECT s1,s2 FROM root.demo.d1 WHERE time >= 0 AND time < 2000",
       "SELECT s1,s2 FROM root.demo.d1 WHERE time >= 2000 AND time < 4000"
     ]
@@ -73,12 +73,12 @@ one task:
 }
 ```
 
-When `querySqls` is set, `device`, `measurements`, `where` and the three time-range parameters are
+When `connection.querySql` is set, `device`, `measurements`, `where` and the three time-range parameters are
 ignored, and the SQL is used exactly as written.
 
 ### Time-range split
 
-Without `querySqls`, the reader can generate time ranges itself. Each range adds
+Without `connection.querySql`, the reader can generate time ranges itself. Each range adds
 `WHERE (where) AND time >= begin AND time < end`:
 
 ```json

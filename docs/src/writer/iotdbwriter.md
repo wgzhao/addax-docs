@@ -24,7 +24,7 @@ bin/addax.sh job/stream2iotdb.json
 | sqlDialect         |     否      | string | tree   | `tree` 或 `table`；未配置时从 jdbcUrl 中的 `sql_dialect` 推断                                           |
 | device             | 是（tree）  | string | 无     | tree model 的目标设备路径，例如 `root.factory.device1`                                                  |
 | measurements       | 是（tree）  | list   | 无     | tree model 的测点名列表，顺序与记录中除 time 外的列一致                                                 |
-| columnTypes        | 否（tree）  | list   | 无     | tree model 的测点类型，可选 `INT32`、`INT64`、`FLOAT`、`DOUBLE`、`BOOLEAN`、`TEXT`、`TIMESTAMP`、`BLOB` |
+| columnType         | 否（tree）  | list   | 无     | tree model 的测点类型，可选 `INT32`、`INT64`、`FLOAT`、`DOUBLE`、`BOOLEAN`、`TEXT`、`TIMESTAMP`、`BLOB` |
 | table              | 是（table） | string | 无     | table model 的目标表，格式为 `database.table`                                                           |
 | column             | 是（table） | list   | 无     | table model 的插入列，必须包含 time 列                                                                  |
 | timeColumnPosition |     否      | int    | 0      | 记录中 time 列的位置                                                                                    |
@@ -45,9 +45,9 @@ tree model 的记录必须包含 `measurements.size() + 1` 列：time 列位于 
 }
 ```
 
-### columnTypes
+### columnType
 
-不配置 `columnTypes` 时，插件从每个测点在本批次中第一个非空值推断 IoTDB 类型：
+不配置 `columnType` 时，插件从每个测点在本批次中第一个非空值推断 IoTDB 类型：
 
 - Addax Long → `INT64`
 - Addax Double → `DOUBLE`
@@ -56,16 +56,16 @@ tree model 的记录必须包含 `measurements.size() + 1` 列：time 列位于 
 - Addax Date/Timestamp → `TIMESTAMP`
 - Addax Bytes → `BLOB`
 
-如果某个测点在第一批中全部为空，或者需要把 Long 写入 `INT32`、把 Double 写入 `FLOAT`，必须显式配置 `columnTypes`：
+如果某个测点在第一批中全部为空，或者需要把 Long 写入 `INT32`、把 Double 写入 `FLOAT`，必须显式配置 `columnType`：
 
 ```json
 {
   "measurements": ["s1", "s2"],
-  "columnTypes": ["INT32", "DOUBLE"]
+  "columnType": ["INT32", "DOUBLE"]
 }
 ```
 
-`columnTypes` 的顺序必须与 `measurements` 一致，长度也必须一致。类型不匹配的记录会作为脏数据收集。
+`columnType` 的顺序必须与 `measurements` 一致，长度也必须一致。类型不匹配的记录会作为脏数据收集。
 
 ## Table model
 
@@ -107,7 +107,7 @@ table model 只存在于 IoTDB 2.x；连接 1.x server 时任务会在启动阶�
 | Date/Timestamp | TIMESTAMP, DATE |
 | Bytes          | BLOB            |
 
-table model 以目标表 schema 为准，源值会尽量转换为目标列类型；tree model 以 `columnTypes` 或推断类型为准。
+table model 以目标表 schema 为准，源值会尽量转换为目标列类型；tree model 以 `columnType` 或推断类型为准。
 
 ## 当前支持版本
 
