@@ -171,7 +171,9 @@ source ==> fr ==> target
 }
 ```
 
-注意：该转换器只按 `column` 中声明的类型生成默认值，不会读取 writer 配置；请保证这里的列顺序和类型与 writer 保持一致。
+::: important
+该转换器只按 `column` 中声明的类型生成默认值，不会读取 writer 配置；请保证这里的列顺序和类型与 writer 保持一致。
+:::
 
 ### dx_groovy
 
@@ -186,13 +188,12 @@ source ==> fr ==> target
 
 Record 数据类型
 
-注意：
-
-- `dx_groovy` 只能调用一次。不能多次调用。
-- `groovy code` 中支持 `java.lang`, `java.util` 的包，可直接引用的对象有 `record`
-  ，以及element下的各种column（BoolColumn.class,BytesColumn.class,DateColumn.class,DoubleColumn.class,LongColumn.class,StringColumn.class）。
-  不支持其他包，如果用户有需要用到其他包，可设置extraPackage，注意extraPackage不支持第三方jar包。
-- `groovy code` 中，返回更新过的 `Record`（比如record.setColumn(columnIndex, new StringColumn(newValue));），或者null。返回null表示过滤此行。
+::: note 使用约束
+- `dx_groovy` 只能调用一次，不能多次调用。
+- `groovy code` 中支持 `java.lang`, `java.util` 的包，可直接引用的对象有 `record`，以及 element 下的各种 column（BoolColumn.class、BytesColumn.class、DateColumn.class、DoubleColumn.class、LongColumn.class、StringColumn.class）。
+  不支持其他包；如有需要可设置 `extraPackage`，但 `extraPackage` 不支持第三方 jar 包。
+- `groovy code` 需要返回更新过的 `Record`（比如 `record.setColumn(columnIndex, new StringColumn(newValue));`）或 `null`，返回 `null` 表示过滤此行。
+:::
 
 举例:
 
@@ -283,7 +284,7 @@ return record
 上述 `transformer` 代码针对每条记录的前面两个字段做了修改，对第一个字段的字符串，在字符串前面增加 `Header_` 字符；
 第二个整数字段值进行倍增处理。最后执行的结果如下：
 
-::: details
+::: details 示例输出
 <<<@/public/assets/output/groovydemo.txt
 :::
 
@@ -303,7 +304,9 @@ Transform过程涉及到数据的转换，可能造成数据的增加或减少�
 Total 1000000 records, 22000000 bytes | Transform 100000 records(in), 10000 records(out) | Speed 2.10MB/s, 100000 records/s | Error 0 records, 0 bytes | Percentage 100.00%
 ```
 
-注意，这里主要记录转换的输入输出，需要检测数据输入输出的记录数量变化。
+::: note
+这里主要记录转换的输入输出，需要关注数据输入输出的记录数量变化。
+:::
 
 涉及到最终作业的计量数据展现定义如下：
 
@@ -319,4 +322,6 @@ Total 1000000 records, 22000000 bytes | Transform 100000 records(in), 10000 reco
 同步失败总数                    :                   0
 ```
 
-注意，这里主要记录转换的输入输出，需要检测数据输入输出的记录数量变化。`Transformer success` 只统计通过全部转换并输出的记录，被过滤的记录计入 `filter`，两者之和加上失败记录等于转换的输入记录数。
+::: note
+这里主要记录转换的输入输出，需要关注数据输入输出的记录数量变化。`Transformer success` 只统计通过全部转换并输出的记录，被过滤的记录计入 `filter`，两者之和加上失败记录等于转换的输入记录数。
+:::

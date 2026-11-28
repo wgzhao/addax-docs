@@ -12,19 +12,19 @@
     "postinstall": "node ./scripts/install-git-hooks.cjs"
   },
   "dependencies": {
-    "@viteplus/versions": "^2.0.9",
-    "vitepress-mermaid-renderer": "^1.1.11",
-    "vue": "^3.5.25"
+    "@viteplus/versions": "^2.3.0",
+    "vitepress-mermaid-renderer": "^1.2.3",
+    "vue": "^3.5.46"
   },
   "devDependencies": {
-    "@types/node": "^24.10.1",
-    "@vitejs/plugin-vue": "^6.0.2",
-    "@vue/tsconfig": "^0.8.1",
-    "mermaid": "^11.17.2",
-    "prettier": "^3.8.1",
+    "@types/node": "^26.6.11",
+    "@vitejs/plugin-vue": "^6.0.11",
+    "@vue/tsconfig": "^0.9.1",
+    "mermaid": "^12.4.0",
+    "prettier": "^3.10.1",
     "typescript": "~5.9.3",
-    "vite": "^7.3.1",
-    "vitepress": "^2.0.0-alpha.16",
-    "vue-tsc": "^3.1.5"
+    "vite": "^8.4.0",
+    "vitepress": "^2.0.0-alpha.21",
+    "vue-tsc": "^3.3.14"
   }
 }

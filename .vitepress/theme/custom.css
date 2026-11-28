@@ -93,6 +93,30 @@
   box-shadow: 0 6px 20px 0 rgba(69, 115, 251, 0.5);
 }
 
+/* ---- Success Container ----
+ * VitePress ships colors for note/important/caution but not for a custom
+ * `::: success` container, so borrow the theme's green palette.
+ */
+.custom-block.success {
+  border-color: transparent;
+  color: var(--vp-c-text-1);
+  background-color: var(--vp-c-success-soft);
+}
+
+.custom-block.success .custom-block-title {
+  color: var(--vp-c-success-1);
+}
+
+.custom-block.success a,
+.custom-block.success code {
+  color: var(--vp-c-success-1);
+}
+
+.custom-block.success a:hover,
+.custom-block.success a:hover > code {
+  color: var(--vp-c-success-2);
+}
+
 /* ---- Feature Card Icons ---- */
 .VPFeature .icon svg {
   width: 24px;

@@ -46,8 +46,9 @@ bin/addax.sh job/tdengine2stream.json
 
 命令输出类似如下：
 
-:::details
+::: details 输出示例 {open}
 <<<@/public/assets/output/tdenginewriter.txt
+:::
 
 ## 参数说明
 

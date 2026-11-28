@@ -99,7 +99,9 @@ If successful, you should see output similar to:
 2023-12-07 10:30:01.234 [main] INFO  JobContainer - Job ID: 202312071030, Total records: 3, Speed: 3rec/s (30B/s), Error records: 0
 ```
 
-And you should find the result file at `/tmp/result.csv`.
+::: success
+If the job succeeded, `/tmp/result.csv` now contains the three synchronized rows.
+:::
 
 ## Database Synchronization Example
 
@@ -107,8 +109,8 @@ Here's a more practical example - synchronizing data from MySQL to PostgreSQL.
 
 ### Prerequisites
 
-- MySQL database with test data
-- PostgreSQL database for destination
+- [ ] MySQL database with test data
+- [ ] PostgreSQL database for destination
 
 ### Job Configuration
 

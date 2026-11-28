@@ -2,7 +2,9 @@
 
 ## 概览
 
-Addax 是阿里开源 [DataX](https://github.com/alibaba/datax) 的活跃维护继任者（DataX 官方仓库自 2023 年后已停止更新）。它是一个快速、通用的开源 ETL 工具，支持 30+ 关系型与非关系型数据源，致力于实现包括关系型数据库(MySQL、Oracle 等)、HDFS、Hive、HBase、FTP 等各种异构数据源之间稳定高效的数据同步。
+Addax 是阿里开源 [DataX](https://github.com/alibaba/datax) 的活跃维护继任者[^datax]。它是一个快速、通用的开源 ETL 工具，支持 30+ 关系型与非关系型数据源，致力于实现包括关系型数据库(MySQL、Oracle 等)、HDFS、Hive、HBase、FTP 等各种异构数据源之间稳定高效的数据同步。
+
+[^datax]: DataX 官方仓库自 2023 年后已停止更新，详见 [alibaba/datax](https://github.com/alibaba/datax)。
 
 ![addax why new](/images/addax_why_new.png)
 
