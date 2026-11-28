@@ -33,6 +33,12 @@ bin/addax.sh job/duckdb2stream.json
 
 This plugin is based on [RDBMS Reader](rdbmsreader), so you can refer to all parameters of RDBMS Reader. A DuckDB connection needs no credentials, so the `username` and `password` every other reader requires are not needed here.
 
+### Configuration Structure
+
+<!--@include: @/src/_partials/reader/rdbms-structure.md#derived-base-no-credentials -->
+
+The tree shows the hierarchy only and omits `username` and `password`; see the [RDBMS Reader](rdbmsreader) parameter table for required flags, types and default values. The driver class name goes under `connection.driver`.
+
 Besides `table` you can read with an arbitrary statement through `querySql`, for example to read a file directly:
 
 ```
@@ -88,13 +94,13 @@ Writing a `TIME` column to a text sink can show a value that differs from the st
 
 The `duckdb_jdbc` shipped with the distribution carries the native library for **Linux x86_64** only. On any other platform the job fails at startup because the driver cannot find its native library; replace the driver jar with the one built for your platform.
 
-| Platform | Driver jar |
-| --- | --- |
-| macOS Apple Silicon | `duckdb_jdbc-<version>-macos_arm64.jar` |
-| macOS Intel | `duckdb_jdbc-<version>-macos_amd64.jar` |
-| Windows x64 | `duckdb_jdbc-<version>-windows_amd64.jar` |
-| Windows ARM64 | `duckdb_jdbc-<version>-windows_arm64.jar` |
-| Linux ARM64 | `duckdb_jdbc-<version>-linux_arm64.jar` |
+| Platform            | Driver jar                                |
+| ------------------- | ----------------------------------------- |
+| macOS Apple Silicon | `duckdb_jdbc-<version>-macos_arm64.jar`   |
+| macOS Intel         | `duckdb_jdbc-<version>-macos_amd64.jar`   |
+| Windows x64         | `duckdb_jdbc-<version>-windows_amd64.jar` |
+| Windows ARM64       | `duckdb_jdbc-<version>-windows_arm64.jar` |
+| Linux ARM64         | `duckdb_jdbc-<version>-linux_arm64.jar`   |
 
 `<version>` is the driver version the distribution already uses, shown by the original file name under `libs/`; the artifacts live at
 `https://repo1.maven.org/maven2/org/duckdb/duckdb_jdbc/<version>/`.

@@ -26,6 +26,12 @@ bin/addax.sh job/stream2access.json
 
 This plugin is based on [RDBMS Writer](rdbmswriter), so you can refer to all configuration items of RDBMS Writer.
 
+### Configuration Structure
+
+<!--@include: @/src/_partials/writer/rdbms-structure.md#derived-base -->
+
+The tree shows the hierarchy only; see the [RDBMS Writer](rdbmswriter) parameter table for required flags, types and default values. The driver class name goes under `connection.driver`.
+
 ## Change Log
 
 1. From version `5.0.1`, when the Access database file to be written does not exist, it will be automatically created and the database format will be set to `Access 2016`

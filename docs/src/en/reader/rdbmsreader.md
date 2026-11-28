@@ -11,6 +11,10 @@ At the same time, RDBMS Reader is also the base class for other relational datab
 - [SQLServer Reader](sqlserverreader)
 - [Access Reader](accessreader)
 - [Databend Reader](databendreader)
+- [HANA Reader](hanareader)
+- [Sybase Reader](sybasereader)
+- [SQLite Reader](sqlitereader)
+- [DuckDB Reader](duckdbreader)
 
 Note: If a dedicated database reading plugin is already provided, it is recommended to use the dedicated plugin. If the database you need to read does not have a dedicated plugin, consider using this generic plugin. Before use, you need to perform the following operations to run normally, otherwise exceptions will occur.
 
@@ -47,7 +51,7 @@ The configuration paths in the table below are relative to `reader.parameter`. `
 
 ### Configuration Structure
 
-<!--@include: @/src/_partials/reader/rdbms-structure.md#base -->
+<!--@include: @/src/_partials/reader/rdbms-structure.md#generic-base -->
 
 The tree shows the hierarchy only; required, data type and default values are listed in the table below.
 

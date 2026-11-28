@@ -28,9 +28,9 @@ bin/addax.sh job/mysql2stream.json
 
 ### 配置结构
 
-<!--@include: @/src/_partials/reader/rdbms-structure.md#base -->
+<!--@include: @/src/_partials/reader/rdbms-structure.md#derived-base -->
 
-上图只表示配置层级；各参数的必填、类型和默认值见 [RDBMS Reader](rdbmsreader) 的参数说明。
+上图只表示配置层级；各参数的必填、类型和默认值见 [RDBMS Reader](rdbmsreader) 的参数说明。驱动类名写在 `connection.driver` 下。
 
 ### driver
 
@@ -46,7 +46,7 @@ bin/addax.sh job/mysql2stream.json
 
 **指定驱动类名称**
 
-在你的 json 文件类，配置 `"driver": "com.mysql.jdbc.Driver"`
+在你的 json 文件中，配置 `connection.driver` 为 `"com.mysql.jdbc.Driver"`
 
 ## 类型转换注意事项
 

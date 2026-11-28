@@ -1,6 +1,6 @@
 <!-- Shared by RDBMS-derived reader docs. Keep the region names stable. -->
 
-<!-- #region base -->
+<!-- #region generic-base -->
 
 ```text
 parameter
@@ -20,24 +20,46 @@ parameter
 └─ driver
 ```
 
-<!-- #endregion base -->
+<!-- #endregion generic-base -->
 
-<!-- #region base-no-credentials -->
+<!-- #region derived-base -->
 
 ```text
 parameter
 ├─ connection
 │  ├─ jdbcUrl
 │  ├─ table
-│  └─ querySql
+│  ├─ querySql
+│  └─ driver
+├─ username
+├─ password
 ├─ column
 ├─ excludeColumn
 ├─ splitPk
 ├─ autoPk
 ├─ where
 ├─ session
-├─ fetchSize
-└─ driver
+└─ fetchSize
 ```
 
-<!-- #endregion base-no-credentials -->
+<!-- #endregion derived-base -->
+
+<!-- #region derived-base-no-credentials -->
+
+```text
+parameter
+├─ connection
+│  ├─ jdbcUrl
+│  ├─ table
+│  ├─ querySql
+│  └─ driver
+├─ column
+├─ excludeColumn
+├─ splitPk
+├─ autoPk
+├─ where
+├─ session
+└─ fetchSize
+```
+
+<!-- #endregion derived-base-no-credentials -->

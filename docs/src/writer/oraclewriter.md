@@ -12,6 +12,12 @@ Oracle Writer 插件实现了写入数据到 Oracle 目的表的功能。
 
 该插件基于 [RDBMS Writer](rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项，并在此基础上增加了一些 OracleWriter 特有的配置项。
 
+### 配置结构
+
+<!--@include: @/src/_partials/writer/rdbms-structure.md#derived-base -->
+
+上图只表示配置层级；各参数的必填、类型和默认值见 [RDBMS Writer](rdbmswriter) 的参数说明。驱动类名写在 `connection.driver` 下。
+
 | 配置项    | 是否必须 | 默认值 | 描述                                     |
 | :-------- | :------: | ------ | ---------------------------------------- |
 | writeMode |    否    | insert | 写入方式，支持 insert， update，详见下文 |

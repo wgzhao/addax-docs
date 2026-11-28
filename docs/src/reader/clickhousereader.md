@@ -35,6 +35,12 @@ bin/addax.sh job/clickhouse2stream.json
 
 该插件基于 [RDBMS Reader](rdbmsreader) 实现，因此可以参考 RDBMS Reader 的所有参数。
 
+### 配置结构
+
+<!--@include: @/src/_partials/reader/rdbms-structure.md#derived-base -->
+
+上图只表示配置层级；各参数的必填、类型和默认值见 [RDBMS Reader](rdbmsreader) 的参数说明。驱动类名写在 `connection.driver` 下。
+
 ## 支持的数据类型
 
 | Addax 内部类型 | ClickHouse 数据类型                                                     |

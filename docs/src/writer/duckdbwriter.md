@@ -37,6 +37,14 @@ bin/addax.sh job/stream2duckdb.json
 
 该插件基于 [RDBMS Writer](rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项。因为 DuckDB 连接无需账号密码，因此其他数据库写入插件需要配置的 `username`，`password` 在这里不需要。
 
+### 配置结构
+
+<!--@include: @/src/_partials/writer/rdbms-structure.md#derived-base-no-credentials -->
+
+上图只表示配置层级，并已省略 `username` 和 `password`；其余参数的必填、类型和默认值见 [RDBMS Writer](rdbmswriter) 的参数说明。驱动类名写在 `connection.driver` 下。
+
+`writeMode` 不在通用结构中，是本插件额外支持的参数。
+
 目标表必须**预先存在**，插件不会建表。注意 `preSql` 是在任务阶段才执行的，建表语句写在这里来不及——作业初始化时就要读取表的列元数据。
 
 ## 批量写入
@@ -89,13 +97,13 @@ Can't open a connection to same database file with a different configuration tha
 
 发行版里的 `duckdb_jdbc` 只包含 **Linux x86_64** 的原生库，其余平台需要换成对应平台的驱动 jar，否则作业启动时会因为找不到原生库而失败。
 
-| 平台 | 驱动 jar |
-| --- | --- |
-| macOS Apple Silicon | `duckdb_jdbc-<version>-macos_arm64.jar` |
-| macOS Intel | `duckdb_jdbc-<version>-macos_amd64.jar` |
-| Windows x64 | `duckdb_jdbc-<version>-windows_amd64.jar` |
-| Windows ARM64 | `duckdb_jdbc-<version>-windows_arm64.jar` |
-| Linux ARM64 | `duckdb_jdbc-<version>-linux_arm64.jar` |
+| 平台                | 驱动 jar                                  |
+| ------------------- | ----------------------------------------- |
+| macOS Apple Silicon | `duckdb_jdbc-<version>-macos_arm64.jar`   |
+| macOS Intel         | `duckdb_jdbc-<version>-macos_amd64.jar`   |
+| Windows x64         | `duckdb_jdbc-<version>-windows_amd64.jar` |
+| Windows ARM64       | `duckdb_jdbc-<version>-windows_arm64.jar` |
+| Linux ARM64         | `duckdb_jdbc-<version>-linux_arm64.jar`   |
 
 `<version>` 是发行版当前使用的驱动版本，从 `libs/` 下的原文件名即可看到；下载地址为
 `https://repo1.maven.org/maven2/org/duckdb/duckdb_jdbc/<version>/`。

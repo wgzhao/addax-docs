@@ -11,6 +11,10 @@ RDBMS Reader 插件支持从传统 RDBMS 读取数据。这是一个通用关系
 - [SQLServer Reader](sqlserverreader)
 - [Access Reader](accessreader)
 - [Databend Reader](databendreader)
+- [HANA Reader](hanareader)
+- [Sybase Reader](sybasereader)
+- [SQLite Reader](sqlitereader)
+- [DuckDB Reader](duckdbreader)
 
 注意， 如果已经提供了专门的数据库读取插件的，推荐使用专用插件，如果你需要读取的数据库没有专门插件，则考虑使用该通用插件。 在使用之前，还需要执行以下操作才可以正常运行，否则运行会出现异常。
 
@@ -47,7 +51,7 @@ RDBMS Reader 插件支持从传统 RDBMS 读取数据。这是一个通用关系
 
 ### 配置结构
 
-<!--@include: @/src/_partials/reader/rdbms-structure.md#base -->
+<!--@include: @/src/_partials/reader/rdbms-structure.md#generic-base -->
 
 上图只表示配置层级，是否必填、数据类型和默认值见下表。
 

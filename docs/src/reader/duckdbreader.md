@@ -33,6 +33,12 @@ bin/addax.sh job/duckdb2stream.json
 
 该插件基于 [RDBMS Reader](rdbmsreader) 实现，因此可以参考 RDBMS Reader 的所有配置项。因为 DuckDB 连接无需账号密码，因此其他数据库读取插件需要配置的 `username`，`password` 在这里不需要。
 
+### 配置结构
+
+<!--@include: @/src/_partials/reader/rdbms-structure.md#derived-base-no-credentials -->
+
+上图只表示配置层级，并已省略 `username` 和 `password`；其余参数的必填、类型和默认值见 [RDBMS Reader](rdbmsreader) 的参数说明。驱动类名写在 `connection.driver` 下。
+
 除了 `table` 之外，也可以用 `querySql` 指定任意 SQL 来读取，例如直接读取文件：
 
 ```
@@ -54,13 +60,13 @@ jdbc:duckdb:/data/test.duckdb;threads=4;memory_limit=4GB;temp_directory=/tmp
 
 常用选项：
 
-| 选项                 | 说明                                                 |
-| -------------------- | ---------------------------------------------------- |
-| `threads`            | 并行线程数，默认等于 CPU 核数                        |
-| `memory_limit`       | 内存上限，例如 `4GB`                                 |
-| `temp_directory`     | 溢写临时目录，超出 `memory_limit` 的数据会落到这里   |
-| `access_mode`        | `READ_ONLY` / `READ_WRITE` / `AUTOMATIC`             |
-| `jdbc_stream_results`| 结果集流式返回，插件已默认开启（见下）               |
+| 选项                  | 说明                                               |
+| --------------------- | -------------------------------------------------- |
+| `threads`             | 并行线程数，默认等于 CPU 核数                      |
+| `memory_limit`        | 内存上限，例如 `4GB`                               |
+| `temp_directory`      | 溢写临时目录，超出 `memory_limit` 的数据会落到这里 |
+| `access_mode`         | `READ_ONLY` / `READ_WRITE` / `AUTOMATIC`           |
+| `jdbc_stream_results` | 结果集流式返回，插件已默认开启（见下）             |
 
 ### 同一文件的多个连接必须配置一致
 
@@ -89,13 +95,13 @@ DuckDB 的 `HUGEINT`/`UHUGEINT` 是 128 位整数，`DECIMAL` 最高支持 38 �
 
 发行版里的 `duckdb_jdbc` 只包含 **Linux x86_64** 的原生库，其余平台需要换成对应平台的驱动 jar，否则作业启动时会因为找不到原生库而失败。
 
-| 平台 | 驱动 jar |
-| --- | --- |
-| macOS Apple Silicon | `duckdb_jdbc-<version>-macos_arm64.jar` |
-| macOS Intel | `duckdb_jdbc-<version>-macos_amd64.jar` |
-| Windows x64 | `duckdb_jdbc-<version>-windows_amd64.jar` |
-| Windows ARM64 | `duckdb_jdbc-<version>-windows_arm64.jar` |
-| Linux ARM64 | `duckdb_jdbc-<version>-linux_arm64.jar` |
+| 平台                | 驱动 jar                                  |
+| ------------------- | ----------------------------------------- |
+| macOS Apple Silicon | `duckdb_jdbc-<version>-macos_arm64.jar`   |
+| macOS Intel         | `duckdb_jdbc-<version>-macos_amd64.jar`   |
+| Windows x64         | `duckdb_jdbc-<version>-windows_amd64.jar` |
+| Windows ARM64       | `duckdb_jdbc-<version>-windows_arm64.jar` |
+| Linux ARM64         | `duckdb_jdbc-<version>-linux_arm64.jar`   |
 
 `<version>` 是发行版当前使用的驱动版本，从 `libs/` 下的原文件名即可看到；下载地址为
 `https://repo1.maven.org/maven2/org/duckdb/duckdb_jdbc/<version>/`。
@@ -115,24 +121,24 @@ plugin/writer/duckdbwriter/libs/duckdb_jdbc-<version>-linux_amd64.jar
 
 ## 类型转换
 
-| DuckDB 数据类型              | Addax 内部类型 | 说明                                       |
-| ---------------------------- | -------------- | ------------------------------------------ |
-| BOOLEAN                      | Boolean        |                                            |
-| TINYINT / SMALLINT / INTEGER | Long           |                                            |
-| BIGINT                       | Long           |                                            |
-| UTINYINT / USMALLINT / UINTEGER | Long        |                                            |
-| UBIGINT                      | Long / String  | 超出 `Long` 范围时按字符串保留完整精度     |
-| HUGEINT / UHUGEINT           | String         | 128 位整数，按字符串保证精度               |
-| FLOAT / DOUBLE               | Double         |                                            |
-| DECIMAL                      | String         | 按字符串保证精度                           |
-| VARCHAR / ENUM               | String         |                                            |
-| BLOB                         | Bytes          |                                            |
-| DATE                         | Date           |                                            |
-| TIME / TIME_NS               | Date           |                                            |
-| TIMESTAMP(_S/_MS/_NS)        | Timestamp      |                                            |
-| TIMESTAMP WITH TIME ZONE     | Timestamp      | 转换为对应的时间点                         |
-| UUID / JSON / INTERVAL       | String         | 驱动的文本表示                             |
-| BIT                          | String         | 任意长度的位串，按 `0`/`1` 文本读取         |
-| LIST / ARRAY / STRUCT / MAP / UNION | String  | 递归转换为 JSON 文本                       |
+| DuckDB 数据类型                     | Addax 内部类型 | 说明                                   |
+| ----------------------------------- | -------------- | -------------------------------------- |
+| BOOLEAN                             | Boolean        |                                        |
+| TINYINT / SMALLINT / INTEGER        | Long           |                                        |
+| BIGINT                              | Long           |                                        |
+| UTINYINT / USMALLINT / UINTEGER     | Long           |                                        |
+| UBIGINT                             | Long / String  | 超出 `Long` 范围时按字符串保留完整精度 |
+| HUGEINT / UHUGEINT                  | String         | 128 位整数，按字符串保证精度           |
+| FLOAT / DOUBLE                      | Double         |                                        |
+| DECIMAL                             | String         | 按字符串保证精度                       |
+| VARCHAR / ENUM                      | String         |                                        |
+| BLOB                                | Bytes          |                                        |
+| DATE                                | Date           |                                        |
+| TIME / TIME_NS                      | Date           |                                        |
+| TIMESTAMP(\_S/\_MS/\_NS)            | Timestamp      |                                        |
+| TIMESTAMP WITH TIME ZONE            | Timestamp      | 转换为对应的时间点                     |
+| UUID / JSON / INTERVAL              | String         | 驱动的文本表示                         |
+| BIT                                 | String         | 任意长度的位串，按 `0`/`1` 文本读取    |
+| LIST / ARRAY / STRUCT / MAP / UNION | String         | 递归转换为 JSON 文本                   |
 
 `LIST`、`STRUCT`、`MAP` 会转换成 JSON，例如 `[1,2,3]`、`{"a":1,"b":"x"}`、`{"p":1,"q":2}`。

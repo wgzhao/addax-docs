@@ -1,8 +1,8 @@
 # RDBMS Writer
 
-RDBMS Writer 插件支持从传统 RDBMS 读取数据。这是一个通用关系数据库读取插件，可以通过注册数据库驱动等方式支持更多关系数据库读取。
+RDBMS Writer 插件支持向传统 RDBMS 写入数据。这是一个通用关系数据库写入插件，可以通过注册数据库驱动等方式支持更多关系数据库写入。
 
-同时 RDBMS Writer 又是其他关系型数据库读取插件的的基础类。以下读取插件均依赖该插件
+同时 RDBMS Writer 又是其他关系型数据库写入插件的基础类。以下写入插件均依赖该插件
 
 - [Oracle Writer](oraclewriter)
 - [MySQL Writer](mysqlwriter)
@@ -11,6 +11,10 @@ RDBMS Writer 插件支持从传统 RDBMS 读取数据。这是一个通用关系
 - [SQLServer Writer](sqlserverwriter)
 - [Access Writer](accesswriter)
 - [Databend Writer](databendwriter)
+- [HANA Writer](hanawriter)
+- [Sybase Writer](sybasewriter)
+- [SQLite Writer](sqlitewriter)
+- [DuckDB Writer](duckdbwriter)
 
 注意, 如果已经提供了专门的数据库写入插件的，推荐使用专用插件，如果你需要写入的数据库没有专门插件，则考虑使用该通用插件。 在使用之前，还需要执行以下操作才可以正常运行，否则运行会出现异常。
 
@@ -19,7 +23,7 @@ RDBMS Writer 插件支持从传统 RDBMS 读取数据。这是一个通用关系
 假定你需要写入 IBM DB2 的数据，因为没有提供专门的读取插件，所以我们可以使用该插件来实现，在使用之前，需要执行下面两个操作：
 
 1. 下载对应的 JDBC 驱动，并拷贝到 `plugin/writer/rdbmswriter/libs` 目录
-2. 修改任务配置文件，找到 `driver` 一项，填写正确的 JDBC 驱动名，比如 DB2 的驱动名为 `com.ibm.db2.jcc.DB2Driver`
+2. 修改任务配置文件，在 `writer.parameter.driver` 中填写正确的 JDBC 驱动名，比如 DB2 的驱动名为 `com.ibm.db2.jcc.DB2Driver`
 
 以下列出常见的数据库以及对应的驱动名称
 
@@ -45,19 +49,30 @@ RDBMS Writer 插件支持从传统 RDBMS 读取数据。这是一个通用关系
 
 ## 参数说明
 
-| 配置项    | 是否必须 | 数据类型 | 默认值 | 描述                                                                                                             |
-| :-------- | :------: | -------- | ------ | ---------------------------------------------------------------------------------------------------------------- |
-| jdbcUrl   |    是    | string   | 无     | 对端数据库的JDBC连接信息，jdbcUrl按照RDBMS官方规范，并可以填写连接附件控制信息 ｜                                |
-| driver    |    是    | string   | 无     | 自定义驱动类名，解决兼容性问题，详见下面描述                                                                     |
-| username  |    是    | string   | 无     | 数据源的用户名                                                                                                   |
-| password  |    否    | string   | 无     | 数据源指定用户名的密码                                                                                           |
-| table     |    是    | list     | 无     | 所选取的需要同步的表名,使用JSON数据格式，当配置为多张表时，用户自己需保证多张表是同一表结构                      |
-| column    |    是    | list     | 无     | 所配置的表中需要同步的列名集合，详细描述见后                                                                     |
-| preSql    |    否    | list     | 无     | 执行数据同步任务之前率先执行的sql语句，目前只允许执行一条SQL语句，例如清除旧数据,涉及到的表可用 `@table`表示     |
-| postSql   |    否    | list     | 无     | 执行数据同步任务之后执行的sql语句，目前只允许执行一条SQL语句，例如加上某一个时间戳                               |
-| batchSize |    否    | int      | 1024   | 定义了插件和数据库服务器端每次批量数据获取条数，调高该值可能导致 Addax 出现OOM或者目标数据库事务提交失败导致挂起 |
-| session   |    否    | list     | 无     | 针对本地连接,修改会话配置,详见下文                                                                               |
-| ddl       |    否    | string   | 无     | 目标端建表DDL语句,当目标表不存在时会执行这些DDL语句创建表,涉及到的表可用 `@table`表示                            |
+下表中的配置路径以 `writer.parameter` 为根。`connection` 既可以写成对象，也可以写成只包含一个元素的数组；写成多元素数组时只有第一个元素生效。
+
+### 配置结构
+
+<!--@include: @/src/_partials/writer/rdbms-structure.md#generic-base -->
+
+上图只表示配置层级，是否必填、数据类型和默认值见下表。
+
+| 配置路径           | 是否必须 | 数据类型 | 默认值 | 描述                                                                                                               |
+| :----------------- | :------: | -------- | ------ | ------------------------------------------------------------------------------------------------------------------ |
+| connection         |    是    | object   | 无     | 连接信息，子项见下；可写成对象，也可写成只包含一个元素的数组                                                       |
+| connection.jdbcUrl |    是    | string   | 无     | 对端数据库的 JDBC 连接信息，jdbcUrl 按照 RDBMS 官方规范，并可以填写连接附件控制信息                                |
+| connection.table   |    是    | list     | 无     | 所选取的需要同步的表名，使用 JSON 数据格式；配置为多张表时，用户需自行保证多张表是同一表结构                       |
+| driver             |    是    | string   | 无     | 自定义驱动类名，解决兼容性问题；通用 RDBMS Writer 要求写在顶层，详见下文                                           |
+| username           |    是    | string   | 无     | 数据源的用户名                                                                                                     |
+| password           |    否    | string   | 无     | 数据源指定用户名的密码                                                                                             |
+| column             |    是    | list     | 无     | 所配置的表中需要同步的列名集合，详细描述见后                                                                       |
+| preSql             |    否    | list     | 无     | 执行数据同步任务之前率先执行的 SQL 语句，目前只允许执行一条 SQL 语句，例如清除旧数据，涉及到的表可用 `@table` 表示 |
+| postSql            |    否    | list     | 无     | 执行数据同步任务之后执行的 SQL 语句，目前只允许执行一条 SQL 语句，例如加上某一个时间戳                             |
+| batchSize          |    否    | int      | 1024   | 定义了插件和数据库服务器端每次批量数据获取条数，调高该值可能导致 Addax 出现 OOM 或者目标数据库事务提交失败导致挂起 |
+| session            |    否    | list     | 无     | 针对本地连接，修改会话配置，详见下文                                                                               |
+| ddl                |    否    | string   | 无     | 目标端建表 DDL 语句，当目标表不存在时会执行这些 DDL 语句创建表，涉及到的表可用 `@table` 表示                       |
+
+通用 RDBMS Writer 只支持 `insert` 写入方式；即使配置了 `writeMode` 也会被忽略。需要 `update` 或 `replace` 时，请使用对应数据库的专用 Writer。
 
 ### column
 
@@ -82,9 +97,9 @@ RDBMS Writer 插件支持从传统 RDBMS 读取数据。这是一个通用关系
 
 Column必须显示填写，不允许为空！
 
-### jdbcUrl
+### connection.jdbcUrl
 
-`jdbcUrl` 配置除了配置必要的信息外，我们还可以在增加每种特定驱动的特定配置属性，这里特别提到我们可以利用配置属性对代理的支持从而实现通过代理访问数据库的功能。
+`jdbcUrl` 除了配置必要的信息外，我们还可以再增加每种特定驱动的特定配置属性，这里特别提到我们可以利用配置属性对代理的支持从而实现通过代理访问数据库的功能。
 比如对于 PrestoSQL 数据库的 JDBC 驱动而言，支持 `socksProxy` 参数，比如一个可能的 `jdbcUrl` 为
 
 `jdbc:presto://127.0.0.1:8080/hive?socksProxy=192.168.1.101:1081`
@@ -101,9 +116,9 @@ Column必须显示填写，不允许为空！
 
 ### driver
 
-大部分情况下，一个数据库的JDBC驱动是固定的，但有些因为版本的不同，所建议的驱动类名不同，比如 MySQL。
-新的 MySQL JDBC 驱动类型推荐使用 `com.mysql.cj.jdbc.Driver` 而不是以前的 `com.mysql.jdbc.Drver`。
-如果想要使用就的驱动名称，则可以配置 `driver` 配置项。
+大部分情况下，一个数据库的 JDBC 驱动是固定的，但有些因为版本的不同，所建议的驱动类名不同，比如 MySQL。
+新的 MySQL JDBC 驱动类型推荐使用 `com.mysql.cj.jdbc.Driver` 而不是以前的 `com.mysql.jdbc.Driver`。
+如果想要使用旧的驱动名称，则可以配置顶层的 `driver` 配置项；通用 RDBMS Writer 要求这一项必须写在顶层。
 
 ### session
 

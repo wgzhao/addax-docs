@@ -74,9 +74,9 @@ This plugin is based on the [RDBMS Reader](rdbmsreader.md) implementation, so yo
 
 ### Configuration Structure
 
-<!--@include: @/src/_partials/reader/rdbms-structure.md#base -->
+<!--@include: @/src/_partials/reader/rdbms-structure.md#derived-base -->
 
-The tree shows the hierarchy only; see the [RDBMS Reader](rdbmsreader) parameter table for required flags, types and default values.
+The tree shows the hierarchy only; see the [RDBMS Reader](rdbmsreader) parameter table for required flags, types and default values. The driver class name goes under `connection.driver`.
 
 ### driver
 
@@ -96,7 +96,7 @@ cp mysql-connector-java-5.1.48.jar plugin/reader/mysqlreader/libs/
 
 **Specify the driver class name**
 
-In your JSON file, configure `"driver": "com.mysql.jdbc.Driver"`
+In your JSON file, configure `connection.driver` as `"com.mysql.jdbc.Driver"`
 
 ### Required Parameters
 

@@ -35,6 +35,14 @@ bin/addax.sh job/stream2sqlite.json
 
 该插件基于 [RDBMS Writer](rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项。因为 SQLite 连接无需账号密码，因此其他数据库写入插件需要配置的 `username`, `password` 在这里不需要。
 
+### 配置结构
+
+<!--@include: @/src/_partials/writer/rdbms-structure.md#derived-base-no-credentials -->
+
+上图只表示配置层级，并已省略 `username` 和 `password`；其余参数的必填、类型和默认值见 [RDBMS Writer](rdbmswriter) 的参数说明。驱动类名写在 `connection.driver` 下。
+
+`writeMode` 不在通用结构中，是本插件额外支持的参数。
+
 ### writeMode
 
 - `insert` 表示采用 `insert into`

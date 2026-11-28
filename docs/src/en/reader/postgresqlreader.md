@@ -65,6 +65,12 @@ Configuration to read from PostgreSQL:
 
 This plugin is based on the [RDBMS Reader](rdbmsreader.md) implementation.
 
+### Configuration Structure
+
+<!--@include: @/src/_partials/reader/rdbms-structure.md#derived-base -->
+
+The tree shows the hierarchy only; see the [RDBMS Reader](rdbmsreader) parameter table for required flags, types and default values. The driver class name goes under `connection.driver`.
+
 ### Required Parameters
 
 | Parameter | Description                    | Required | Default |

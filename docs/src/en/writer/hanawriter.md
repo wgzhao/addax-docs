@@ -31,3 +31,9 @@ bin/addax.sh job/hana2stream.json
 ## Parameters
 
 This plugin is based on [RDBMS Writer](rdbmswriter), so you can refer to all configuration items of RDBMS Writer.
+
+### Configuration Structure
+
+<!--@include: @/src/_partials/writer/rdbms-structure.md#derived-base -->
+
+The tree shows the hierarchy only; see the [RDBMS Writer](rdbmswriter) parameter table for required flags, types and default values. The driver class name goes under `connection.driver`.

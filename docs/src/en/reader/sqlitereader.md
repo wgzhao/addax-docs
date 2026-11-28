@@ -36,6 +36,6 @@ This plugin is based on [RDBMS Reader](rdbmsreader), so you can refer to all con
 
 ### Configuration Structure
 
-<!--@include: @/src/_partials/reader/rdbms-structure.md#base-no-credentials -->
+<!--@include: @/src/_partials/reader/rdbms-structure.md#derived-base-no-credentials -->
 
-This plugin does not need `username` or `password`; see the [RDBMS Reader](rdbmsreader) parameter table for required flags, types and default values of the remaining parameters.
+This plugin does not need `username` or `password`; see the [RDBMS Reader](rdbmsreader) parameter table for required flags, types and default values of the remaining parameters. The driver class name goes under `connection.driver`.

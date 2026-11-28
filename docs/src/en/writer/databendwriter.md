@@ -32,6 +32,12 @@ bin/addax.sh job/stream2Databend.json
 
 This plugin is based on [RDBMS Writer](rdbmswriter), so you can refer to all configuration items of RDBMS Writer, and adds the following configuration items:
 
+### Configuration Structure
+
+<!--@include: @/src/_partials/writer/rdbms-structure.md#derived-base -->
+
+The tree shows the hierarchy only; see the [RDBMS Writer](rdbmswriter) parameter table for required flags, types and default values. The driver class name goes under `connection.driver`.
+
 | Configuration    | Required | Type   | Default Value | Description                                                                                           |
 | :--------------- | :------: | ------ | ------------- | ----------------------------------------------------------------------------------------------------- |
 | writeMode        |    No    | string | `insert`      | Write mode, supports `insert` and `replace` modes                                                     |
