@@ -17,7 +17,7 @@ Note: If a dedicated database reading plugin is already provided, it is recommen
 ## Configure Driver
 
 Suppose you need to read data from IBM DB2. Since no dedicated reading plugin is provided, we can use this plugin to implement it. Before use, you need to download the corresponding JDBC driver and copy it to the `plugin/reader/rdbmsreader/libs` directory.
-If your driver class name is special, you need to find the `driver` item in the task configuration file and fill in the correct JDBC driver name, such as DB2's driver name `com.ibm.db2.jcc.DB2Driver`. If not filled, the plugin will automatically guess the driver name.
+If your driver class name is special, you need to fill in the correct JDBC driver name in `reader.parameter.driver` (or `reader.parameter.connection.driver`) of the task configuration file, such as DB2's driver name `com.ibm.db2.jcc.DB2Driver`. If not filled, the plugin will automatically guess the driver name.
 
 The following lists common databases and their corresponding driver names:
 
@@ -43,25 +43,50 @@ The following configuration shows how to read data from Presto database to termi
 
 ## Parameters
 
-| Configuration | Required | Data Type | Default Value | Description                                                                                                                                                                   |
-| :------------ | :------: | --------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| jdbcUrl       |   Yes    | list      | None          | JDBC connection information of the target database, jdbcUrl follows RDBMS official specifications and can include connection attachment control information                   |
-| driver        |    No    | string    | None          | Custom driver class name to solve compatibility issues, see description below                                                                                                 |
-| username      |   Yes    | string    | None          | Username of the data source                                                                                                                                                   |
-| password      |    No    | string    | None          | Password for the specified username of the data source                                                                                                                        |
-| table         |   Yes    | list      | None          | Selected table names to be synchronized, using JSON data format. When configured for multiple tables, users need to ensure that multiple tables have the same table structure |
-| column        |   Yes    | list      | None          | Collection of column names to be synchronized in the configured table, detailed description below                                                                             |
-| splitPk       |    No    | string    | None          | Use the field represented by splitPk for data sharding, which can greatly improve data synchronization efficiency, see notes below                                            |
-| autoPk        |    No    | boolean   | false         | Whether to automatically guess the sharding primary key, introduced in version `3.2.6`, see description below                                                                 |
-| where         |    No    | string    | None          | Filtering conditions for the table                                                                                                                                            |
-| session       |    No    | list      | None          | For local connections, modify session configuration, see below                                                                                                                |
-| querySql      |    No    | string    | None          | Use custom SQL instead of specified table to get data. When this item is configured, `table` and `column` configuration items are ignored                                     |
-| fetchSize     |    No    | int       | 1024          | Defines the number of batch data fetched between plugin and database server each time. Increasing this value may cause Addax OOM                                              |
-| excludeColumn |    No    | list      | None          | Column name fields to be excluded, only valid when `column` is configured as `*`                                                                                              |
+The configuration paths in the table below are relative to `reader.parameter`. `connection` may be written as an object or as a one-element array; when a multi-element array is supplied, only the first element is used.
 
-### jdbcUrl
+### Configuration Structure
 
-In addition to configuring necessary information, `jdbcUrl` configuration can also add specific configuration properties for each specific driver. Here we particularly mention that we can use configuration properties to support proxies to access databases through proxies. For example, for PrestoSQL database JDBC driver, it supports the `socksProxy` parameter, so the above configured `jdbcUrl` can be modified to:
+```text
+parameter
+├─ connection
+│  ├─ jdbcUrl
+│  ├─ table
+│  └─ querySql
+├─ username
+├─ password
+├─ column
+├─ excludeColumn
+├─ splitPk
+├─ autoPk
+├─ where
+├─ session
+├─ fetchSize
+└─ driver
+```
+
+The tree shows the hierarchy only; required, data type and default values are listed in the table below.
+
+| Configuration Path  |  Required   | Data Type | Default Value | Description                                                                                                                                                                                                                  |
+| :------------------ | :---------: | --------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| connection          |     Yes     | object    | None          | Connection information, see the child items below; may be written as an object or a one-element array                                                                                                                        |
+| connection.jdbcUrl  |     Yes     | string    | None          | JDBC connection information of the target database, jdbcUrl follows RDBMS official specifications and can include connection attachment control information                                                                  |
+| connection.table    | Yes (table) | list      | None          | Selected table names to be synchronized, using JSON data format. When configured for multiple tables, users need to ensure that multiple tables have the same table structure. Mutually exclusive with `connection.querySql` |
+| connection.querySql |     No      | list      | None          | Use custom SQL instead of a specified table to get data. Mutually exclusive with `connection.table`; when configured, `column` is ignored                                                                                    |
+| username            |     Yes     | string    | None          | Username of the data source                                                                                                                                                                                                  |
+| password            |     No      | string    | None          | Password for the specified username of the data source                                                                                                                                                                       |
+| column              | Yes (table) | list      | None          | Collection of column names to be synchronized in the configured table; not needed when `connection.querySql` is configured, detailed description below                                                                       |
+| excludeColumn       |     No      | list      | None          | Column name fields to be excluded, only valid when `column` is configured as `*`                                                                                                                                             |
+| splitPk             |     No      | string    | None          | Use the field represented by splitPk for data sharding, which can greatly improve data synchronization efficiency, see notes below                                                                                           |
+| autoPk              |     No      | boolean   | false         | Whether to automatically guess the sharding primary key, introduced in version `3.2.6`, see description below                                                                                                                |
+| where               |     No      | string    | None          | Filtering conditions for the table                                                                                                                                                                                           |
+| session             |     No      | list      | None          | For local connections, modify session configuration, see below                                                                                                                                                               |
+| fetchSize           |     No      | int       | 1024          | Defines the number of batch data fetched between plugin and database server each time. Increasing this value may cause Addax OOM                                                                                             |
+| driver              |     No      | string    | None          | Custom driver class name to solve compatibility issues; may also be written as `connection.driver`, which takes precedence when both are configured                                                                          |
+
+### connection.jdbcUrl
+
+In addition to configuring necessary information, `connection.jdbcUrl` configuration can also add specific configuration properties for each specific driver. Here we particularly mention that we can use configuration properties to support proxies to access databases through proxies. For example, for PrestoSQL database JDBC driver, it supports the `socksProxy` parameter, so the above configured `connection.jdbcUrl` can be modified to:
 
 `jdbc:presto://127.0.0.1:8080/hive?socksProxy=192.168.1.101:1081`
 
@@ -77,7 +102,7 @@ The following are the proxy types and configuration methods supported by various
 
 ### driver
 
-In most cases, the JDBC driver for a database is fixed, but some have different recommended driver class names due to different versions, such as MySQL. The new MySQL JDBC driver type recommends using `com.mysql.cj.jdbc.Driver` instead of the previous `com.mysql.jdbc.Driver`. If you want to use the old driver name, you can configure the `driver` configuration item. Otherwise, the plugin will automatically guess the driver name based on the string in `jdbcUrl`.
+In most cases, the JDBC driver for a database is fixed, but some have different recommended driver class names due to different versions, such as MySQL. The new MySQL JDBC driver type recommends using `com.mysql.cj.jdbc.Driver` instead of the previous `com.mysql.jdbc.Driver`. If you want to use the old driver name, you can configure the top-level `driver` item, or write it as `connection.driver`; when both are configured, `connection.driver` takes precedence. Otherwise, the plugin will automatically guess the driver name based on the string in `connection.jdbcUrl`.
 
 ### column
 
