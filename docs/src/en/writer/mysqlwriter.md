@@ -34,9 +34,9 @@ This plugin is based on [RDBMS Writer](rdbmswriter), so all common RDBMS Writer 
 
 ### Configuration Structure
 
-<!--@include: @/src/_partials/writer/rdbms-structure.md#derived-base -->
+<!--@include: @/src/_partials/writer/rdbms-structure.md#base -->
 
-The tree shows the hierarchy only; see the [RDBMS Writer](rdbmswriter) parameter table for required flags, types and default values of the common parameters. The driver class name goes under `connection.driver`.
+The tree shows the hierarchy only; see the [RDBMS Writer](rdbmswriter) parameter table for required flags, types and default values of the common parameters. The driver class name goes under `connection.driver`; the top-level `driver` is a deprecated legacy form that still works but logs a warning.
 
 | Configuration | Required | Type   | Default Value | Description                        |
 | :------------ | :------: | ------ | ------------- | ---------------------------------- |

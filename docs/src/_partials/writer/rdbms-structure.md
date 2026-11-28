@@ -1,26 +1,6 @@
 <!-- Shared by RDBMS-derived writer docs. Keep the region names stable. -->
 
-<!-- #region generic-base -->
-
-```text
-parameter
-├─ connection
-│  ├─ jdbcUrl
-│  └─ table
-├─ driver
-├─ username
-├─ password
-├─ column
-├─ preSql
-├─ postSql
-├─ batchSize
-├─ session
-└─ ddl
-```
-
-<!-- #endregion generic-base -->
-
-<!-- #region derived-base -->
+<!-- #region base -->
 
 ```text
 parameter
@@ -38,9 +18,9 @@ parameter
 └─ ddl
 ```
 
-<!-- #endregion derived-base -->
+<!-- #endregion base -->
 
-<!-- #region derived-base-no-credentials -->
+<!-- #region base-no-credentials -->
 
 ```text
 parameter
@@ -56,4 +36,4 @@ parameter
 └─ ddl
 ```
 
-<!-- #endregion derived-base-no-credentials -->
+<!-- #endregion base-no-credentials -->

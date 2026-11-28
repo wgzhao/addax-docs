@@ -35,9 +35,9 @@ This plugin is based on [RDBMS Reader](rdbmsreader), so you can refer to all par
 
 ### Configuration Structure
 
-<!--@include: @/src/_partials/reader/rdbms-structure.md#derived-base-no-credentials -->
+<!--@include: @/src/_partials/reader/rdbms-structure.md#base-no-credentials -->
 
-The tree shows the hierarchy only and omits `username` and `password`; see the [RDBMS Reader](rdbmsreader) parameter table for required flags, types and default values. The driver class name goes under `connection.driver`.
+The tree shows the hierarchy only and omits `username` and `password`; see the [RDBMS Reader](rdbmsreader) parameter table for required flags, types and default values. The driver class name goes under `connection.driver`; the top-level `driver` is a deprecated legacy form that still works but logs a warning.
 
 Besides `table` you can read with an arbitrary statement through `querySql`, for example to read a file directly:
 

@@ -21,7 +21,7 @@ Note: If a dedicated database reading plugin is already provided, it is recommen
 ## Configure Driver
 
 Suppose you need to read data from IBM DB2. Since no dedicated reading plugin is provided, we can use this plugin to implement it. Before use, you need to download the corresponding JDBC driver and copy it to the `plugin/reader/rdbmsreader/libs` directory.
-If your driver class name is special, you need to fill in the correct JDBC driver name in `reader.parameter.driver` (or `reader.parameter.connection.driver`) of the task configuration file, such as DB2's driver name `com.ibm.db2.jcc.DB2Driver`. If not filled, the plugin will automatically guess the driver name.
+If your driver class name is special, you need to fill in the correct JDBC driver name in `reader.parameter.connection.driver` of the task configuration file, such as DB2's driver name `com.ibm.db2.jcc.DB2Driver`. The legacy `reader.parameter.driver` is still accepted but logs a deprecation warning. If not filled, the plugin will automatically guess the driver name.
 
 The following lists common databases and their corresponding driver names:
 
@@ -51,26 +51,26 @@ The configuration paths in the table below are relative to `reader.parameter`. `
 
 ### Configuration Structure
 
-<!--@include: @/src/_partials/reader/rdbms-structure.md#generic-base -->
+<!--@include: @/src/_partials/reader/rdbms-structure.md#base -->
 
 The tree shows the hierarchy only; required, data type and default values are listed in the table below.
 
-| Configuration Path  |  Required   | Data Type | Default Value | Description                                                                                                                                                                                                                  |
-| :------------------ | :---------: | --------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| connection          |     Yes     | object    | None          | Connection information, see the child items below; may be written as an object or a one-element array                                                                                                                        |
-| connection.jdbcUrl  |     Yes     | string    | None          | JDBC connection information of the target database, jdbcUrl follows RDBMS official specifications and can include connection attachment control information                                                                  |
-| connection.table    | Yes (table) | list      | None          | Selected table names to be synchronized, using JSON data format. When configured for multiple tables, users need to ensure that multiple tables have the same table structure. Mutually exclusive with `connection.querySql` |
-| connection.querySql |     No      | list      | None          | Use custom SQL instead of a specified table to get data. Mutually exclusive with `connection.table`; when configured, `column` is ignored                                                                                    |
-| username            |     Yes     | string    | None          | Username of the data source                                                                                                                                                                                                  |
-| password            |     No      | string    | None          | Password for the specified username of the data source                                                                                                                                                                       |
-| column              | Yes (table) | list      | None          | Collection of column names to be synchronized in the configured table; not needed when `connection.querySql` is configured, detailed description below                                                                       |
-| excludeColumn       |     No      | list      | None          | Column name fields to be excluded, only valid when `column` is configured as `*`                                                                                                                                             |
-| splitPk             |     No      | string    | None          | Use the field represented by splitPk for data sharding, which can greatly improve data synchronization efficiency, see notes below                                                                                           |
-| autoPk              |     No      | boolean   | false         | Whether to automatically guess the sharding primary key, introduced in version `3.2.6`, see description below                                                                                                                |
-| where               |     No      | string    | None          | Filtering conditions for the table                                                                                                                                                                                           |
-| session             |     No      | list      | None          | For local connections, modify session configuration, see below                                                                                                                                                               |
-| fetchSize           |     No      | int       | 1024          | Defines the number of batch data fetched between plugin and database server each time. Increasing this value may cause Addax OOM                                                                                             |
-| driver              |     No      | string    | None          | Custom driver class name to solve compatibility issues; may also be written as `connection.driver`, which takes precedence when both are configured                                                                          |
+| Configuration Path  |  Required   | Data Type | Default Value | Description                                                                                                                                                                                                                            |
+| :------------------ | :---------: | --------- | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| connection          |     Yes     | object    | None          | Connection information, see the child items below; may be written as an object or a one-element array                                                                                                                                  |
+| connection.jdbcUrl  |     Yes     | string    | None          | JDBC connection information of the target database, jdbcUrl follows RDBMS official specifications and can include connection attachment control information                                                                            |
+| connection.table    | Yes (table) | list      | None          | Selected table names to be synchronized, using JSON data format. When configured for multiple tables, users need to ensure that multiple tables have the same table structure. Mutually exclusive with `connection.querySql`           |
+| connection.querySql |     No      | list      | None          | Use custom SQL instead of a specified table to get data. Mutually exclusive with `connection.table`; when configured, `column` is ignored                                                                                              |
+| connection.driver   |     No      | string    | None          | Custom driver class name; when omitted, it is guessed from `connection.jdbcUrl`. The top-level `driver` is a deprecated legacy form that still works but logs a warning; `connection.driver` takes precedence when both are configured |
+| username            |     Yes     | string    | None          | Username of the data source                                                                                                                                                                                                            |
+| password            |     No      | string    | None          | Password for the specified username of the data source                                                                                                                                                                                 |
+| column              | Yes (table) | list      | None          | Collection of column names to be synchronized in the configured table; not needed when `connection.querySql` is configured, detailed description below                                                                                 |
+| excludeColumn       |     No      | list      | None          | Column name fields to be excluded, only valid when `column` is configured as `*`                                                                                                                                                       |
+| splitPk             |     No      | string    | None          | Use the field represented by splitPk for data sharding, which can greatly improve data synchronization efficiency, see notes below                                                                                                     |
+| autoPk              |     No      | boolean   | false         | Whether to automatically guess the sharding primary key, introduced in version `3.2.6`, see description below                                                                                                                          |
+| where               |     No      | string    | None          | Filtering conditions for the table                                                                                                                                                                                                     |
+| session             |     No      | list      | None          | For local connections, modify session configuration, see below                                                                                                                                                                         |
+| fetchSize           |     No      | int       | 1024          | Defines the number of batch data fetched between plugin and database server each time. Increasing this value may cause Addax OOM                                                                                                       |
 
 ### connection.jdbcUrl
 
@@ -88,9 +88,9 @@ The following are the proxy types and configuration methods supported by various
 | Presto   | socks      | socksProxy                    | `socksProxy=192.168.1.101:1081`                    |
 | Presto   | http       | httpProxy                     | `httpProxy=192.168.1.101:3128`                     |
 
-### driver
+### connection.driver
 
-In most cases, the JDBC driver for a database is fixed, but some have different recommended driver class names due to different versions, such as MySQL. The new MySQL JDBC driver type recommends using `com.mysql.cj.jdbc.Driver` instead of the previous `com.mysql.jdbc.Driver`. If you want to use the old driver name, you can configure the top-level `driver` item, or write it as `connection.driver`; when both are configured, `connection.driver` takes precedence. Otherwise, the plugin will automatically guess the driver name based on the string in `connection.jdbcUrl`.
+In most cases, the JDBC driver for a database is fixed, but some have different recommended driver class names due to different versions, such as MySQL. The new MySQL JDBC driver type recommends using `com.mysql.cj.jdbc.Driver` instead of the previous `com.mysql.jdbc.Driver`. If you want to use the old driver name, configure `connection.driver`. The top-level `driver` is a deprecated legacy form: it still works but logs a deprecation warning, and `connection.driver` takes precedence when both are configured. Otherwise, the plugin will automatically guess the driver name based on the string in `connection.jdbcUrl`.
 
 ### column
 

@@ -36,6 +36,6 @@ bin/addax.sh job/sqlite2stream.json
 
 ### 配置结构
 
-<!--@include: @/src/_partials/reader/rdbms-structure.md#derived-base-no-credentials -->
+<!--@include: @/src/_partials/reader/rdbms-structure.md#base-no-credentials -->
 
-该插件不需要配置 `username` 和 `password`；其余参数的必填、类型和默认值见 [RDBMS Reader](rdbmsreader) 的参数说明。驱动类名写在 `connection.driver` 下。
+该插件不需要配置 `username` 和 `password`；其余参数的必填、类型和默认值见 [RDBMS Reader](rdbmsreader) 的参数说明。驱动类名写在 `connection.driver` 下；顶层 `driver` 是已弃用的旧写法，仍兼容但会打印弃用警告。

@@ -23,7 +23,7 @@ Note: If a dedicated database writer plugin is already provided, it is recommend
 Suppose you need to write data to IBM DB2. Since no dedicated writer plugin is provided, we can use this plugin to implement it. Before use, you need to perform the following two operations:
 
 1. Download the corresponding JDBC driver and copy it to the `plugin/writer/rdbmswriter/libs` directory
-2. Modify the task configuration file and fill in the correct JDBC driver name in `writer.parameter.driver`, such as DB2's driver name `com.ibm.db2.jcc.DB2Driver`
+2. Modify the task configuration file and fill in the correct JDBC driver name in `writer.parameter.connection.driver`, such as DB2's driver name `com.ibm.db2.jcc.DB2Driver`. The legacy `writer.parameter.driver` is still accepted but logs a deprecation warning
 
 The following lists common databases and their corresponding driver names:
 
@@ -53,23 +53,23 @@ The configuration paths in the table below are relative to `writer.parameter`. `
 
 ### Configuration Structure
 
-<!--@include: @/src/_partials/writer/rdbms-structure.md#generic-base -->
+<!--@include: @/src/_partials/writer/rdbms-structure.md#base -->
 
 The tree shows the hierarchy only; required, data type and default values are listed in the table below.
 
-| Configuration Path | Required | Data Type | Default Value | Description                                                                                                                                                                   |
-| :----------------- | :------: | --------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| connection         |   Yes    | object    | None          | Connection information, see the child items below; may be written as an object or a one-element array                                                                         |
-| connection.jdbcUrl |   Yes    | string    | None          | JDBC connection information of the target database, jdbcUrl follows RDBMS official specifications and can include connection attachment control information                   |
-| connection.table   |   Yes    | list      | None          | Selected table names to be synchronized, using JSON data format. When configured for multiple tables, users need to ensure that multiple tables have the same table structure |
-| driver             |   Yes    | string    | None          | Custom driver class name to solve compatibility issues; the generic RDBMS Writer requires it at the top level                                                                 |
-| username           |   Yes    | string    | None          | Username of the data source                                                                                                                                                   |
-| password           |    No    | string    | None          | Password for the specified username of the data source                                                                                                                        |
-| column             |   Yes    | list      | None          | Collection of column names to be synchronized in the configured table; supports `*`, column pruning/reordering and constants                                                  |
-| preSql             |    No    | list      | None          | SQL executed before the synchronization task, one statement is allowed, for example to clear old data; `@table` can be used to refer to the table                             |
-| postSql            |    No    | list      | None          | SQL executed after the synchronization task, one statement is allowed, for example to update a timestamp                                                                      |
-| batchSize          |    No    | int       | 1024          | Number of records fetched between the plugin and the database server per batch. Increasing it may cause Addax OOM or transaction commit failures on the target database       |
-| session            |    No    | list      | None          | Session settings applied to local connections                                                                                                                                 |
-| ddl                |    No    | string    | None          | DDL used to create the target table when it does not exist; `@table` can be used to refer to the table                                                                        |
+| Configuration Path | Required | Data Type | Default Value | Description                                                                                                                                                                                                               |
+| :----------------- | :------: | --------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| connection         |   Yes    | object    | None          | Connection information, see the child items below; may be written as an object or a one-element array                                                                                                                     |
+| connection.jdbcUrl |   Yes    | string    | None          | JDBC connection information of the target database, jdbcUrl follows RDBMS official specifications and can include connection attachment control information                                                               |
+| connection.table   |   Yes    | list      | None          | Selected table names to be synchronized, using JSON data format. When configured for multiple tables, users need to ensure that multiple tables have the same table structure                                             |
+| connection.driver  |   Yes    | string    | None          | Custom driver class name, required by the generic RDBMS Writer; the top-level `driver` is a deprecated legacy form that still works but logs a warning, and `connection.driver` takes precedence when both are configured |
+| username           |   Yes    | string    | None          | Username of the data source                                                                                                                                                                                               |
+| password           |    No    | string    | None          | Password for the specified username of the data source                                                                                                                                                                    |
+| column             |   Yes    | list      | None          | Collection of column names to be synchronized in the configured table; supports `*`, column pruning/reordering and constants                                                                                              |
+| preSql             |    No    | list      | None          | SQL executed before the synchronization task, one statement is allowed, for example to clear old data; `@table` can be used to refer to the table                                                                         |
+| postSql            |    No    | list      | None          | SQL executed after the synchronization task, one statement is allowed, for example to update a timestamp                                                                                                                  |
+| batchSize          |    No    | int       | 1024          | Number of records fetched between the plugin and the database server per batch. Increasing it may cause Addax OOM or transaction commit failures on the target database                                                   |
+| session            |    No    | list      | None          | Session settings applied to local connections                                                                                                                                                                             |
+| ddl                |    No    | string    | None          | DDL used to create the target table when it does not exist; `@table` can be used to refer to the table                                                                                                                    |
 
 The generic RDBMS Writer only supports `insert`; `writeMode` is ignored even when configured. Use the database-specific Writer when you need `update` or `replace`.

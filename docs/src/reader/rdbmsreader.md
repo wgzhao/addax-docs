@@ -21,7 +21,7 @@ RDBMS Reader 插件支持从传统 RDBMS 读取数据。这是一个通用关系
 ## 配置驱动
 
 假定你需要读取 IBM DB2 的数据，因为没有提供专门的读取插件，所以我们可以使用该插件来实现，在使用之前，需要下载对应的 JDBC 驱动，并拷贝到 `plugin/reader/rdbmsreader/libs` 目录。
-如果你的驱动类名比较特殊，则需要在任务配置文件的 `reader.parameter.driver`（或 `reader.parameter.connection.driver`）中填写正确的 JDBC 驱动名，比如 DB2 的驱动名为 `com.ibm.db2.jcc.DB2Driver`。如果不填写，则插件会自动猜测驱动名。
+如果你的驱动类名比较特殊，则需要在任务配置文件的 `reader.parameter.connection.driver` 中填写正确的 JDBC 驱动名，比如 DB2 的驱动名为 `com.ibm.db2.jcc.DB2Driver`。旧写法 `reader.parameter.driver` 仍然兼容，但会打印弃用警告。如果不填写，则插件会自动猜测驱动名。
 
 以下列出常见的数据库以及对应的驱动名称
 
@@ -51,26 +51,26 @@ RDBMS Reader 插件支持从传统 RDBMS 读取数据。这是一个通用关系
 
 ### 配置结构
 
-<!--@include: @/src/_partials/reader/rdbms-structure.md#generic-base -->
+<!--@include: @/src/_partials/reader/rdbms-structure.md#base -->
 
 上图只表示配置层级，是否必填、数据类型和默认值见下表。
 
-| 配置路径            |   是否必须   | 数据类型 | 默认值 | 描述                                                                                                                        |
-| :------------------ | :----------: | -------- | ------ | --------------------------------------------------------------------------------------------------------------------------- |
-| connection          |      是      | object   | 无     | 连接信息，子项见下；可写成对象，也可写成只包含一个元素的数组                                                                |
-| connection.jdbcUrl  |      是      | string   | 无     | 对端数据库的 JDBC 连接信息，jdbcUrl 按照 RDBMS 官方规范，并可以填写连接附件控制信息                                         |
-| connection.table    | 是（表模式） | list     | 无     | 所选取的需要同步的表名，使用 JSON 数据格式；配置为多张表时，用户需自行保证多张表是同一表结构，与 `connection.querySql` 互斥 |
-| connection.querySql |      否      | list     | 无     | 使用自定义的 SQL 而不是指定表来获取数据，与 `connection.table` 互斥；配置后忽略 `column` 配置项                             |
-| username            |      是      | string   | 无     | 数据源的用户名                                                                                                              |
-| password            |      否      | string   | 无     | 数据源指定用户名的密码                                                                                                      |
-| column              | 是（表模式） | list     | 无     | 所配置的表中需要同步的列名集合；配置 `connection.querySql` 时不需要，详细描述见后                                           |
-| excludeColumn       |      否      | list     | 无     | 需要排除的列名字段，仅在 `column` 配置为 `*` 时有效                                                                         |
-| splitPk             |      否      | string   | 无     | 使用 splitPk 代表的字段进行数据分片，这样可以大大提高数据同步的效能，注意事项见后                                           |
-| autoPk              |      否      | boolean  | false  | 是否自动猜测分片主键，`3.2.6` 版本引入，详见后面描述                                                                        |
-| where               |      否      | string   | 无     | 针对表的筛选条件                                                                                                            |
-| session             |      否      | list     | 无     | 针对本地连接，修改会话配置，详见下文                                                                                        |
-| fetchSize           |      否      | int      | 1024   | 定义了插件和数据库服务器端每次批量数据获取条数，调高该值可能导致 Addax 出现 OOM                                             |
-| driver              |      否      | string   | 无     | 自定义驱动类名，解决兼容性问题；也可以写在 `connection.driver` 下，两者同时配置时以 `connection.driver` 为准                |
+| 配置路径            |   是否必须   | 数据类型 | 默认值 | 描述                                                                                                                                                      |
+| :------------------ | :----------: | -------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| connection          |      是      | object   | 无     | 连接信息，子项见下；可写成对象，也可写成只包含一个元素的数组                                                                                              |
+| connection.jdbcUrl  |      是      | string   | 无     | 对端数据库的 JDBC 连接信息，jdbcUrl 按照 RDBMS 官方规范，并可以填写连接附件控制信息                                                                       |
+| connection.table    | 是（表模式） | list     | 无     | 所选取的需要同步的表名，使用 JSON 数据格式；配置为多张表时，用户需自行保证多张表是同一表结构，与 `connection.querySql` 互斥                               |
+| connection.querySql |      否      | list     | 无     | 使用自定义的 SQL 而不是指定表来获取数据，与 `connection.table` 互斥；配置后忽略 `column` 配置项                                                           |
+| connection.driver   |      否      | string   | 无     | 自定义驱动类名；未配置时根据 `connection.jdbcUrl` 猜测。顶层 `driver` 是已弃用的旧写法，仍兼容但会打印弃用警告；两者同时配置时以 `connection.driver` 为准 |
+| username            |      是      | string   | 无     | 数据源的用户名                                                                                                                                            |
+| password            |      否      | string   | 无     | 数据源指定用户名的密码                                                                                                                                    |
+| column              | 是（表模式） | list     | 无     | 所配置的表中需要同步的列名集合；配置 `connection.querySql` 时不需要，详细描述见后                                                                         |
+| excludeColumn       |      否      | list     | 无     | 需要排除的列名字段，仅在 `column` 配置为 `*` 时有效                                                                                                       |
+| splitPk             |      否      | string   | 无     | 使用 splitPk 代表的字段进行数据分片，这样可以大大提高数据同步的效能，注意事项见后                                                                         |
+| autoPk              |      否      | boolean  | false  | 是否自动猜测分片主键，`3.2.6` 版本引入，详见后面描述                                                                                                      |
+| where               |      否      | string   | 无     | 针对表的筛选条件                                                                                                                                          |
+| session             |      否      | list     | 无     | 针对本地连接，修改会话配置，详见下文                                                                                                                      |
+| fetchSize           |      否      | int      | 1024   | 定义了插件和数据库服务器端每次批量数据获取条数，调高该值可能导致 Addax 出现 OOM                                                                           |
 
 ### connection.jdbcUrl
 
@@ -102,9 +102,9 @@ RDBMS Reader 插件支持从传统 RDBMS 读取数据。这是一个通用关系
 
 上述配置会选择 `t1`, `tbl2`, `tbl3` 三张表进行同步。
 
-### driver
+### connection.driver
 
-大部分情况下，一个数据库的 JDBC 驱动是固定的，但有些因为版本的不同，所建议的驱动类名不同，比如 MySQL。新的 MySQL JDBC 驱动类型推荐使用 `com.mysql.cj.jdbc.Driver` 而不是以前的 `com.mysql.jdbc.Driver`。如果想要使用旧的驱动名称，则可以配置顶层 `driver` 配置项；也可以写在 `connection.driver` 下，两者同时配置时以 `connection.driver` 为准。否则插件会自动依据 `connection.jdbcUrl` 中的字符串来猜测驱动名称。
+大部分情况下，一个数据库的 JDBC 驱动是固定的，但有些因为版本的不同，所建议的驱动类名不同，比如 MySQL。新的 MySQL JDBC 驱动类型推荐使用 `com.mysql.cj.jdbc.Driver` 而不是以前的 `com.mysql.jdbc.Driver`。如果想要使用旧的驱动名称，则配置 `connection.driver`。顶层 `driver` 是已弃用的旧写法，仍兼容但会打印弃用警告；两者同时配置时以 `connection.driver` 为准。否则插件会自动依据 `connection.jdbcUrl` 中的字符串来猜测驱动名称。
 
 ### column
 

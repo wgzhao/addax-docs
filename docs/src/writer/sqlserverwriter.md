@@ -14,9 +14,9 @@ SQLServer Writer 插件实现了写入数据到 [SQL Server](https://www.microso
 
 ### 配置结构
 
-<!--@include: @/src/_partials/writer/rdbms-structure.md#derived-base -->
+<!--@include: @/src/_partials/writer/rdbms-structure.md#base -->
 
-上图只表示配置层级；通用参数的必填、类型和默认值见 [RDBMS Writer](rdbmswriter) 的参数说明。驱动类名写在 `connection.driver` 下。
+上图只表示配置层级；通用参数的必填、类型和默认值见 [RDBMS Writer](rdbmswriter) 的参数说明。驱动类名写在 `connection.driver` 下；顶层 `driver` 是已弃用的旧写法，仍兼容但会打印弃用警告。
 
 `writeMode` 不在通用结构中，是本插件额外支持的参数。
 

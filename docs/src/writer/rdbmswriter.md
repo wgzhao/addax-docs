@@ -23,7 +23,7 @@ RDBMS Writer 插件支持向传统 RDBMS 写入数据。这是一个通用关系
 假定你需要写入 IBM DB2 的数据，因为没有提供专门的读取插件，所以我们可以使用该插件来实现，在使用之前，需要执行下面两个操作：
 
 1. 下载对应的 JDBC 驱动，并拷贝到 `plugin/writer/rdbmswriter/libs` 目录
-2. 修改任务配置文件，在 `writer.parameter.driver` 中填写正确的 JDBC 驱动名，比如 DB2 的驱动名为 `com.ibm.db2.jcc.DB2Driver`
+2. 修改任务配置文件，在 `writer.parameter.connection.driver` 中填写正确的 JDBC 驱动名，比如 DB2 的驱动名为 `com.ibm.db2.jcc.DB2Driver`；旧写法 `writer.parameter.driver` 仍然兼容，但会打印弃用警告
 
 以下列出常见的数据库以及对应的驱动名称
 
@@ -53,24 +53,24 @@ RDBMS Writer 插件支持向传统 RDBMS 写入数据。这是一个通用关系
 
 ### 配置结构
 
-<!--@include: @/src/_partials/writer/rdbms-structure.md#generic-base -->
+<!--@include: @/src/_partials/writer/rdbms-structure.md#base -->
 
 上图只表示配置层级，是否必填、数据类型和默认值见下表。
 
-| 配置路径           | 是否必须 | 数据类型 | 默认值 | 描述                                                                                                               |
-| :----------------- | :------: | -------- | ------ | ------------------------------------------------------------------------------------------------------------------ |
-| connection         |    是    | object   | 无     | 连接信息，子项见下；可写成对象，也可写成只包含一个元素的数组                                                       |
-| connection.jdbcUrl |    是    | string   | 无     | 对端数据库的 JDBC 连接信息，jdbcUrl 按照 RDBMS 官方规范，并可以填写连接附件控制信息                                |
-| connection.table   |    是    | list     | 无     | 所选取的需要同步的表名，使用 JSON 数据格式；配置为多张表时，用户需自行保证多张表是同一表结构                       |
-| driver             |    是    | string   | 无     | 自定义驱动类名，解决兼容性问题；通用 RDBMS Writer 要求写在顶层，详见下文                                           |
-| username           |    是    | string   | 无     | 数据源的用户名                                                                                                     |
-| password           |    否    | string   | 无     | 数据源指定用户名的密码                                                                                             |
-| column             |    是    | list     | 无     | 所配置的表中需要同步的列名集合，详细描述见后                                                                       |
-| preSql             |    否    | list     | 无     | 执行数据同步任务之前率先执行的 SQL 语句，目前只允许执行一条 SQL 语句，例如清除旧数据，涉及到的表可用 `@table` 表示 |
-| postSql            |    否    | list     | 无     | 执行数据同步任务之后执行的 SQL 语句，目前只允许执行一条 SQL 语句，例如加上某一个时间戳                             |
-| batchSize          |    否    | int      | 1024   | 定义了插件和数据库服务器端每次批量数据获取条数，调高该值可能导致 Addax 出现 OOM 或者目标数据库事务提交失败导致挂起 |
-| session            |    否    | list     | 无     | 针对本地连接，修改会话配置，详见下文                                                                               |
-| ddl                |    否    | string   | 无     | 目标端建表 DDL 语句，当目标表不存在时会执行这些 DDL 语句创建表，涉及到的表可用 `@table` 表示                       |
+| 配置路径           | 是否必须 | 数据类型 | 默认值 | 描述                                                                                                                                          |
+| :----------------- | :------: | -------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| connection         |    是    | object   | 无     | 连接信息，子项见下；可写成对象，也可写成只包含一个元素的数组                                                                                  |
+| connection.jdbcUrl |    是    | string   | 无     | 对端数据库的 JDBC 连接信息，jdbcUrl 按照 RDBMS 官方规范，并可以填写连接附件控制信息                                                           |
+| connection.table   |    是    | list     | 无     | 所选取的需要同步的表名，使用 JSON 数据格式；配置为多张表时，用户需自行保证多张表是同一表结构                                                  |
+| connection.driver  |    是    | string   | 无     | 自定义驱动类名，通用 RDBMS Writer 必须配置；顶层 `driver` 是已弃用的旧写法，仍兼容但会打印弃用警告；两者同时配置时以 `connection.driver` 为准 |
+| username           |    是    | string   | 无     | 数据源的用户名                                                                                                                                |
+| password           |    否    | string   | 无     | 数据源指定用户名的密码                                                                                                                        |
+| column             |    是    | list     | 无     | 所配置的表中需要同步的列名集合，详细描述见后                                                                                                  |
+| preSql             |    否    | list     | 无     | 执行数据同步任务之前率先执行的 SQL 语句，目前只允许执行一条 SQL 语句，例如清除旧数据，涉及到的表可用 `@table` 表示                            |
+| postSql            |    否    | list     | 无     | 执行数据同步任务之后执行的 SQL 语句，目前只允许执行一条 SQL 语句，例如加上某一个时间戳                                                        |
+| batchSize          |    否    | int      | 1024   | 定义了插件和数据库服务器端每次批量数据获取条数，调高该值可能导致 Addax 出现 OOM 或者目标数据库事务提交失败导致挂起                            |
+| session            |    否    | list     | 无     | 针对本地连接，修改会话配置，详见下文                                                                                                          |
+| ddl                |    否    | string   | 无     | 目标端建表 DDL 语句，当目标表不存在时会执行这些 DDL 语句创建表，涉及到的表可用 `@table` 表示                                                  |
 
 通用 RDBMS Writer 只支持 `insert` 写入方式；即使配置了 `writeMode` 也会被忽略。需要 `update` 或 `replace` 时，请使用对应数据库的专用 Writer。
 
@@ -114,11 +114,11 @@ Column必须显示填写，不允许为空！
 | Presto | socks    | socksProxy                    | `socksProxy=192.168.1.101:1081`                    |
 | Presto | http     | httpProxy                     | `httpProxy=192.168.1.101:3128`                     |
 
-### driver
+### connection.driver
 
 大部分情况下，一个数据库的 JDBC 驱动是固定的，但有些因为版本的不同，所建议的驱动类名不同，比如 MySQL。
 新的 MySQL JDBC 驱动类型推荐使用 `com.mysql.cj.jdbc.Driver` 而不是以前的 `com.mysql.jdbc.Driver`。
-如果想要使用旧的驱动名称，则可以配置顶层的 `driver` 配置项；通用 RDBMS Writer 要求这一项必须写在顶层。
+如果想要使用旧的驱动名称，则配置 `connection.driver`；通用 RDBMS Writer 必须配置这一项。顶层 `driver` 是已弃用的旧写法，仍兼容但会打印弃用警告。
 
 ### session
 

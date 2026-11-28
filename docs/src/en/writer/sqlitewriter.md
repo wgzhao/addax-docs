@@ -34,9 +34,9 @@ This plugin is based on [RDBMS Writer](rdbmswriter), so you can refer to all con
 
 ### Configuration Structure
 
-<!--@include: @/src/_partials/writer/rdbms-structure.md#derived-base-no-credentials -->
+<!--@include: @/src/_partials/writer/rdbms-structure.md#base-no-credentials -->
 
-The tree shows the hierarchy only and omits `username` and `password`; see the [RDBMS Writer](rdbmswriter) parameter table for required flags, types and default values of the remaining parameters. The driver class name goes under `connection.driver`.
+The tree shows the hierarchy only and omits `username` and `password`; see the [RDBMS Writer](rdbmswriter) parameter table for required flags, types and default values of the remaining parameters. The driver class name goes under `connection.driver`; the top-level `driver` is a deprecated legacy form that still works but logs a warning.
 
 `writeMode` is not part of the common structure; it is an additional parameter supported by this plugin.
 
