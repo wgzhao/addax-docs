@@ -106,7 +106,7 @@ TxtFile Reader 提供了读取本地文件系统数据存储的能力。
 }
 ```
 
-所有配置项及默认值,配置时 csvReaderConfig 的map中请**严格按照以下字段名字进行配置**：
+所有配置项及默认值，配置时 csvReaderConfig 的 map 中请**严格按照以下字段名字进行配置**：
 
 ```ini
 boolean caseSensitive = true;

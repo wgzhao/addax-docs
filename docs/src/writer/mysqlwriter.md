@@ -6,6 +6,7 @@ MySQL Writer 插件实现了写入数据到 [MySQL](https://mysql.com) 目的表
 
 假定要写入的 MySQL 表建表语句如下：
 
+```sql
 create table test.addax_tbl
 (
 col1 varchar(20) ,
@@ -14,6 +15,7 @@ col3 datetime,
 col4 boolean,
 col5 binary
 ) default charset utf8;
+```
 
 这里使用一份从内存产生到 MySQL 导入的数据。
 

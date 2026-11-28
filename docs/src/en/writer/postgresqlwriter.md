@@ -14,7 +14,9 @@ Assume the table creation statement and input insertion statement are as follows
 
 The statement to create the table to be inserted is as follows:
 
-create table addax_tbl1 as select \* from addax_tbl where 1=2;
+```sql
+create table addax_tbl1 as select * from addax_tbl where 1=2;
+```
 
 ### Task Configuration
 

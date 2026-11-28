@@ -6,7 +6,7 @@
 
 ### Get Sample Files
 
-Download the Excel compressed file for demonstration from [here](assets/excel_reader_demo.zip) and extract it to the `/tmp/in` directory.
+Download the Excel compressed file for demonstration from [here](/assets/excel_reader_demo.zip) and extract it to the `/tmp/in` directory.
 The three folders have the same content, where:
 
 - `demo.xlsx` is the new Excel format

@@ -41,7 +41,6 @@ Iceberg Writer 提供向 已有的iceberg表写入数据的能力。
 
 ```groovy
 //build.gradle
-groovy
 plugins {
 id 'java'
 }

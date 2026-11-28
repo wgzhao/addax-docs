@@ -8,6 +8,7 @@ Databend is a database backend compatible with MySQL protocol, so Databend writi
 
 Assume the table to be written has the following DDL statement:
 
+```sql
 CREATE DATABASE example_db;
 CREATE TABLE `example_db`.`table1`
 (
@@ -16,6 +17,7 @@ CREATE TABLE `example_db`.`table1`
 `username` VARCHAR,
 `pv` BIGINT
 );
+```
 
 The following configures a configuration file to read data from memory and write to databend table:
 

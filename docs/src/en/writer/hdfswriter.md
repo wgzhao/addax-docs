@@ -127,7 +127,7 @@ Here `cluster` is the HA nameservice name and should match the value used in `de
 
 `preShell` and `postShell` allow you to run shell commands before and after data writing. Typical uses include truncating a table before loading or checking row counts after loading. For example, to add a partition before writing you might use:
 
-```
+```bash
 hive -e "alter table test.hello add partition(dt='${logdate}')"
 ```
 

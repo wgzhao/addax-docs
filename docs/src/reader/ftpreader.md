@@ -1,6 +1,6 @@
-# Ftp Reader
+# FTP Reader
 
-Ftp Reader 提供了读取远程 FTP/SFTP 文件系统数据存储的能力。
+FTP Reader 提供了读取远程 FTP/SFTP 文件系统数据存储的能力。
 
 ## 功能说明
 
@@ -50,6 +50,7 @@ Ftp Reader 提供了读取远程 FTP/SFTP 文件系统数据存储的能力。
 每个路径都必须是绝对路径。通配符只有两种：`*` 匹配任意多个字符，`?` 匹配单个字符，且只作用于路径的最后一段；模式整体按 Java 的 glob 语法解释。匹配不到任何文件、或者路径不存在时，作业日志中会给出对应的 WARN。
 
 ::: warning 使用前请注意
+
 - Addax 会将一个作业下同步的所有 Text File 视作同一张数据表。你必须自己保证所有文件适配同一套 schema，文件为类 CSV 格式，并且对 Addax 可读。
 - 如果 Path 指定的路径下没有符合匹配的文件，Addax 会直接报错。
 :::
@@ -73,12 +74,12 @@ Ftp Reader 提供了读取远程 FTP/SFTP 文件系统数据存储的能力。
   {
     "type": "long",
     "index": 0,
-    "description": "从远程FTP文件文本第一列获取int字段"
+    "description": "从远程 FTP 文件文本第一列获取 int 字段"
   },
   {
     "type": "string",
     "value": "addax",
-    "description": "从FtpReader内部生成alibaba的字符串字段作为当前字段"
+    "description": "在 FTP Reader 内部生成值为 addax 的字符串字段作为当前字段"
   }
 ]
 ```
@@ -86,6 +87,8 @@ Ftp Reader 提供了读取远程 FTP/SFTP 文件系统数据存储的能力。
 对于用户指定 Column 信息，type 必须填写，index/value 必须选择其一。
 
 #### csvReaderConfig
+
+读取 CSV 类型文件参数配置，Map 类型。读取 CSV 类型文件使用的 CsvReader 进行读取，会有很多配置，不配置则使用默认值。
 
 常见配置：
 
@@ -99,9 +102,9 @@ Ftp Reader 提供了读取远程 FTP/SFTP 文件系统数据存储的能力。
 }
 ```
 
-所有配置项及默认值,配置时 csvReaderConfig 的 map 中请 **严格按照以下字段名字进行配置**：
+所有配置项及默认值，配置时 csvReaderConfig 的 map 中请**严格按照以下字段名字进行配置**：
 
-ini
+```ini
 boolean caseSensitive = true;
 char textQualifier = 34;
 boolean trimWhitespace = true;
@@ -114,10 +117,11 @@ int escapeMode = 1;
 boolean safetySwitch = true;//单列长度是否限制100000字符
 boolean skipEmptyRecords = true;//是否跳过空行
 boolean captureRawRecord = true;
+```
 
 ### 类型转换
 
-远程 FTP 文件本身不提供数据类型，该类型是 Addax FtpReader 定义：
+远程 FTP 文件本身不提供数据类型，该类型是 Addax FTP Reader 定义：
 
 | Addax 内部类型 | 远程 FTP 文件 数据类型 |
 | -------------- | ---------------------- |

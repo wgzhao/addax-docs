@@ -14,7 +14,9 @@ Assume the table structure and data to be read are as follows:
 
 The table to be written uses the same structure as the read table, with the following DDL statement:
 
+```sql
 create table ck_addax_writer as ck_addax;
+```
 
 ## Configuration
 

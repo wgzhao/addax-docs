@@ -6,6 +6,7 @@ SQLite Writer plugin implements the functionality of writing data to [SQLite](ht
 
 Assume the table to be written is as follows:
 
+```sql
 create table addax_tbl
 (
 col1 varchar(20) ,
@@ -14,6 +15,7 @@ col3 datetime,
 col4 boolean,
 col5 binary
 );
+```
 
 Here we use data generated from memory to SQLite.
 

@@ -41,9 +41,9 @@ The following lists common databases and their corresponding driver names:
 - [TrinoDB](https://trino.io): `io.trino.jdbc.TrinoDriver`
 - [PrestoSQL](https://trino.io): `io.prestosql.jdbc.PrestoDriver`
 - [Oracle DB](https://www.oracle.com/database/): `oracle.jdbc.OracleDriver`
-- [PostgreSQL](https://postgresql.org): `org.postgresql.Drive`
+- [PostgreSQL](https://postgresql.org): `org.postgresql.Driver`
 
-## Configuration
+## Configuration Example
 
 Configure a job to write to RDBMS.
 
@@ -67,11 +67,84 @@ The tree shows the hierarchy only; required, data type and default values are li
 | connection.driver  |   Yes    | string    | None          | Custom driver class name, required by the generic RDBMS Writer; the top-level `driver` is a deprecated legacy form that still works but logs a warning, and `connection.driver` takes precedence when both are configured |
 | username           |   Yes    | string    | None          | Username of the data source                                                                                                                                                                                               |
 | password           |    No    | string    | None          | Password for the specified username of the data source                                                                                                                                                                    |
-| column             |   Yes    | list      | None          | Collection of column names to be synchronized in the configured table; supports `*`, column pruning/reordering and constants                                                                                              |
-| preSql             |    No    | list      | None          | SQL executed before the synchronization task, one statement is allowed, for example to clear old data; `@table` can be used to refer to the table                                                                         |
-| postSql            |    No    | list      | None          | SQL executed after the synchronization task, one statement is allowed, for example to update a timestamp                                                                                                                  |
-| batchSize          |    No    | int       | 1024          | Number of records fetched between the plugin and the database server per batch. Increasing it may cause Addax OOM or transaction commit failures on the target database                                                   |
-| session            |    No    | list      | None          | Session settings applied to local connections                                                                                                                                                                             |
-| ddl                |    No    | string    | None          | DDL used to create the target table when it does not exist; `@table` can be used to refer to the table                                                                                                                    |
+| column             |   Yes    | list      | None          | Collection of column names to be synchronized in the configured table, detailed description below                                                                                                                         |
+| preSql             |    No    | list      | None          | SQL statement executed first before the data synchronization task; currently only one SQL statement is allowed, for example to clear old data; `@table` can be used to refer to the table involved                           |
+| postSql            |    No    | list      | None          | SQL statement executed after the data synchronization task; currently only one SQL statement is allowed, for example to add a timestamp                                                                                    |
+| batchSize          |    No    | int       | 1024          | Number of records fetched between the plugin and the database server per batch. Increasing it may cause Addax OOM or cause the target database transaction commit to fail and hang                                               |
+| session            |    No    | list      | None          | Modifies session settings for local connections, see below for details                                                                                                                                                     |
+| ddl                |    No    | string    | None          | DDL statement to create the target table; when the target table does not exist these DDL statements are executed to create it, and `@table` can be used to refer to the table involved                                      |
 
 The generic RDBMS Writer only supports `insert`; `writeMode` is ignored even when configured. Use the database-specific Writer when you need `update` or `replace`.
+
+### column
+
+The set of column names to synchronize in the configured table, using a JSON array to describe field information. Users use `*` to represent using all column configurations by default, for example `["*"]`.
+
+Column pruning is supported, i.e. only part of the columns can be selected for export.
+
+Column reordering is supported, i.e. columns can be exported regardless of the table schema information.
+
+Constant configuration is supported, in JSON format:
+
+``["id", "`table`", "1", "'bazhen.csy'", "null", "to_char(a + 1)", "2.3" , "true"]``
+
+- `id` is a normal column name
+- `` `table` `` is a column name containing reserved words,
+- `1` is an integer constant,
+- `'bazhen.csy'` is a string constant
+- `null` is a null pointer; note that `null` here must appear as a string, i.e. quoted with double quotes
+- `to_char(a + 1)` is an expression,
+- `2.3` is a floating point number,
+- `true` is a boolean value; likewise, the boolean value here must also be quoted with double quotes
+
+::: important
+`column` must be filled in explicitly and is not allowed to be empty.
+:::
+
+### connection.jdbcUrl
+
+In addition to the necessary information, `jdbcUrl` can also include specific configuration attributes for each particular driver. Here we especially note that these configuration attributes can be used to support proxies, thereby accessing the database through a proxy.
+For example, the JDBC driver for the PrestoSQL database supports the `socksProxy` parameter, so a possible `jdbcUrl` is
+
+`jdbc:presto://127.0.0.1:8080/hive?socksProxy=192.168.1.101:1081`
+
+Most relational database JDBC drivers support the `socksProxyHost,socksProxyPort` parameters for proxy access. There are also some special cases.
+
+The following are the proxy types and configuration methods supported by the JDBC drivers of various databases:
+
+| Database | Proxy Type | Proxy Configuration           | Example                                            |
+| -------- | ---------- | ----------------------------- | -------------------------------------------------- |
+| MySQL    | socks      | socksProxyHost,socksProxyPort | `socksProxyHost=192.168.1.101&socksProxyPort=1081` |
+| Presto   | socks      | socksProxy                    | `socksProxy=192.168.1.101:1081`                    |
+| Presto   | http       | httpProxy                     | `httpProxy=192.168.1.101:3128`                     |
+
+### connection.driver
+
+In most cases, the JDBC driver of a database is fixed, but for some databases the recommended driver class name differs between versions, for example MySQL.
+The new MySQL JDBC driver type recommends `com.mysql.cj.jdbc.Driver` instead of the previous `com.mysql.jdbc.Driver`.
+If you want to use the old driver name, configure `connection.driver`; the generic RDBMS Writer must configure this item. The top-level `driver` is a deprecated legacy form that is still accepted but logs a deprecation warning.
+
+### session
+
+Description: Sets the session information when connecting to the database. For example, for an Oracle database, you can configure it as follows:
+
+```json
+{
+  "session": [
+    "alter session set nls_date_format = 'dd.mm.yyyy hh24:mi:ss';",
+    "alter session set NLS_LANG = 'AMERICAN';"
+  ]
+}
+```
+
+### ddl
+
+Used to execute statements before acquiring the target table, mainly for scenarios where the target table does not exist, for example:
+
+```json
+{
+  "ddl": "CREATE TABLE IF NOT EXISTS @table (id INT PRIMARY KEY, name VARCHAR(100), age INT);"
+}
+```
+
+In this way, the target table can be created before writing table data. If the target table already exists, the statement is not executed.

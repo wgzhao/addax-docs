@@ -36,3 +36,10 @@ Currently this plugin supports the following write types and corresponding relat
 | Numeric        | N            | java.math.BigDecimal      |
 | Floating Point | F            | java.math.BigDecimal      |
 | Logical        | L            | java.lang.Boolean         |
+| Date           | D            | java.util.Date            |
+
+Where:
+
+- numeric means the local file uses a numeric representation, for example `19901219`, with `0` decimal places.
+- logical means the local file text uses a Boolean representation, for example `true` or `false`.
+- Date means the local file text uses a Date representation, for example `2014-12-31`; Date is the Java `Date` type.

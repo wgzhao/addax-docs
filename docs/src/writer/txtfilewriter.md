@@ -73,7 +73,6 @@ sql 格式表示将数据以 SQL 语句 (`INSERT INTO ... VALUES`) 的方式写�
 
 | Addax 内部类型 | 本地文件 数据类型 |
 | -------------- | ----------------- |
-|                |
 | Long           | Long              |
 | Double         | Double            |
 | string         | string            |

@@ -6,6 +6,7 @@ MySQL Writer plugin implements the functionality of writing data to [MySQL](http
 
 Assume the MySQL table to be written has the following DDL statement:
 
+```sql
 create table test.addax_tbl
 (
 col1 varchar(20) ,
@@ -14,6 +15,7 @@ col3 datetime,
 col4 boolean,
 col5 binary
 ) default charset utf8;
+```
 
 Here we use data generated from memory to import into MySQL.
 

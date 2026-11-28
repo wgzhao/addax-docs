@@ -77,13 +77,13 @@ scheme://user:password@host:port/database
 
 | Option | Default | Description |
 |---|---|---|
-| `--file-type orc|parquet|text` | orc | output file type |
-| `--write-mode append|overwrite|nonConflict` | overwrite | write mode |
-| `--compress NONE|GZIP|SNAPPY|LZO|BZIP2` | SNAPPY | compression |
+| `--file-type orc\|parquet\|text` | orc | output file type |
+| `--write-mode append\|overwrite\|nonConflict` | overwrite | write mode |
+| `--compress NONE\|GZIP\|SNAPPY\|LZO\|BZIP2` | SNAPPY | compression |
 | `--field-delimiter <char>` | template default | text file delimiter |
 | `--encoding <charset>` | — | text file encoding |
 | `--file-name <name>` | source table | output file name |
-| `--have-kerberos true|false` | false | enable Kerberos |
+| `--have-kerberos true\|false` | false | enable Kerberos |
 | `--kerberos-principal <p>` / `--kerberos-keytab <path>` | — | Kerberos credentials (with `--have-kerberos true`) |
 | `--hadoop-config k=v` (repeatable) | — | extra hadoop config entries (HA nameservices etc.) |
 | `--hdfs-site-path <path>` | — | path to `hdfs-site.xml` (alternative to `--hadoop-config`, e.g. `/etc/hadoop/conf/hdfs-site.xml`) |

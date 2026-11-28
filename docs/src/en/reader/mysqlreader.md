@@ -1,76 +1,30 @@
 # MySQL Reader
 
-The MySQLReader plugin enables reading data from MySQL databases.
+The MysqlReader plugin provides the ability to read data from MySQL.
 
 ## Example
 
-Let's create a table in MySQL's test database and insert a record:
+We create the following table in the `test` database of MySQL and insert one record:
 
-CREATE TABLE IF NOT EXISTS test_table (
-id INT AUTO_INCREMENT PRIMARY KEY,
-name VARCHAR(100) NOT NULL,
-age INT,
-salary DECIMAL(10,2),
-created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+<<<@/public/assets/sql/mysql.sql
 
-INSERT INTO test_table (name, age, salary) VALUES
-('John Doe', 30, 50000.00),
-('Jane Smith', 25, 45000.00);
+The following configuration is a job that reads this table to the terminal:
 
-Here's a configuration to read from this table to the console:
+<<<@/public/assets/jobs/mysqlreader.json
 
-```json
-{
-  "job": {
-    "content": [
-      {
-        "reader": {
-          "name": "mysqlreader",
-          "parameter": {
-            "username": "root",
-            "password": "password",
-            "column": ["id", "name", "age", "salary", "created_time"],
-            "splitPk": "id",
-            "connection": [
-              {
-                "jdbcUrl": "jdbc:mysql://localhost:3306/test?useSSL=false&serverTimezone=UTC",
-                "table": ["test_table"]
-              }
-            ]
-          }
-        },
-        "writer": {
-          "name": "streamwriter",
-          "parameter": {
-            "encoding": "UTF-8",
-            "print": true
-          }
-        }
-      }
-    ],
-    "setting": {
-      "speed": {
-        "channel": 1
-      }
-    }
-  }
-}
-```
+Save the above configuration file as `job/mysql2stream.json`
 
-Save this configuration as `job/mysql2stream.json`.
+### Execute Collection Command
 
-### Execute the Job
-
-Run the following command to execute the data collection:
+Execute the following command for data collection
 
 ```bash
 bin/addax.sh job/mysql2stream.json
 ```
 
-## Parameter Description
+## Parameters
 
-This plugin is based on the [RDBMS Reader](rdbmsreader.md) implementation, so you can refer to all configuration items of RDBMS Reader.
+This plugin is based on [RDBMS Reader](rdbmsreader), so you can refer to all configuration items of RDBMS Reader.
 
 ### Configuration Structure
 
@@ -80,128 +34,27 @@ The tree shows the hierarchy only; see the [RDBMS Reader](rdbmsreader) parameter
 
 ### driver
 
-The current Addax uses MySQL JDBC driver version 8.0 or higher, with the driver class name `com.mysql.cj.jdbc.Driver`, not `com.mysql.jdbc.Driver`. If you need to collect from a MySQL server lower than version `5.6` and need to use the `Connector/J 5.1` driver, you can follow these steps:
+The current Addax uses a MySQL JDBC driver of version 8.0 or later, and the driver class name is `com.mysql.cj.jdbc.Driver` rather than `com.mysql.jdbc.Driver`. If the MySQL server you need to collect from is lower than `5.6` and you need to use the `Connector/J 5.1` driver, you can take the following steps:
 
 **Replace the built-in driver**
 
-```bash
-rm -f plugin/reader/mysqlreader/libs/mysql-connector-java-*.jar
-```
+`rm -f plugin/reader/mysqlreader/libs/mysql-connector-java-*.jar`
 
 **Copy the old driver to the plugin directory**
 
-```bash
-cp mysql-connector-java-5.1.48.jar plugin/reader/mysqlreader/libs/
-```
+`cp mysql-connector-java-5.1.48.jar plugin/reader/mysqlreader/libs/`
 
 **Specify the driver class name**
 
 In your JSON file, configure `connection.driver` as `"com.mysql.jdbc.Driver"`
 
-### Required Parameters
+## Data Type Mapping Notes
 
-| Parameter | Description                 | Required | Default |
-| --------- | --------------------------- | -------- | ------- |
-| jdbcUrl   | JDBC connection URL         | Yes      | None    |
-| username  | Database username           | Yes      | None    |
-| password  | Database password           | Yes      | None    |
-| table     | List of tables to read from | Yes      | None    |
-| column    | List of columns to read     | Yes      | None    |
+- `tinyint(1)` is treated as an integer
+- `year` is treated as an integer
+- `bit(1)` is treated as a boolean
+- `bit(n)` (n > 1) is treated as a binary type whose content is the packed bit value as bytes: 8 bits per byte, most significant bit first, for example `b'101'` in `bit(3)` yields the single byte `0x05`
 
-### Optional Parameters
+## Notes
 
-| Parameter | Description                    | Required | Default                  |
-| --------- | ------------------------------ | -------- | ------------------------ |
-| splitPk   | Primary key for data splitting | No       | None                     |
-| where     | WHERE clause for filtering     | No       | None                     |
-| querySql  | Custom SQL query               | No       | None                     |
-| fetchSize | JDBC fetch size                | No       | 1024                     |
-| driver    | JDBC driver class name         | No       | com.mysql.cj.jdbc.Driver |
-
-## Data Type Mapping
-
-| MySQL Type                        | Addax Type | Notes                                                |
-| --------------------------------- | ---------- | ---------------------------------------------------- |
-| TINYINT, SMALLINT, MEDIUMINT, INT | long       |                                                      |
-| BIGINT                            | long       |                                                      |
-| FLOAT, DOUBLE, DECIMAL            | double     |                                                      |
-| VARCHAR, CHAR, TEXT               | string     |                                                      |
-| DATE, TIME, DATETIME, TIMESTAMP   | date       |                                                      |
-| BIT(1)                            | bool       |                                                      |
-| BIT(n)                            | bytes      | packed, 8 bits per byte, most significant byte first |
-| BINARY, VARBINARY, BLOB           | bytes      |                                                      |
-
-## Performance Tuning
-
-### Split Key Configuration
-
-For large tables, configure `splitPk` to enable parallel reading:
-
-```json
-{
-  "parameter": {
-    "splitPk": "id",
-    "channel": 4
-  }
-}
-```
-
-### Fetch Size Optimization
-
-Adjust `fetchSize` based on your memory and network conditions:
-
-```json
-{
-  "parameter": {
-    "fetchSize": 2048
-  }
-}
-```
-
-### Query Optimization
-
-Use `where` clause to filter data at the source:
-
-```json
-{
-  "parameter": {
-    "where": "created_time >= '2023-01-01' AND status = 'active'"
-  }
-}
-```
-
-## Error Handling
-
-Common issues and solutions:
-
-### Connection Timeout
-
-```json
-{
-  "parameter": {
-    "jdbcUrl": "jdbc:mysql://localhost:3306/test?connectTimeout=60000&socketTimeout=60000"
-  }
-}
-```
-
-### SSL Connection Issues
-
-```json
-{
-  "parameter": {
-    "jdbcUrl": "jdbc:mysql://localhost:3306/test?useSSL=false"
-  }
-}
-```
-
-### Timezone Issues
-
-```json
-{
-  "parameter": {
-    "jdbcUrl": "jdbc:mysql://localhost:3306/test?serverTimezone=UTC"
-  }
-}
-```
-
-For more detailed configuration options, please refer to the [RDBMS Reader](rdbmsreader.md) documentation.
+1. When using `autoPk` or `splitPk`, if the selected field type is a character type and the `COLLATE` set on that field is a case-insensitive character set such as `utf8_general_ci` or `utf8mb4_general_ci`, data duplication occurs. Therefore, avoid using a case-insensitive character set.

@@ -77,13 +77,13 @@ scheme://user:password@host:port/database
 
 | 选项 | 缺省 | 说明 |
 |---|---|---|
-| `--file-type orc|parquet|text` | orc | 文件类型 |
-| `--write-mode append|overwrite|nonConflict` | overwrite | 写入模式 |
-| `--compress NONE|GZIP|SNAPPY|LZO|BZIP2` | SNAPPY | 压缩格式 |
+| `--file-type orc\|parquet\|text` | orc | 文件类型 |
+| `--write-mode append\|overwrite\|nonConflict` | overwrite | 写入模式 |
+| `--compress NONE\|GZIP\|SNAPPY\|LZO\|BZIP2` | SNAPPY | 压缩格式 |
 | `--field-delimiter <char>` | 模板默认 | 文本文件分隔符 |
 | `--encoding <charset>` | — | 文本文件编码 |
 | `--file-name <name>` | 源表名 | 输出文件名 |
-| `--have-kerberos true|false` | false | 启用 Kerberos |
+| `--have-kerberos true\|false` | false | 启用 Kerberos |
 | `--kerberos-principal <p>` / `--kerberos-keytab <path>` | — | Kerberos 凭据（配合 `--have-kerberos true`） |
 | `--hadoop-config k=v`（可重复） | — | 额外 hadoop 配置（HA nameservices 等） |
 | `--hdfs-site-path <path>` | — | `hdfs-site.xml` 路径（替代手工 `--hadoop-config`，如 `/etc/hadoop/conf/hdfs-site.xml`） |
