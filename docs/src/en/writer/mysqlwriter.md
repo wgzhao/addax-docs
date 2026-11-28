@@ -30,12 +30,17 @@ bin/addax.sh job/stream2mysql.json
 
 ## Parameters
 
-This plugin is based on [RDBMS Writer](rdbmswriter), so you can refer to all configuration items of RDBMS Writer, and adds some MySQL-specific configuration items.
+This plugin is based on [RDBMS Writer](rdbmswriter), so all common RDBMS Writer parameters are available; `writeMode` is an additional write mode supported by this plugin, see below.
 
-| Configuration | Required | Type   | Default Value | Description                                                                           |
-| :------------ | :------: | ------ | ------------- | ------------------------------------------------------------------------------------- |
-| writeMode     |   Yes    | string | insert        | The way data is written to the table, see below                                       |
-| batchSize     |    No    | int    | 1024          | Defines the number of batch data fetched between plugin and database server each time |
+### Configuration Structure
+
+<!--@include: @/src/_partials/writer/rdbms-structure.md#base -->
+
+The tree shows the hierarchy only; see the [RDBMS Writer](rdbmswriter) parameter table for required flags, types and default values of the common parameters. The driver class name goes under `connection.driver`; the top-level `driver` is a deprecated legacy form that still works but logs a warning.
+
+| Configuration | Required | Type   | Default Value | Description                        |
+| :------------ | :------: | ------ | ------------- | ---------------------------------- |
+| writeMode     |   Yes    | string | insert        | The way data is written, see below |
 
 ### driver
 
@@ -49,7 +54,7 @@ If you need to collect from MySQL server below `5.6` and need to use `Connector/
    `cp mysql-connector-java-5.1.48.jar plugin/writer/mysqlwriter/libs/`
 
 3. Specify driver class name
-   In your json file, configure `"driver": "com.mysql.jdbc.Driver"`
+   In your json file, configure `connection.driver` as `"com.mysql.jdbc.Driver"`
 
 ### writeMode
 

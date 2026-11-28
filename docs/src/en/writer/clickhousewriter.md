@@ -35,3 +35,9 @@ bin/addax.sh job/clickhouse2clickhouse.json
 ## Parameters
 
 This plugin is based on [RDBMS Writer](rdbmswriter), so you can refer to all configuration items of RDBMS Writer.
+
+### Configuration Structure
+
+<!--@include: @/src/_partials/writer/rdbms-structure.md#base -->
+
+The tree shows the hierarchy only; see the [RDBMS Writer](rdbmswriter) parameter table for required flags, types and default values. The driver class name goes under `connection.driver`; the top-level `driver` is a deprecated legacy form that still works but logs a warning.

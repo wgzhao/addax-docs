@@ -19,12 +19,12 @@
           "column": [
             "*"
           ],
-          "driver": "io.prestosql.jdbc.PrestoDriver",
           "connection": {
             "table": [
               "default.table"
             ],
-            "jdbcUrl": "jdbc:presto://127.0.0.1:8080/hive"
+            "jdbcUrl": "jdbc:presto://127.0.0.1:8080/hive",
+            "driver": "io.prestosql.jdbc.PrestoDriver"
           },
           "fetchSize": 1024,
           "where": "1 = 1"

@@ -30,12 +30,17 @@ bin/addax.sh job/stream2mysql.json
 
 ## 参数说明
 
-该插件基于 [RDBMS Writer](rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项，并且增加了一些 MySQL 特有的配置项。
+该插件基于 [RDBMS Writer](rdbmswriter) 实现，因此可以使用 RDBMS Writer 的全部通用参数；`writeMode` 是本插件额外支持的写入模式，详见下文。
 
-| 配置项    | 是否必须 | 类型   | 默认值 | 描述                                           |
-| :-------- | :------: | ------ | ------ | ---------------------------------------------- |
-| writeMode |    是    | string | insert | 数据写入表的方式，详见下文                     |
-| batchSize |    否    | int    | 1024   | 定义了插件和数据库服务器端每次批量数据获取条数 |
+### 配置结构
+
+<!--@include: @/src/_partials/writer/rdbms-structure.md#base -->
+
+上图只表示配置层级；通用参数的必填、类型和默认值见 [RDBMS Writer](rdbmswriter) 的参数说明。驱动类名写在 `connection.driver` 下；顶层 `driver` 是已弃用的旧写法，仍兼容但会打印弃用警告。
+
+| 配置项    | 是否必须 | 类型   | 默认值 | 描述                       |
+| :-------- | :------: | ------ | ------ | -------------------------- |
+| writeMode |    是    | string | insert | 数据写入表的方式，详见下文 |
 
 ### driver
 
@@ -49,7 +54,7 @@ bin/addax.sh job/stream2mysql.json
    `cp mysql-connector-java-5.1.48.jar plugin/writer/mysqlwriter/libs/`
 
 3. 指定驱动类名称
-   在你的 json 文件类，配置 `"driver": "com.mysql.jdbc.Driver"`
+   在你的 json 文件中，配置 `connection.driver` 为 `"com.mysql.jdbc.Driver"`
 
 ### writeMode
 

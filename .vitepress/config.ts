@@ -190,6 +190,8 @@ export default defineVersionedConfig({
   // also keeps `vitepress build` and .vitepress/dist, which is what the
   // Cloudflare Pages VitePress preset expects.
   srcDir: 'docs',
+  // Shared Markdown fragments are included by pages, not rendered on their own.
+  srcExclude: ['**/_partials/**'],
   versionsConfig: {
     // The root serves docs/src, which tracks the Addax master branch, so it is
     // labelled after that branch rather than "latest" — the old mkdocs site sent

@@ -12,6 +12,12 @@ Oracle Reader 插件用于从 Oracle 读取数据
 
 该插件基于 [RDBMS Reader](rdbmsreader) 实现，因此可以参考 RDBMS Reader 的所有配置项。
 
+### 配置结构
+
+<!--@include: @/src/_partials/reader/rdbms-structure.md#base -->
+
+上图只表示配置层级；各参数的必填、类型和默认值见 [RDBMS Reader](rdbmsreader) 的参数说明。驱动类名写在 `connection.driver` 下；顶层 `driver` 是已弃用的旧写法，仍兼容但会打印弃用警告。
+
 ## 对 GEOMETRY 类型的支持
 
 从 Addax `4.0.13` 开始，实验性的支持 Oracle GEOMETRY 类型，该插件会把该类型的数据转为 JSON 数组字符串。

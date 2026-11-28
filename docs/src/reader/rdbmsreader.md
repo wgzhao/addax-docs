@@ -11,13 +11,17 @@ RDBMS Reader 插件支持从传统 RDBMS 读取数据。这是一个通用关系
 - [SQLServer Reader](sqlserverreader)
 - [Access Reader](accessreader)
 - [Databend Reader](databendreader)
+- [HANA Reader](hanareader)
+- [Sybase Reader](sybasereader)
+- [SQLite Reader](sqlitereader)
+- [DuckDB Reader](duckdbreader)
 
 注意， 如果已经提供了专门的数据库读取插件的，推荐使用专用插件，如果你需要读取的数据库没有专门插件，则考虑使用该通用插件。 在使用之前，还需要执行以下操作才可以正常运行，否则运行会出现异常。
 
 ## 配置驱动
 
 假定你需要读取 IBM DB2 的数据，因为没有提供专门的读取插件，所以我们可以使用该插件来实现，在使用之前，需要下载对应的 JDBC 驱动，并拷贝到 `plugin/reader/rdbmsreader/libs` 目录。
-如果你的驱动类名比较特殊，则需要在任务配置文件中找到 `driver` 一项，填写正确的 JDBC 驱动名，比如 DB2 的驱动名为 `com.ibm.db2.jcc.DB2Driver`。如果不填写，则插件会自动猜测驱动名。
+如果你的驱动类名比较特殊，则需要在任务配置文件的 `reader.parameter.connection.driver` 中填写正确的 JDBC 驱动名，比如 DB2 的驱动名为 `com.ibm.db2.jcc.DB2Driver`。旧写法 `reader.parameter.driver` 仍然兼容，但会打印弃用警告。如果不填写，则插件会自动猜测驱动名。
 
 以下列出常见的数据库以及对应的驱动名称
 
@@ -43,26 +47,34 @@ RDBMS Reader 插件支持从传统 RDBMS 读取数据。这是一个通用关系
 
 ## 参数说明
 
-| 配置项        | 是否必须 | 数据类型 | 默认值 | 描述                                                                                                       |
-| :------------ | :------: | -------- | ------ | ---------------------------------------------------------------------------------------------------------- |
-| jdbcUrl       |    是    | list     | 无     | 对端数据库的JDBC连接信息，jdbcUrl按照RDBMS官方规范，并可以填写连接附件控制信息                             |
-| driver        |    否    | string   | 无     | 自定义驱动类名，解决兼容性问题，详见下面描述                                                               |
-| username      |    是    | string   | 无     | 数据源的用户名                                                                                             |
-| password      |    否    | string   | 无     | 数据源指定用户名的密码                                                                                     |
-| table         |    是    | list     | 无     | 所选取的需要同步的表名,使用JSON数据格式，当配置为多张表时，用户自己需保证多张表是同一表结构                |
-| column        |    是    | list     | 无     | 所配置的表中需要同步的列名集合，详细描述见后                                                               |
-| splitPk       |    否    | string   | 无     | 使用splitPk代表的字段进行数据分片，这样可以大大提供数据同步的效能，注意事项见后                            |
-| autoPk        |    否    | boolean  | false  | 是否自动猜测分片主键，`3.2.6` 版本引入，详见后面描述                                                       |
-| where         |    否    | string   | 无     | 针对表的筛选条件                                                                                           |
-| session       |   是否   | list     | 无     | 针对本地连接,修改会话配置,详见下文                                                                         |
-| querySql      |    否    | string   | 无     | 使用自定义的SQL而不是指定表来获取数据，与 `table` 配置项互斥。当配置了这一项之后，忽略 `column` 配置项忽略 |
-| fetchSize     |    否    | int      | 1024   | 定义了插件和数据库服务器端每次批量数据获取条数，调高该值可能导致 Addax 出现OOM                             |
-| excludeColumn |    否    | list     | 无     | 需要排除的列名字段，仅在 `column` 配置为 `*` 时有效                                                        |
+下表中的配置路径以 `reader.parameter` 为根。`connection` 既可以写成对象，也可以写成只包含一个元素的数组；写成多元素数组时只有第一个元素生效。
 
-### jdbcUrl
+### 配置结构
 
-`jdbcUrl` 配置除了配置必要的信息外，我们还可以在增加每种特定驱动的特定配置属性，这里特别提到我们可以利用配置属性对代理的支持从而实现通过代理访问数据库的功能。 比如对于 PrestoSQL 数据库的 JDBC 驱动而言，支持 `socksProxy`
-参数，于是上述配置的 `jdbcUrl` 可以修改为
+<!--@include: @/src/_partials/reader/rdbms-structure.md#base -->
+
+上图只表示配置层级，是否必填、数据类型和默认值见下表。
+
+| 配置路径            |   是否必须   | 数据类型 | 默认值 | 描述                                                                                                                                                      |
+| :------------------ | :----------: | -------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| connection          |      是      | object   | 无     | 连接信息，子项见下；可写成对象，也可写成只包含一个元素的数组                                                                                              |
+| connection.jdbcUrl  |      是      | string   | 无     | 对端数据库的 JDBC 连接信息，jdbcUrl 按照 RDBMS 官方规范，并可以填写连接附件控制信息                                                                       |
+| connection.table    | 是（表模式） | list     | 无     | 所选取的需要同步的表名，使用 JSON 数据格式；配置为多张表时，用户需自行保证多张表是同一表结构，与 `connection.querySql` 互斥                               |
+| connection.querySql |      否      | list     | 无     | 使用自定义的 SQL 而不是指定表来获取数据，与 `connection.table` 互斥；配置后忽略 `column` 配置项                                                           |
+| connection.driver   |      否      | string   | 无     | 自定义驱动类名；未配置时根据 `connection.jdbcUrl` 猜测。顶层 `driver` 是已弃用的旧写法，仍兼容但会打印弃用警告；两者同时配置时以 `connection.driver` 为准 |
+| username            |      是      | string   | 无     | 数据源的用户名                                                                                                                                            |
+| password            |      否      | string   | 无     | 数据源指定用户名的密码                                                                                                                                    |
+| column              | 是（表模式） | list     | 无     | 所配置的表中需要同步的列名集合；配置 `connection.querySql` 时不需要，详细描述见后                                                                         |
+| excludeColumn       |      否      | list     | 无     | 需要排除的列名字段，仅在 `column` 配置为 `*` 时有效                                                                                                       |
+| splitPk             |      否      | string   | 无     | 使用 splitPk 代表的字段进行数据分片，这样可以大大提高数据同步的效能，注意事项见后                                                                         |
+| autoPk              |      否      | boolean  | false  | 是否自动猜测分片主键，`3.2.6` 版本引入，详见后面描述                                                                                                      |
+| where               |      否      | string   | 无     | 针对表的筛选条件                                                                                                                                          |
+| session             |      否      | list     | 无     | 针对本地连接，修改会话配置，详见下文                                                                                                                      |
+| fetchSize           |      否      | int      | 1024   | 定义了插件和数据库服务器端每次批量数据获取条数，调高该值可能导致 Addax 出现 OOM                                                                           |
+
+### connection.jdbcUrl
+
+`jdbcUrl` 除了配置必要的信息外，我们还可以再增加每种特定驱动的特定配置属性，这里特别提到我们可以利用配置属性对代理的支持从而实现通过代理访问数据库的功能。比如对于 PrestoSQL 数据库的 JDBC 驱动而言，支持 `socksProxy` 参数，于是上述配置的 `jdbcUrl` 可以修改为
 
 `jdbc:presto://127.0.0.1:8080/hive?socksProxy=192.168.1.101:1081`
 
@@ -76,24 +88,25 @@ RDBMS Reader 插件支持从传统 RDBMS 读取数据。这是一个通用关系
 | Presto | socks    | socksProxy                    | `socksProxy=192.168.1.101:1081`                    |
 | Presto | http     | httpProxy                     | `httpProxy=192.168.1.101:3128`                     |
 
-### table
+### connection.table
 
-所选取的需要同步的表名，当配置为多张表时，用户自己需保证多张表是同一表结构,多个表可以使用正则表达式来配置，比如 `["t1", "t2", "t3"]` 或者 `["t[1-3]"]` 都表示选择 `t1`, `t2`, `t3` 三张表。也可以两者混合配置，比如:
+所选取的需要同步的表名，当配置为多张表时，用户自己需保证多张表是同一表结构。多个表可以使用正则表达式来配置，比如 `["t1", "t2", "t3"]` 或者 `["t[1-3]"]` 都表示选择 `t1`, `t2`, `t3` 三张表。也可以两者混合配置，比如:
 
 ```json
 {
-  "table": ["t1", "tbl[2-3]"]
+  "connection": {
+    "table": ["t1", "tbl[2-3]"]
+  }
 }
 ```
 
 上述配置会选择 `t1`, `tbl2`, `tbl3` 三张表进行同步。
 
-### driver
+### connection.driver
 
-大部分情况下，一个数据库的JDBC驱动是固定的，但有些因为版本的不同，所建议的驱动类名不同，比如 MySQL。 新的 MySQL JDBC 驱动类型推荐使用 `com.mysql.cj.jdbc.Driver` 而不是以前的 `com.mysql.jdbc.Drver`
-。如果想要使用就的驱动名称，则可以配置 `driver` 配置项。否则插件会自动依据 `jdbcUrl` 中的字符串来猜测驱动名称.
+大部分情况下，一个数据库的 JDBC 驱动是固定的，但有些因为版本的不同，所建议的驱动类名不同，比如 MySQL。新的 MySQL JDBC 驱动类型推荐使用 `com.mysql.cj.jdbc.Driver` 而不是以前的 `com.mysql.jdbc.Driver`。如果想要使用旧的驱动名称，则配置 `connection.driver`。顶层 `driver` 是已弃用的旧写法，仍兼容但会打印弃用警告；两者同时配置时以 `connection.driver` 为准。否则插件会自动依据 `connection.jdbcUrl` 中的字符串来猜测驱动名称。
 
-#### column
+### column
 
 所配置的表中需要同步的列名集合，使用JSON的数组描述字段信息。用户使用 `*` 代表默认使用所有列配置，例如 `["*"]`。
 
@@ -116,7 +129,7 @@ RDBMS Reader 插件支持从传统 RDBMS 读取数据。这是一个通用关系
 
 Column必须显示填写，不允许为空！
 
-#### excludeColumn
+### excludeColumn
 
 存在这样的一种情况，我们需要读取绝大部分表的字段，如果表字段特别多的情况下，配置 `column` 显然是一件耗时的事情。
 特别的，一般我们把业务数据采集到大数据平台时，会增加一些包括分区字段，采集信息的额外字段，当我们需要回写业务数据表时，这些字段我们需要排除。
@@ -131,7 +144,7 @@ Column必须显示填写，不允许为空！
 }
 ```
 
-#### splitPk
+### splitPk
 
 如果指定 `splitPk`，表示用户希望使用 `splitPk` 代表的字段进行数据分片，因此会启动并发任务进行数据同步，这样可以大大提供数据同步的效能。
 
@@ -141,7 +154,7 @@ Column必须显示填写，不允许为空！
 
 `splitPk` 如果不填写，将视作用户不对单表进行切分，而使用单通道同步全量数据。
 
-#### autoPk
+### autoPk
 
 从 `3.2.6` 版本开始，支持自动获取表主键或唯一索引，如果设置为 `true` ，程序将猜测可用于拆分表的字段，他通过查询数据库的元数据信息获取指定表具有主键、单字段唯一索引索引的字段，
 如果有多个字段符合要求，则优先使用数字类型的字段，其次使用字符类型的字段。如果没有符合要求的字段，则不切分表。
@@ -183,21 +196,22 @@ Column必须显示填写，不允许为空！
 
 注意 `&quot;`是 `"` 的转义字符串
 
-### querySql
+### connection.querySql
 
 如果配置了 `querySql`，则使用自定义的 SQL 而不是指定表来获取数据。同时，`querySql` 还支持从外部读取 SQL 文件，这也可以减少复杂 SQL 在写入 `json` 文件中的难度。
 假定 `/tmp/t.sql` 文件有如下内容:
 
-select
-
-- from t
-  where id < 10
+```sql
+select * from t where id < 10
+```
 
 那么可以配置如下:
 
 ```json
 {
-  "querySql": ["@/tmp/t.sql"]
+  "connection": {
+    "querySql": ["@/tmp/t.sql"]
+  }
 }
 ```
 

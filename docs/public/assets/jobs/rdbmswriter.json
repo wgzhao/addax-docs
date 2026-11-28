@@ -40,7 +40,6 @@
         "parameter": {
           "username": "username",
           "password": "password",
-          "driver": "dm.jdbc.driver.DmDriver",
           "column": [
             "*"
           ],
@@ -51,7 +50,8 @@
             "jdbcUrl": "jdbc:dm://ip:port/database",
             "table": [
               "table"
-            ]
+            ],
+            "driver": "dm.jdbc.driver.DmDriver"
           }
         }
       }

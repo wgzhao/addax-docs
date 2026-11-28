@@ -35,6 +35,12 @@ bin/addax.sh job/stream2Databend.json
 
 该插件基于 [RDBMS Writer](rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项, 并增加了如下配置项：
 
+### 配置结构
+
+<!--@include: @/src/_partials/writer/rdbms-structure.md#base -->
+
+上图只表示配置层级；各参数的必填、类型和默认值见 [RDBMS Writer](rdbmswriter) 的参数说明。驱动类名写在 `connection.driver` 下；顶层 `driver` 是已弃用的旧写法，仍兼容但会打印弃用警告。
+
 | 配置项           | 是否必须 | 类型   | 默认值   | 描述                                                                       |
 | :--------------- | :------: | ------ | -------- | -------------------------------------------------------------------------- |
 | writeMode        |    否    | string | `insert` | 写入模式，支持 `insert` 和 `replace` 两种模式                              |

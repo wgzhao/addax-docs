@@ -37,6 +37,14 @@ bin/addax.sh job/stream2duckdb.json
 
 This plugin is based on [RDBMS Writer](rdbmswriter), so you can refer to all parameters of RDBMS Writer. A DuckDB connection needs no credentials, so the `username` and `password` every other writer requires are not needed here.
 
+### Configuration Structure
+
+<!--@include: @/src/_partials/writer/rdbms-structure.md#base-no-credentials -->
+
+The tree shows the hierarchy only and omits `username` and `password`; see the [RDBMS Writer](rdbmswriter) parameter table for required flags, types and default values of the remaining parameters. The driver class name goes under `connection.driver`; the top-level `driver` is a deprecated legacy form that still works but logs a warning.
+
+`writeMode` is not part of the common structure; it is an additional parameter supported by this plugin.
+
 The target table must **already exist**; the plugin does not create it. Note that `preSql` runs too late for that, because a job reads the column metadata of the table while it initializes.
 
 ## Bulk Loading
@@ -89,13 +97,13 @@ Neither `replace` nor `update` uses the appender; both go through the regular ba
 
 The `duckdb_jdbc` shipped with the distribution carries the native library for **Linux x86_64** only. On any other platform the job fails at startup because the driver cannot find its native library; replace the driver jar with the one built for your platform.
 
-| Platform | Driver jar |
-| --- | --- |
-| macOS Apple Silicon | `duckdb_jdbc-<version>-macos_arm64.jar` |
-| macOS Intel | `duckdb_jdbc-<version>-macos_amd64.jar` |
-| Windows x64 | `duckdb_jdbc-<version>-windows_amd64.jar` |
-| Windows ARM64 | `duckdb_jdbc-<version>-windows_arm64.jar` |
-| Linux ARM64 | `duckdb_jdbc-<version>-linux_arm64.jar` |
+| Platform            | Driver jar                                |
+| ------------------- | ----------------------------------------- |
+| macOS Apple Silicon | `duckdb_jdbc-<version>-macos_arm64.jar`   |
+| macOS Intel         | `duckdb_jdbc-<version>-macos_amd64.jar`   |
+| Windows x64         | `duckdb_jdbc-<version>-windows_amd64.jar` |
+| Windows ARM64       | `duckdb_jdbc-<version>-windows_arm64.jar` |
+| Linux ARM64         | `duckdb_jdbc-<version>-linux_arm64.jar`   |
 
 `<version>` is the driver version the distribution already uses, shown by the original file name under `libs/`; the artifacts live at
 `https://repo1.maven.org/maven2/org/duckdb/duckdb_jdbc/<version>/`.

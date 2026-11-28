@@ -33,6 +33,12 @@ The output information is as follows (non-critical information removed):
 
 This plugin is based on [RDBMS Reader](rdbmsreader), so you can refer to all parameters of RDBMS Reader.
 
+### Configuration Structure
+
+<!--@include: @/src/_partials/reader/rdbms-structure.md#base -->
+
+The tree shows the hierarchy only; see the [RDBMS Reader](rdbmsreader) parameter table for required flags, types and default values. The driver class name goes under `connection.driver`; the top-level `driver` is a deprecated legacy form that still works but logs a warning.
+
 ## Supported Data Types
 
 | Addax Internal Type | ClickHouse Data Type                                                    |

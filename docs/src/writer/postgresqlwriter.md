@@ -38,6 +38,14 @@ bin/addax.sh job/pg2pg.json
 
 该插件基于 [RDBMS Writer](rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项。
 
+### 配置结构
+
+<!--@include: @/src/_partials/writer/rdbms-structure.md#base -->
+
+上图只表示配置层级；通用参数的必填、类型和默认值见 [RDBMS Writer](rdbmswriter) 的参数说明。驱动类名写在 `connection.driver` 下；顶层 `driver` 是已弃用的旧写法，仍兼容但会打印弃用警告。
+
+`writeMode` 不在通用结构中，是本插件额外支持的参数。
+
 ### writeMode
 
 默认情况下， 采取 `insert into` 语法写入 postgresql 表，如果你希望采取主键存在时更新，不存在则写入的方式， 可以使用 `update` 模式。假定表的主键为 `id` ,则 `writeMode` 配置方法如下：

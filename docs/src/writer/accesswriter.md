@@ -28,6 +28,12 @@ bin/addax.sh job/stream2access.json
 
 该插件基于 [RDBMS Writer](rdbmswriter) 实现，因此可以参考 RDBMS Writer 的所有配置项。
 
+### 配置结构
+
+<!--@include: @/src/_partials/writer/rdbms-structure.md#base -->
+
+上图只表示配置层级；各参数的必填、类型和默认值见 [RDBMS Writer](rdbmswriter) 的参数说明。驱动类名写在 `connection.driver` 下；顶层 `driver` 是已弃用的旧写法，仍兼容但会打印弃用警告。
+
 ## 变更记录
 
 1. 从 `5.0.1` 版本其，当要写入的 Access 数据库文件不存在时，会自动创建，并设置数据库格式为 `Access 2016`
