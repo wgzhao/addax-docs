@@ -86,7 +86,7 @@ The tree shows the hierarchy only; required, data type and default values are li
 
 ### connection.jdbcUrl
 
-In addition to configuring necessary information, `connection.jdbcUrl` configuration can also add specific configuration properties for each specific driver. Here we particularly mention that we can use configuration properties to support proxies to access databases through proxies. For example, for PrestoSQL database JDBC driver, it supports the `socksProxy` parameter, so the above configured `connection.jdbcUrl` can be modified to:
+In addition to configuring necessary information, `jdbcUrl` can also add specific configuration properties for each specific driver. Here we particularly mention that we can use configuration properties to support proxies to access databases through proxies. For example, for PrestoSQL database JDBC driver, it supports the `socksProxy` parameter, so the above configured `jdbcUrl` can be modified to:
 
 `jdbc:presto://127.0.0.1:8080/hive?socksProxy=192.168.1.101:1081`
 

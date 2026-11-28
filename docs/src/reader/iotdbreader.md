@@ -79,7 +79,7 @@ tree model 的查询结果即使没有显式 `SELECT time`，也会在首列返�
 
 ### 使用 connection.querySql 并行读取
 
-`connection.querySql` 适合按时间范围或设备手工拆分并行读取，每个 SQL 生成一个 task：
+`querySql` 适合按时间范围或设备手工拆分并行读取，每个 SQL 生成一个 task：
 
 ```json
 {
@@ -94,7 +94,7 @@ tree model 的查询结果即使没有显式 `SELECT time`，也会在首列返�
 }
 ```
 
-`connection.querySql` 非空时，`device`、`measurements`、`where` 和三个时间切分参数都会被忽略，SQL 由用户完全控制。
+`querySql` 非空时，`device`、`measurements`、`where` 和三个时间切分参数都会被忽略，SQL 由用户完全控制。
 
 ### 时间区间切分
 

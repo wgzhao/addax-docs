@@ -84,7 +84,7 @@ change over time, so production jobs should list the measurements explicitly.
 
 ### Parallel reads with connection.querySql
 
-`connection.querySql` is the way to split a read manually, by time range or by device. Each statement becomes
+`querySql` is the way to split a read manually, by time range or by device. Each statement becomes
 one task:
 
 ```json
@@ -100,7 +100,7 @@ one task:
 }
 ```
 
-When `connection.querySql` is set, `device`, `measurements`, `where` and the three time-range parameters are
+When `querySql` is set, `device`, `measurements`, `where` and the three time-range parameters are
 ignored, and the SQL is used exactly as written.
 
 ### Time-range split

@@ -86,7 +86,7 @@ parameter
 
 ### connection.jdbcUrl
 
-`connection.jdbcUrl` 配置除了配置必要的信息外，我们还可以再增加每种特定驱动的特定配置属性，这里特别提到我们可以利用配置属性对代理的支持从而实现通过代理访问数据库的功能。比如对于 PrestoSQL 数据库的 JDBC 驱动而言，支持 `socksProxy` 参数，于是上述配置的 `connection.jdbcUrl` 可以修改为
+`jdbcUrl` 除了配置必要的信息外，我们还可以再增加每种特定驱动的特定配置属性，这里特别提到我们可以利用配置属性对代理的支持从而实现通过代理访问数据库的功能。比如对于 PrestoSQL 数据库的 JDBC 驱动而言，支持 `socksProxy` 参数，于是上述配置的 `jdbcUrl` 可以修改为
 
 `jdbc:presto://127.0.0.1:8080/hive?socksProxy=192.168.1.101:1081`
 
@@ -210,7 +210,7 @@ Column必须显示填写，不允许为空！
 
 ### connection.querySql
 
-如果配置了 `connection.querySql`，则使用自定义的 SQL 而不是指定表来获取数据。同时，`connection.querySql` 还支持从外部读取 SQL 文件，这也可以减少复杂 SQL 在写入 `json` 文件中的难度。
+如果配置了 `querySql`，则使用自定义的 SQL 而不是指定表来获取数据。同时，`querySql` 还支持从外部读取 SQL 文件，这也可以减少复杂 SQL 在写入 `json` 文件中的难度。
 假定 `/tmp/t.sql` 文件有如下内容:
 
 ```sql
