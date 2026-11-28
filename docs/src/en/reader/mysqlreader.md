@@ -72,6 +72,12 @@ bin/addax.sh job/mysql2stream.json
 
 This plugin is based on the [RDBMS Reader](rdbmsreader.md) implementation, so you can refer to all configuration items of RDBMS Reader.
 
+### Configuration Structure
+
+<!--@include: @/src/_partials/reader/rdbms-structure.md#base -->
+
+The tree shows the hierarchy only; see the [RDBMS Reader](rdbmsreader) parameter table for required flags, types and default values.
+
 ### driver
 
 The current Addax uses MySQL JDBC driver version 8.0 or higher, with the driver class name `com.mysql.cj.jdbc.Driver`, not `com.mysql.jdbc.Driver`. If you need to collect from a MySQL server lower than version `5.6` and need to use the `Connector/J 5.1` driver, you can follow these steps:

@@ -47,23 +47,7 @@ RDBMS Reader 插件支持从传统 RDBMS 读取数据。这是一个通用关系
 
 ### 配置结构
 
-```text
-parameter
-├─ connection
-│  ├─ jdbcUrl
-│  ├─ table
-│  └─ querySql
-├─ username
-├─ password
-├─ column
-├─ excludeColumn
-├─ splitPk
-├─ autoPk
-├─ where
-├─ session
-├─ fetchSize
-└─ driver
-```
+<!--@include: @/src/_partials/reader/rdbms-structure.md#base -->
 
 上图只表示配置层级，是否必填、数据类型和默认值见下表。
 

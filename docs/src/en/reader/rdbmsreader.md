@@ -47,23 +47,7 @@ The configuration paths in the table below are relative to `reader.parameter`. `
 
 ### Configuration Structure
 
-```text
-parameter
-├─ connection
-│  ├─ jdbcUrl
-│  ├─ table
-│  └─ querySql
-├─ username
-├─ password
-├─ column
-├─ excludeColumn
-├─ splitPk
-├─ autoPk
-├─ where
-├─ session
-├─ fetchSize
-└─ driver
-```
+<!--@include: @/src/_partials/reader/rdbms-structure.md#base -->
 
 The tree shows the hierarchy only; required, data type and default values are listed in the table below.
 

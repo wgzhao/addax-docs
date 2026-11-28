@@ -33,3 +33,9 @@ bin/addax.sh job/sqlite2stream.json
 ## Parameters
 
 This plugin is based on [RDBMS Reader](rdbmsreader), so you can refer to all configuration items of RDBMS Reader.
+
+### Configuration Structure
+
+<!--@include: @/src/_partials/reader/rdbms-structure.md#base-no-credentials -->
+
+This plugin does not need `username` or `password`; see the [RDBMS Reader](rdbmsreader) parameter table for required flags, types and default values of the remaining parameters.
