@@ -65,6 +65,7 @@ const connectorGroups = computed(() => [
     logos: [
       { name: 'TDengine', logo: 'tdengine' },
       { name: 'InfluxDB', logo: 'influxdata' },
+      { name: 'IoTDB', logo: 'iotdb' },
       { name: 'Kafka', logo: 'kafka' },
       { name: 'Stream', logo: 'stream' },
     ],
